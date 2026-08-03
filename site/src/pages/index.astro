@@ -627,4 +627,21 @@ const strategyCards = [
       box.replaceChildren(frame);
     });
   });
+
+  const promoButton = document.querySelector<HTMLImageElement>('.buttonPlay.video-image');
+  if (promoButton) {
+    promoButton.addEventListener('click', () => {
+      const container = promoButton.closest('.video-container');
+      if (!container) return;
+      const iframe = document.createElement('iframe');
+      iframe.src = 'https://www.youtube.com/embed/REgdFeNIXc4?autoplay=1&rel=0';
+      iframe.frameBorder = '0';
+      iframe.allow = 'autoplay; accelerometer; encrypted-media; gyroscope; picture-in-picture';
+      iframe.allowFullscreen = true;
+      iframe.title = 'Alpha Efficiency Promo Video';
+      iframe.width = '100%';
+      iframe.height = '100%';
+      container.replaceChildren(iframe);
+    });
+  }
 </script>
