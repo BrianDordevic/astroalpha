@@ -1,0 +1,626 @@
+---
+import Base from '../layouts/Base.astro';
+
+// Ported from alpha-efficiency-2024 template-home.blade.php and its
+// partials/home/* includes. Section wrappers and class names match the
+// compiled Sage stylesheet exactly (.home-one, .second, .third, ...).
+//
+// Prerendered rather than SSR: the homepage is hand-authored, not D1 content,
+// so there is nothing to look up per request. Static output also takes
+// precedence over the [...slug] catch-all for "/", which would otherwise hit
+// the 'template' track row and render the not-yet-ported placeholder.
+
+const IMG = '/assets/images';
+
+const services = [
+  { icon: 'rwd-icon.svg', title: 'Responsive<br> Web Design', href: '/web-design-agency-chicago', copy: 'Modern web design services for your business. We use the latest technology guaranteed to look great on any device.' },
+  { icon: 'seo-icon.svg', title: 'Search Engine<br> Optimization', href: '/seo-agency-chicago', copy: 'We use proven search engine optimization (SEO) strategies to promote your business and drive traffic to your website.' },
+  { icon: 'wd-icon.svg', title: 'Web<br> Development', href: '/web-development-agency-chicago', copy: 'We’ve helped over 600 clients set up blogs, e-commerce, and responsive websites that are easy to update.' },
+  { icon: 'ppc-icon.svg', title: 'PPC<br> Services', href: '/ppc-agency-chicago', copy: 'Alpha Efficiency is miles ahead of the competition thanks to our specialized team of PPC account managers.' },
+  { icon: 'wp-icon.svg', title: 'Wordpress<br> Maintenance', href: '/wordpress-maintenance-chicago', copy: 'Modern web design services for your business. We use the latest technology guaranteed to look great on any device.' },
+  { icon: 'others-icon.svg', title: 'Other<br> Services', href: '/other-services', copy: 'Modern web design services for your business. We use the latest technology guaranteed to look great on any device.' },
+];
+
+const portfolio = [
+  { name: 'Purple Care', kind: 'UX & Web Design', url: 'https://www.purplecare.com', img: 'purplecare.webp', extra: 'purplecareNew' },
+  { name: 'Breachlock', kind: 'Branding, UX & Web Design', url: 'https://www.breachlock.com', img: 'breachlock.webp', extra: '' },
+  { name: 'School Choice Week', kind: 'UX & Web Design', url: 'https://schoolchoiceweek.com', img: 'school.webp', extra: '' },
+];
+
+const featuredOn = [
+  { file: 'lifehacker.svg', alt: 'Lifehacker', w: 179, h: 49 },
+  { file: 'cloudways.svg', alt: 'Cloudways', w: 175, h: 156 },
+  { file: 'hubspot.svg', alt: 'HubSpot', w: 184, h: 159 },
+  { file: 'clutch.svg', alt: 'Clutch', w: 161, h: 166 },
+];
+
+const testimonials = [
+  { img: 'DavidPinyerd.svg', logo: 'PinyerdLawLogo.svg', name: 'David Pinyerd', position: 'Founder, Attorney', quote: '“Our revenue has gone up 70% in 6 months, our number of cases has gone up even more than that. He\'s very transparent, there\'s no BS, no excuses, just getting the job done and getting us ranked very high”' },
+  { img: 'justinberg.webp', logo: 'purplecare-logo.svg', name: 'Justin Berg', position: 'President, CEO', quote: '“They were transparent, backed everything with real data, and never hid anything. Most importantly, they made a promise and delivered. As a business owner, that clarity and trust make it possible to confidently grow your company.”' },
+  { img: 'tangram.webp', logo: 'tangram.svg', name: 'Milind M. Lele', position: 'President, CEO', quote: '“Brian and the team managed to hone in precisely on our target audience and connect us with the qualified prospects within our specialized niche. These efforts created meaningful demos and results.”' },
+  { img: 'jen-duncan.webp', logo: 'brio.svg', name: 'Jen Duncan', position: 'President, CEO', quote: '“One thing I like about them is that they’re very easy to reach. I can contact the owner, Brian (Director of Strategic Planning), at any time. Their turnaround time has always been what they said it would be.”' },
+  { img: 'surve-photo.webp', logo: 'surve.svg', name: 'Darrell Terry', position: 'President, CEO', quote: '“Alpha Efficiency designed our website and other platforms to establish our foundation. As we grow, their work will continue to impact by providing their development, marketing, and consulting services; Alpha brings a lot to my company”' },
+  { img: 'aeriform-photo.webp', logo: 'aeriform.svg', name: 'Nicolas Silva', position: 'President, CEO', quote: '“I always wanted to have the highest quality image, but that’s not sustainable when building a website. When Brian’s team redesigned our site, I realized how much faster it could be if it’s properly built out.”' },
+];
+
+const clientLogos = [
+  'aeriform.svg', 'ignite.svg', 'jpar.svg', 'tangram.svg', 'joorney.svg', 'smith.svg',
+  'incomewiz.svg', 'breachlock.svg', 'brio.svg', 'amp.svg', 'better-weigh.svg', 'ci2a.svg',
+  'cih.svg', 'love.svg', 'reveal.svg', 'sverdloff.svg', 'afreeman.svg', 'BWM.svg',
+];
+
+const faqs = [
+  { q: 'How much does it cost to hire a web designer to build a website?', a: 'We offer transparent pricing. You can expect to pay $4,000+ for a new website. Projects with e-commerce functionality or SEO services cost more.<br><br>Check out our detailed article regarding pricing, or get a free website quote in a few minutes.' },
+  { q: 'How much should I expect to pay for website maintenance and support?', a: 'Our turn-key website maintenance and management services start at $200/month. Please find out more by visiting our website maintenance page.<br><br>We offer flexible monthly payment plans.' },
+  { q: 'Do you develop and maintain WordPress websites?', a: 'We love the WordPress platform for building websites and think it’s the best for SEO. It’s our platform of choice and we specialize in it.<br><br>Read about our detailed WordPress maintenance plans on this page. Clio Websites is a premier WordPress development agency.' },
+  { q: 'Do you use templates to develop websites?', a: 'We don’t use website design templates to develop sites. All of our projects are unique and custom-developed for each client.<br><br>Your business is unique, and your website should be unique as well. While there is nothing wrong with templated websites (as lots of web designers use them), custom-developed websites perform better and more appropriately represent your business and your brand.' },
+  { q: 'Do you offer digital marketing services?', a: 'We are a premier digital marketing agency. We have helped many clients reach the first page of Google with our proven marketing strategies. To find out more, check out our detailed SEO page.' },
+];
+
+const strategyCards = [
+  { icon: 'chat-icon.svg', heading: 'From traffic leaks to consistent <strong>inbound leads</strong>.', embed: 'LR4GkyBuq2g', thumb: 'purplecare-video.webp', thumbAlt: 'Turning SEO into Consistent Leads for Purple Care', quote: '“You made a promise, and you delivered. <br><strong>No excuses, no extra charges.</strong>”' },
+  { icon: 'user-icon.svg', heading: 'Turning traffic into <strong>qualified sales</strong> calls.', embed: 'QNQcbWCN0MY', thumb: 'pinyerdlaw-video.webp', thumbAlt: 'How We Increased Pinyerd Law Revenue by 70%', quote: '“Very transparent, no disconnect, and our numbers <strong>have all gone up</strong>.”' },
+  { icon: 'bulb-icon.svg', heading: 'How clarity &amp; conversion led to <strong>growth</strong>.', embed: 'G0X6JGXAhBU', thumb: 'krissia-video.webp', thumbAlt: 'Client Spotlight: Krissia shares her journey with Alpha Efficiency', quote: '“We’re extremely satisfied. The traffic keeps <strong>growing better and better</strong>.”' },
+];
+---
+
+<Base
+  title="Alpha Efficiency.™ – Website Design, SEO & AI Development Agency"
+  description="Website design, SEO and AI development agency in Chicago. We build sites that make your phone ring. 600+ businesses trust us."
+  path="/"
+  image={`${IMG}/home/david.webp`}
+  type="website"
+  fullBleed={true}
+  bodyClass="home page-template page-template-template-home template-home page front-page"
+>
+  <!-- ─────────────────────────────── hero ─────────────────────────────── -->
+  <section class="home-one" id="make">
+    <div class="content-holder">
+      <img
+        src={`${IMG}/home/statue-left.webp`} width="450" height="787" alt="Left statue"
+        class="statue-desktop statue-left statue-hero" loading="eager" decoding="async"
+        style="margin-left: 2%; object-fit: contain; max-width: 450px; width: 24%;"
+      />
+
+      <div class="text">
+        <div class="titles">
+          <h1 class="subtitle">Website Design, SEO &amp; AI Development Agency.</h1>
+          <h2>Stop losing profit to a dead website.<br />Our sites <span>make your phone ring.</span></h2>
+        </div>
+
+        <a href="#contact" class="call-btn call-btn-red">
+          <div class="svg-frame">
+            <svg width="52" height="31" viewBox="0 0 52 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M29.1113 26.8955L19.1176 24.173C12.706 22.4157 5.86492 23.1808 0 26.3111L0.624193 27.4799C6.19054 24.5119 12.6818 23.7872 18.7656 25.4545L28.7594 28.1771C31.6202 28.9588 34.5723 29.3562 37.5379 29.3591C39.5288 29.3561 41.5154 29.1761 43.4744 28.8212V27.4931C38.703 28.3812 33.7924 28.1769 29.1113 26.8955Z" fill="#FFB000"/>
+              <path d="M42.8085 30.6892C44.2754 30.6892 45.4646 29.5 45.4646 28.0331C45.4646 26.5661 44.2754 25.377 42.8085 25.377C41.3415 25.377 40.1523 26.5661 40.1523 28.0331C40.1523 29.5 41.3415 30.6892 42.8085 30.6892Z" fill="white"/>
+              <path d="M51.0863 19.7124C44.2093 22.9068 36.4251 23.57 29.1067 21.585L19.113 18.8625C16.8834 18.2567 14.5839 17.9464 12.2734 17.9395C12.3566 18.3782 12.3566 18.8287 12.2734 19.2675C14.4763 19.2697 16.6691 19.5644 18.7943 20.1441L28.788 22.8666C31.6381 23.6453 34.5788 24.0428 37.5333 24.0486C42.4104 24.0495 47.2286 22.9843 51.6507 20.9276L51.0863 19.7124Z" fill="#FFB000"/>
+            </svg>
+          </div>
+          <p>Build A Winning Site</p>
+        </a>
+
+        <img src={`${IMG}/home/Partners.svg`} alt="Partners" class="banner-svg" loading="eager" decoding="async" />
+
+        <div class="pf-trust-left">
+          <h3>600+</h3>
+          <p>Businesses Trust Us</p>
+        </div>
+      </div>
+
+      <img src={`${IMG}/home/david-mobile.webp`} alt="Right statue" class="statue-mobile statue-right"
+        fetchpriority="high" loading="eager" decoding="async" width="275" height="338" />
+
+      <img src={`${IMG}/home/david.webp`} alt="Right statue" class="statue-desktop statue-right statue-hero"
+        loading="eager" decoding="async" width="650" height="800" />
+    </div>
+  </section>
+
+  <!-- ────────────────────────────── second ────────────────────────────── -->
+  <section class="second" id="grow">
+    <div class="second-container">
+      <div class="second-box upper">
+        <div class="video-container">
+          <img class="buttonPlay video-image" src={`${IMG}/alpha-new-home/video.webp`} alt="Alpha Efficiency Promo Video" loading="lazy" />
+        </div>
+        <div class="second-text">
+          <h2>Web Design With<br /> <span>SEO First Approach</span></h2>
+          <div class="line"></div>
+          <p>We lead with web development services that enable excellent rankings &amp; conversions to gain a profitable advantage for our business partners.</p>
+          <div class="section-circle-button">
+            <a href="/schedule-a-call">Grow Your Business <span></span></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="decor">
+        <svg width="1320" height="71" viewBox="0 0 1322 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M663.568 23.234C663.568 23.234 657.72 32.7458 653.314 30.9873C648.909 29.2288 653.749 20.4964 653.749 20.4964C653.749 20.4964 656.1 15.7605 659.676 15.6806C663.252 15.6006 663.568 23.234 663.568 23.234Z" fill="#2C73DB"/>
+          <path d="M647.309 24.5734L642.251 33.4258H652.09C652.09 33.4058 645.807 31.967 647.309 24.5734Z" fill="#ED462F"/>
+          <path d="M657.324 33.4254C657.324 33.4254 662.737 31.8468 665.424 28.11C665.424 28.11 665.72 32.5062 669.79 33.4054L657.324 33.4254Z" fill="#ED462F"/>
+          <path d="M671.234 18.5988L679.749 33.3261L671.807 33.406C671.807 33.406 673.447 33.0264 674.79 31.4677C674.79 31.4677 674.929 31.2679 674.573 31.3478C674.217 31.4277 670.681 32.1071 669.496 28.4903L668.014 23.8943L671.234 18.5988Z" fill="#ED462F"/>
+          <path d="M666.394 18.2789C666.394 18.2789 664.992 13.503 660.092 13.503C654.935 13.503 651.537 17.3996 651.537 17.3996L661.04 0.574219L668.706 14.3023L666.394 18.2789Z" fill="#2C73DB"/>
+          <path d="M1 21.7899L1321 21.79" stroke="url(#hp_line)" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="hp_line" x1="1" y1="22.7899" x2="1321" y2="22.79" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#1994FF" stop-opacity="0.5"/>
+              <stop offset="0.440197" stop-color="#1994FF" stop-opacity="0"/>
+              <stop offset="0.56176" stop-color="#1994FF" stop-opacity="0"/>
+              <stop offset="1" stop-color="#1994FF" stop-opacity="0.5"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      <div class="second-box lower">
+        <div class="second-text">
+          <h2><span>600 Websites</span> <br /> And Counting...</h2>
+          <div class="line"></div>
+          <p>We help forward-thinking companies perfect their online presence by empowering their web design and their search performance, communication, and software environment.</p>
+          <div class="section-circle-button">
+            <a href="/schedule-a-call">Get Inspired <span></span></a>
+          </div>
+        </div>
+        <div class="img-frame">
+          <img src={`${IMG}/home/brian2.webp`} width="637" height="358" alt="Mission" class="img-fluid" loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────── third ─────────────────────────────── -->
+  <section class="third" id="intelligence">
+    <div class="container-fluid">
+      <div class="intelligence">
+        <h2>Analytics &amp; Data Driven <br /> <span>Web Design Company</span></h2>
+        <div class="line"></div>
+        <p>Alpha Efficiency engages in research &amp; development of high-leverage design &amp; front-end code for business purposes. We serve as an independent resource of analysis, code, and business intelligence to ensure that our business partners get the best possible data and user experience to ensure sustainable growth.</p>
+        <div class="section-circle-button">
+          <a href="/about">About Us <span></span></a>
+        </div>
+      </div>
+      <div class="featured-on">
+        <div class="featured-box">
+          <div class="featured-header"><p>Featured On</p></div>
+          <div class="frame">
+            <div class="frame">
+              {featuredOn.map((f) => (
+                <p>
+                  <img src={`${IMG}/home/third-section-icons/analytics/${f.file}`} width={f.w} height={f.h} alt={f.alt} class="img-fluid" loading="lazy" />
+                </p>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────────── services ───────────────────────────── -->
+  <section class="homepage-services">
+    <div class="container-fluid">
+      <div class="titles">
+        <h2>Services</h2>
+        <h3><strong>Web Design</strong> Services</h3>
+        <svg width="60" height="1" viewBox="0 0 60 1" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="60" height="1" fill="#898989"/></svg>
+      </div>
+
+      <!-- The six cards are wider than the container, so they scroll. The
+           track is a separate element from .cards-container because the arrows
+           are absolutely positioned against the container and must not scroll
+           away with the cards. -->
+      <div class="cards-container">
+        <button class="arrow left" aria-label="Previous services" data-services-prev>
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="20" viewBox="0 0 12 20" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.82843 9.70711L11.1213 1.41421L9.70711 0L0 9.70711L9.70711 19.4142L11.1213 18L2.82843 9.70711Z" fill="#1994FF"/></svg>
+        </button>
+
+        <div class="cards-track" data-services-track>
+          {services.map((s) => (
+            <div class="service-card">
+              <img src={`${IMG}/home/services/${s.icon}`} alt="" class="service-icon" loading="lazy" />
+              <h4 set:html={s.title} />
+              <p>{s.copy}</p>
+              <a href={s.href} class="card-link">VIEW DETAILS</a>
+            </div>
+          ))}
+        </div>
+
+        <button class="arrow right" aria-label="Next services" data-services-next>
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="20" viewBox="0 0 12 20" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.82843 9.70711L11.1213 1.41421L9.70711 0L0 9.70711L9.70711 19.4142L11.1213 18L2.82843 9.70711Z" fill="#1994FF"/></svg>
+        </button>
+      </div>
+
+      <a href="/schedule-a-call" class="schedule-a-call-btn">
+        Schedule a Call
+        <img src={`${IMG}/home/services/call-icon.svg`} alt="" />
+      </a>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────── portfolio ───────────────────────────── -->
+  <section class="homepage-our-portfolio">
+    <div class="container-fluid">
+      <div class="titles">
+        <h2><strong>Our</strong> Portfolio</h2>
+        <svg width="88" height="1" viewBox="0 0 88 1" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="88" height="1" fill="#898989"/></svg>
+        <p>We craft unique digital experiences. Our projects are responsive, lightning-fast, and custom tailored to your brand.</p>
+      </div>
+
+      <div class="cards-container">
+        {portfolio.map((p) => (
+          <div class={`portfolio-cardNew ${p.extra}`.trim()}>
+            <div class="titles">
+              <h3>{p.name}</h3>
+              <h4>{p.kind}</h4>
+            </div>
+            <a href={p.url} target="_blank" rel="noopener noreferrer" class="card-link">VIEW LIVE</a>
+            <img src={`${IMG}/home/portfolio/${p.img}`} alt={p.name} class="portfolio-image" loading="lazy" />
+          </div>
+        ))}
+      </div>
+
+      <div class="section-circle-button">
+        <a href="/portfolio" style="text-decoration: none">See Our Portfolio<span></span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────── testimonials ─────────────────────────── -->
+  <section class="fifth" id="clients">
+    <div class="container-fluid">
+      <div class="header">
+        <h2><span>What Our Clients</span> Are Saying</h2>
+        <div class="line"></div>
+      </div>
+
+      <div id="fadeCarousel" class="carousel slide quotes carousel-fade">
+        <div class="carousel-inner">
+          {testimonials.map((t, i) => (
+            <div class={`carousel-item ${i === 0 ? 'active' : ''}`.trim()}>
+              <div class="info-wrap">
+                <div class="img-wrap">
+                  <img loading="lazy" src={`${IMG}/home/testimonials/${t.img}`} width="270" height="270" alt={t.name} class="img-fluid" />
+                </div>
+                <div class="client-logo">
+                  <img src={`${IMG}/home/testimonials/${t.logo}`} width="150" alt={`${t.name} company logo`} class="img-fluid" loading="lazy" />
+                </div>
+              </div>
+              <p class="quote-text">
+                <img src={`${IMG}/home/quote-reviews.svg`} alt="Quote" />
+                {t.quote}
+              </p>
+              <div class="thirth-col">
+                <div class="controls-desktop">
+                  <button class="carousel-control-prev" data-slide="prev" aria-label="Previous testimonial">
+                    <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="32" fill="#E8F5FF"/><path fill-rule="evenodd" clip-rule="evenodd" d="M28.8284 31.7071L37.1213 23.4142L35.7071 22L26 31.7071L35.7071 41.4142L37.1213 40L28.8284 31.7071Z" fill="#1994FF"/></svg>
+                  </button>
+                  <button class="carousel-control-next" data-slide="next" aria-label="Next testimonial">
+                    <svg width="65" height="64" viewBox="0 0 65 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0.5" width="64" height="64" rx="32" fill="#E8F5FF"/><path fill-rule="evenodd" clip-rule="evenodd" d="M34.7929 31.7071L26.5 40L27.9142 41.4142L37.6213 31.7071L27.9142 22L26.5 23.4142L34.7929 31.7071Z" fill="#1994FF"/></svg>
+                  </button>
+                </div>
+                <div class="client-name">
+                  <p class="name-quote">{t.name}</p>
+                  <p class="function-quote mb-4">{t.position}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style is:global>
+    /* The theme markup used <a role="button"> for the carousel arrows, so its
+       stylesheet never resets button chrome. Porting them to real <button>
+       elements — correct, since they are controls rather than links — meant the
+       browser's default background, 2px outset border and padding rendered as
+       grey squares around the circular SVGs.
+
+       Bootstrap also fades .carousel-control-* to opacity .5, which reads as
+       disabled. That is inherited from production, but these are the only way
+       to move the carousel, so they are shown at full strength here. The
+       theme's own hover (blue fill, white chevron) still applies. */
+    .fifth .carousel-control-prev,
+    .fifth .carousel-control-next {
+      appearance: none;
+      -webkit-appearance: none;
+      background: none;
+      border: 0;
+      padding: 0;
+      margin: 0;
+      opacity: 1;
+      line-height: 0;
+      cursor: pointer;
+    }
+
+    .fifth .carousel-control-prev svg,
+    .fifth .carousel-control-next svg {
+      display: block;
+      transition: transform 0.2s ease;
+    }
+
+    .fifth .carousel-control-prev:hover svg,
+    .fifth .carousel-control-next:hover svg {
+      transform: scale(1.06);
+    }
+
+    /* Keyboard users need a visible target; the default ring is clipped by the
+       circular artwork, so draw it on the button instead. */
+    .fifth .carousel-control-prev:focus-visible,
+    .fifth .carousel-control-next:focus-visible {
+      outline: 2px solid #1994ff;
+      outline-offset: 3px;
+      border-radius: 50%;
+    }
+
+    /* ── Services carousel ────────────────────────────────────────────────
+       Six 276px cards plus gaps come to ~1816px inside a 1176px container, so
+       the theme let them spill past the container on both sides — cards were
+       sliced by the viewport edge rather than aligned to the site grid. The
+       track now clips at the container and scrolls, so the row starts and ends
+       on the grid and the arrows reveal the rest. */
+    .homepage-services .cards-track {
+      display: flex;
+      gap: 32px;
+      overflow-x: auto;
+      /* No `scroll-behavior: smooth` here on purpose. Combined with mandatory
+         snapping it fought the programmatic scroll and snapped straight back to
+         0, so the arrows appeared dead. The JS passes behavior:'smooth' per
+         call, which snapping cooperates with. Proximity rather than mandatory
+         for the same reason — it tidies the resting position without
+         overriding where the scroll was asked to go. */
+      scroll-snap-type: x proximity;
+      /* Room for the cards' own drop shadows, which clip otherwise. */
+      padding: 12px 4px 24px;
+      scrollbar-width: none;
+    }
+    .homepage-services .cards-track::-webkit-scrollbar { display: none; }
+
+    .homepage-services .cards-track > .service-card {
+      flex: 0 0 auto;
+      scroll-snap-align: start;
+    }
+
+    /* The arrows sit outside the scrolling track so they stay put. */
+    .homepage-services .cards-container > .arrow {
+      z-index: 2;
+    }
+    .homepage-services .cards-container > .arrow[hidden] {
+      visibility: hidden;
+    }
+
+    /* ── Portfolio row ───────────────────────────────────────────────────
+       The cards are squares sized by a fixed `height: 424px` with
+       `aspect-ratio: 1/1`, so three of them plus two 24px gaps need 1320px in a
+       1176px container — the third wrapped onto its own line, which is what
+       made the section look cramped.
+
+       Letting them share the row (376px each here) and dropping the fixed
+       height lets the aspect ratio set it, so they stay square and land on one
+       baseline. Selectors match the theme's own specificity, which is why they
+       are this long. */
+    .page-template-template-home section.homepage-our-portfolio .container-fluid .cards-container {
+      flex-wrap: nowrap;
+      align-items: stretch;
+    }
+    .page-template-template-home section.homepage-our-portfolio .container-fluid .cards-container .portfolio-cardNew {
+      flex: 1 1 0;
+      min-width: 0;
+      height: auto;
+    }
+
+    /* Below the point where three squares stop being readable, go back to
+       wrapping rather than shrinking them further. */
+    @media (max-width: 900px) {
+      .page-template-template-home section.homepage-our-portfolio .container-fluid .cards-container {
+        flex-wrap: wrap;
+      }
+      .page-template-template-home section.homepage-our-portfolio .container-fluid .cards-container .portfolio-cardNew {
+        flex: 1 1 320px;
+        max-width: 424px;
+      }
+    }
+  </style>
+
+  <!-- ────────────────────── book strategy session ─────────────────────── -->
+  <section class="book-strategy-session">
+    <div class="container-fluid">
+      <img src={`${IMG}/book-strategy-session/coloured-dots.svg`} alt="" class="decorative-dots" loading="lazy" />
+      <h2>Book Your <strong>Strategy Session</strong></h2>
+      <p>See how we helped businesses transform underperforming websites into revenue drivers by aligning design, SEO, and marketing.</p>
+
+      <div class="cards-container">
+        {strategyCards.map((c) => (
+          <div class="card">
+            <div class="header">
+              <img src={`${IMG}/book-strategy-session/${c.icon}`} alt="" loading="lazy" />
+              <h3 set:html={c.heading} />
+            </div>
+            <div class="youtube-lazy-load" data-embed={c.embed}>
+              <img class="video-thumbnail" src={`${IMG}/book-strategy-session/${c.thumb}`} alt={c.thumbAlt} loading="lazy" />
+            </div>
+            <p set:html={c.quote} />
+          </div>
+        ))}
+      </div>
+
+      <!-- components.request-and-schedule.cta-buttons -->
+      <div class="cta-section">
+        <div class="cta-actions">
+          <a href="/contact" class="call-btn btn-left">
+            <div class="svg-frame">
+              <svg width="52" height="31" viewBox="0 0 52 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M29.1113 26.8955L19.1176 24.173C12.706 22.4157 5.86492 23.1808 0 26.3111L0.624193 27.4799C6.19054 24.5119 12.6818 23.7872 18.7656 25.4545L28.7594 28.1771C31.6202 28.9588 34.5723 29.3562 37.5379 29.3591C39.5288 29.3561 41.5154 29.1761 43.4744 28.8212V27.4931C38.703 28.3812 33.7924 28.1769 29.1113 26.8955Z" fill="#FFB000"/>
+                <path d="M42.8085 30.6892C44.2754 30.6892 45.4646 29.5 45.4646 28.0331C45.4646 26.5661 44.2754 25.377 42.8085 25.377C41.3415 25.377 40.1523 26.5661 40.1523 28.0331C40.1523 29.5 41.3415 30.6892 42.8085 30.6892Z" fill="white"/>
+                <path d="M51.0863 19.7124C44.2093 22.9068 36.4251 23.57 29.1067 21.585L19.113 18.8625C16.8834 18.2567 14.5839 17.9464 12.2734 17.9395C12.3566 18.3782 12.3566 18.8287 12.2734 19.2675C14.4763 19.2697 16.6691 19.5644 18.7943 20.1441L28.788 22.8666C31.6381 23.6453 34.5788 24.0428 37.5333 24.0486C42.4104 24.0495 47.2286 22.9843 51.6507 20.9276L51.0863 19.7124Z" fill="#FFB000"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M39.7822 0C41.951 0 43.6187 1.57689 43.6187 3.40456V6.36704L27.8602 16.9293C27.2619 17.3292 26.5704 17.565 25.8561 17.6153L25.5481 17.6255H25.5441C24.7213 17.6291 23.9149 17.3864 23.231 16.9293L7.45312 6.36602V3.40456C7.45312 1.57686 9.12004 0.000130758 11.2886 0H39.7822ZM11.3089 1.55594C10.8112 1.53997 10.3254 1.71784 9.95624 2.05493C9.58143 2.39722 9.35894 2.87452 9.33529 3.38017L9.33427 3.39237V5.60686L24.3855 15.722L24.3926 15.726C24.735 15.949 25.1356 16.0695 25.5461 16.0695C25.9563 16.0694 26.3571 15.949 26.6996 15.726L26.7067 15.722L41.7508 5.60686V3.3822C41.7402 3.13224 41.6799 2.88545 41.5739 2.65759C41.468 2.42988 41.3181 2.22603 41.1339 2.05697C40.9491 1.88746 40.7322 1.75559 40.4967 1.66976C40.3214 1.60594 40.1363 1.56726 39.9479 1.55695L39.9337 1.55594H11.3089Z" fill="white"/>
+              </svg>
+            </div>
+            <p>Request Your Proposal</p>
+          </a>
+
+          <a href="/schedule-a-call" class="call-btn btn-right">
+            <div class="svg-frame">
+              <svg width="47" height="31" viewBox="0 0 47 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.2593 4.21075V2.06765C17.2593 1.78345 17.1464 1.5109 16.9455 1.30994C16.7445 1.10899 16.472 0.996094 16.1878 0.996094C15.9036 0.996094 15.631 1.10899 15.4301 1.30994C15.2291 1.5109 15.1162 1.78345 15.1162 2.06765V4.21075H17.2593Z" fill="white"/>
+                <path d="M32.7964 4.21075V2.06765C32.7964 1.78345 32.6835 1.5109 32.4826 1.30994C32.2816 1.10899 32.0091 0.996094 31.7249 0.996094C31.4407 0.996094 31.1681 1.10899 30.9672 1.30994C30.7662 1.5109 30.6533 1.78345 30.6533 2.06765V4.21075H32.7964Z" fill="white"/>
+                <path d="M36.0117 23.6634C36.4886 23.7706 37.0511 23.8777 37.619 23.9742V14.1855C37.0726 14.3515 36.536 14.5483 36.0117 14.7749V23.6634Z" fill="white"/>
+                <path d="M35.5015 4.20904H32.7958C32.7958 4.49324 32.6829 4.76579 32.482 4.96675C32.281 5.1677 32.0085 5.2806 31.7243 5.2806C31.4401 5.2806 31.1675 5.1677 30.9666 4.96675C30.7656 4.76579 30.6527 4.49324 30.6527 4.20904H17.2583C17.2583 4.49324 17.1454 4.76579 16.9445 4.96675C16.7435 5.1677 16.471 5.2806 16.1868 5.2806C15.9026 5.2806 15.63 5.1677 15.4291 4.96675C15.2281 4.76579 15.1152 4.49324 15.1152 4.20904H11.9005C11.3322 4.20904 10.7871 4.43484 10.3851 4.83675C9.98323 5.23866 9.75744 5.78376 9.75744 6.35215V11.142C9.76008 11.1633 9.76008 11.1849 9.75744 11.2063L10.3307 11.3402C10.5665 11.3884 10.8022 11.4259 11.0326 11.4635C11.0426 11.4199 11.0551 11.377 11.0701 11.3349L11.413 10.1454L11.6166 9.56681H35.5604C35.5658 9.60232 35.5658 9.63844 35.5604 9.67396L34.6871 12.7815L34.3013 14.1745L31.8636 23.0523L31.5635 24.156L31.4189 24.6918C31.394 24.7754 31.3432 24.8489 31.2739 24.9018C31.2046 24.9548 31.1203 24.9844 31.0331 24.9864H7.45896C7.39651 24.9869 7.33484 24.9725 7.27897 24.9446C7.22311 24.9167 7.17463 24.8759 7.1375 24.8257C7.09961 24.775 7.07408 24.7161 7.06292 24.6538C7.05176 24.5915 7.05528 24.5275 7.07321 24.4667L9.75209 15.6264L10.2879 13.9548C10.1218 13.9173 9.95032 13.8852 9.75209 13.8584C9.47943 13.8051 9.20395 13.7676 8.92699 13.7459L5.80342 24.0649C5.6781 24.5032 5.72967 24.9732 5.94705 25.3739C6.16443 25.7746 6.53029 26.0741 6.96605 26.208C7.12941 26.2573 7.29906 26.2825 7.46968 26.283H31.0438C31.4247 26.2816 31.7948 26.1558 32.0975 25.9246C32.4003 25.6934 32.6192 25.3696 32.7208 25.0025L32.769 24.8257L33.0583 23.7542L35.4747 15.0585L35.9301 13.4137L36.0533 12.9476L36.2087 12.4118L36.2837 12.1439C36.7338 11.9832 37.1945 11.8331 37.6607 11.6938V6.35215C37.6607 6.06935 37.6047 5.78936 37.496 5.52829C37.3873 5.26722 37.228 5.03025 37.0273 4.83103C36.8266 4.63182 36.5884 4.47429 36.3266 4.36754C36.0647 4.26079 35.7843 4.20692 35.5015 4.20904Z" fill="white"/>
+                <path d="M17.7455 26.3132C15.7665 27.4563 13.6094 28.2586 11.3645 28.6867C10.8287 28.7867 10.2929 28.8671 9.75713 28.9278C9.11955 28.9974 8.47662 29.0457 7.82833 29.0564L4.33507 29.1153C4.15699 29.6054 3.80637 30.0137 3.34887 30.2638C2.89137 30.5139 2.35838 30.5886 1.84973 30.474C1.34108 30.3594 0.891664 30.0633 0.585654 29.6411C0.279644 29.219 0.138033 28.6997 0.187344 28.1807C0.236656 27.6616 0.473507 27.1783 0.853536 26.8213C1.23356 26.4643 1.7307 26.2581 2.25183 26.2413C2.77297 26.2246 3.28235 26.3983 3.68457 26.7301C4.08678 27.0619 4.35425 27.5289 4.43687 28.0437L7.81226 27.9902C8.45519 27.9902 9.10348 27.9259 9.74641 27.8455C10.2822 27.7866 10.818 27.6955 11.3537 27.5883C12.7304 27.3134 14.0726 26.8875 15.356 26.3185L17.7455 26.3132Z" fill="#FFB000"/>
+                <path d="M46.4147 11.8672C46.4268 12.4356 46.2126 12.9855 45.8192 13.3959C45.4259 13.8064 44.8855 14.0437 44.3172 14.0558C43.7488 14.0679 43.1989 13.8537 42.7884 13.4603C42.378 13.067 42.1406 12.5266 42.1285 11.9583C41.3326 12.0068 40.5412 12.1124 39.7604 12.2744C39.0371 12.419 38.3191 12.5958 37.6173 12.8101C37.0601 12.9744 36.5243 13.162 36.0099 13.3727L35.8867 13.4209L36.0099 12.9548L36.1653 12.419L36.2403 12.1511C36.6904 11.9904 37.1512 11.8404 37.6173 11.7011C39.1459 11.2453 40.7231 10.9719 42.316 10.8867C42.5256 10.4392 42.8833 10.0779 43.3286 9.86382C43.774 9.64979 44.2796 9.59624 44.76 9.71222C45.2403 9.8282 45.6658 10.1066 45.9644 10.5003C46.263 10.894 46.4164 11.3787 46.3986 11.8725L46.4147 11.8672Z" fill="#FFB000"/>
+                <path d="M20.6449 15.9011C18.4101 13.9907 15.7874 12.588 12.9579 11.7897C10.1283 10.9915 7.15921 10.8167 4.25551 11.2774C4.04406 10.7919 3.66276 10.4002 3.18313 10.1757C2.70349 9.9513 2.15845 9.90953 1.65022 10.0583C1.14199 10.207 0.705466 10.536 0.42251 10.9836C0.139554 11.4313 0.0295989 11.9667 0.113263 12.4896C0.196927 13.0125 0.468463 13.4869 0.876955 13.8239C1.28545 14.1609 1.80284 14.3373 2.33211 14.32C2.86137 14.3028 3.36617 14.093 3.75183 13.7302C4.1375 13.3673 4.37754 12.8762 4.42695 12.3489C7.18087 11.9088 9.99762 12.0744 12.681 12.834C15.3644 13.5937 17.8499 14.9293 19.9645 16.7476C20.0609 16.8275 20.1822 16.8711 20.3074 16.8709C20.4177 16.8711 20.5254 16.8372 20.6157 16.774C20.7061 16.7107 20.7747 16.621 20.8123 16.5173C20.8498 16.4135 20.8543 16.3007 20.8253 16.1943C20.7964 16.0878 20.7352 15.9929 20.6503 15.9226L20.6449 15.9011Z" fill="#FFB000"/>
+              </svg>
+            </div>
+            <p>Schedule a call</p>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────────── our clients ───────────────────────────── -->
+  <section class="our-clients" id="banners-clients">
+    <div class="clients-header">
+      <h2>Our <strong>Clients</strong></h2>
+      <svg width="88" height="1" viewBox="0 0 88 1" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="88" height="1" fill="#898989"/></svg>
+      <p class="partner">Get a reliable partner that can bring new ideas to the table, with no excuses.</p>
+    </div>
+    <div class="clients-frame">
+      {clientLogos.map((f) => (
+        <div class="client"><img src={`${IMG}/home/clients/desktop/${f}`} alt="Client logo" loading="lazy" /></div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ───────────────────────────── faqs ───────────────────────────────── -->
+  <section class="homepage-faqs">
+    <div class="container-fluid">
+      <div class="faqs-header">
+        <h2><strong>Common</strong> Questions</h2>
+        <svg width="88" height="1" viewBox="0 0 88 1" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="88" height="1" fill="#898989"/></svg>
+      </div>
+
+      <ul class="faqs-container">
+        {faqs.map((f, i) => (
+          <li class="faq">
+            <div class="question">
+              <h3>{f.q}</h3>
+              <button class="toggle-answer-btn" aria-expanded="false" aria-controls={`faq-answer-${i + 1}`} aria-label={`Toggle answer for: ${f.q}`}>
+                <svg class="minus" xmlns="http://www.w3.org/2000/svg" width="20" height="3" viewBox="0 0 20 3" fill="none"><path d="M18.75 1.25H1.25" stroke="#1994FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <svg class="plus" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.96095 18.75L9.98389 1.25" stroke="#1994FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.75 9.99951H1.25" stroke="#1994FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+            <div class="answer" id={`faq-answer-${i + 1}`}>
+              <p set:html={f.a} />
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────── seventh ─────────────────────────────── -->
+  <section class="seventh">
+    <div class="seventh-frame">
+      <div class="delivers">
+        <div class="info-content">
+          <div class="delivers-title">
+            <h2><span>Proven Process. </span> <br /> Friction-Free UX.</h2>
+          </div>
+          <div class="delivers-txt">
+            <p>Alpha Efficiency takes a <strong>process-driven approach</strong> to find solutions to the complex challenges businesses face when navigating the future. Our senior-level experts work in <strong>cross-functional teams of strategists</strong>, designers and developers to deliver fresh thinking on everything from apps to automation.</p>
+          </div>
+          <div class="contact-arrow section-circle-button" id="contactmobile">
+            <a href="/contact">Contact Us <span></span></a>
+          </div>
+        </div>
+        <img src={`${IMG}/home/banner4.svg`} alt="Partners" loading="lazy" />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // The theme drove these with Bootstrap 4 + jQuery. Reimplemented in vanilla
+  // JS so the homepage does not need jQuery, Popper and bootstrap.js (~120KB)
+  // for two interactions.
+
+  // Testimonial carousel — mirrors .carousel-fade's active-item swap.
+  const carousel = document.getElementById('fadeCarousel');
+  if (carousel) {
+    const items = [...carousel.querySelectorAll<HTMLElement>('.carousel-item')];
+    let current = 0;
+    const show = (next: number) => {
+      items[current]?.classList.remove('active');
+      current = (next + items.length) % items.length;
+      items[current]?.classList.add('active');
+    };
+    carousel.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-slide]');
+      if (!btn) return;
+      show(current + (btn.dataset.slide === 'next' ? 1 : -1));
+    });
+  }
+
+  // Services carousel. The theme shipped these arrows as decoration — they had
+  // no behaviour at all, so the cards that spilled past the container were
+  // simply unreachable.
+  const track = document.querySelector<HTMLElement>('[data-services-track]');
+  const prev = document.querySelector<HTMLButtonElement>('[data-services-prev]');
+  const next = document.querySelector<HTMLButtonElement>('[data-services-next]');
+
+  if (track && prev && next) {
+    const step = () => {
+      const card = track.querySelector<HTMLElement>('.service-card');
+      if (!card) return track.clientWidth;
+      const gap = parseFloat(getComputedStyle(track).gap) || 0;
+      return card.getBoundingClientRect().width + gap;
+    };
+
+    const sync = () => {
+      // 2px tolerance: fractional scroll offsets never land exactly on the end.
+      const atStart = track.scrollLeft <= 2;
+      const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
+      prev.toggleAttribute('hidden', atStart);
+      next.toggleAttribute('hidden', atEnd);
+    };
+
+    prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+    next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+    track.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync);
+    sync();
+  }
+
+  // FAQ accordion.
+  //
+  // The class here has to be `is-active`: the theme reveals answers with
+  // `.faq.is-active .answer { display: flex }` and they are `display: none`
+  // otherwise. Toggling any other name leaves every answer hidden with no
+  // error — the questions look right and simply never open.
+  document.querySelectorAll<HTMLButtonElement>('.toggle-answer-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const faq = btn.closest('.faq');
+      const open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      faq?.classList.toggle('is-active', !open);
+    });
+  });
+
+  // Click-to-load YouTube: keeps the thumbnail until the user opts in, so the
+  // homepage never ships a third-party iframe on first paint.
+  document.querySelectorAll<HTMLElement>('.youtube-lazy-load').forEach((box) => {
+    box.addEventListener('click', () => {
+      const id = box.dataset.embed;
+      if (!id) return;
+      const frame = document.createElement('iframe');
+      frame.width = '100%';
+      frame.height = '100%';
+      frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture';
+      frame.allowFullscreen = true;
+      frame.title = 'YouTube video player';
+      frame.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1`;
+      box.replaceChildren(frame);
+    });
+  });
+</script>

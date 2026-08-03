@@ -1,0 +1,70 @@
+---
+// Ported from alpha-efficiency-2024
+// partials/about/about-single/{hero-about-single,content-about-single}.
+import type { Person } from '../data/team';
+
+const { person } = Astro.props as { person: Person };
+
+const ICONS = {
+  instagram:
+    '<svg width="21" height="21" class="insta-logo" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.631 20.1946H5.62966C2.57285 20.1946 0.0859375 17.7075 0.0859375 14.6507V5.64942C0.0859375 2.59249 2.57285 0.105581 5.62966 0.105581H14.631C17.688 0.105581 20.1749 2.59261 20.1749 5.64942V14.6507C20.1751 17.7075 17.688 20.1946 14.631 20.1946ZM18.3927 5.64942C18.3927 3.57531 16.7052 1.88797 14.6311 1.88797H5.62966C3.55566 1.88786 1.86833 3.57531 1.86833 5.64942V14.6507C1.86833 16.7247 3.55566 18.4122 5.62966 18.4122H14.631C16.7051 18.4122 18.3925 16.7247 18.3925 14.6507V5.64942H18.3927Z" fill="#9D9BA3"/><path d="M15.5258 16.8379C15.1824 16.8379 14.8451 16.6989 14.6026 16.4553C14.3588 16.2129 14.2188 15.8754 14.2188 15.5308C14.2188 15.1873 14.359 14.8499 14.6026 14.6063C14.845 14.3639 15.1824 14.2237 15.5258 14.2237C15.8704 14.2237 16.2067 14.3639 16.4503 14.6063C16.6939 14.8499 16.8329 15.1874 16.8329 15.5308C16.8329 15.8754 16.6939 16.2129 16.4503 16.4553C16.2079 16.6989 15.8704 16.8379 15.5258 16.8379Z" fill="#9D9BA3"/><path d="M10.1296 15.3259C7.27523 15.3259 4.95312 13.0038 4.95312 10.1495C4.95312 7.29529 7.27523 4.97331 10.1296 4.97331C12.9839 4.97331 15.306 7.29529 15.306 10.1495C15.306 13.0038 12.9839 15.3259 10.1296 15.3259ZM10.1296 6.75582C8.25816 6.75582 6.73552 8.27822 6.73552 10.1496C6.73552 12.0211 8.25804 13.5437 10.1296 13.5437C12.0011 13.5437 13.5236 12.0211 13.5236 10.1496C13.5236 8.27822 12.0009 6.75582 10.1296 6.75582Z" fill="#9D9BA3"/></svg>',
+  linkedin:
+    '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.72631 19.1894H0.765156V6.43364H4.72631V19.1894ZM2.74334 4.69366C1.47687 4.69366 0.449219 3.64421 0.449219 2.37778C0.449219 1.76936 0.690921 1.18587 1.12115 0.75565C1.55138 0.325433 2.1349 0.0837402 2.74334 0.0837402C3.35178 0.0837402 3.9353 0.325433 4.36553 0.75565C4.79577 1.18587 5.03747 1.76936 5.03747 2.37778C5.03747 3.64421 4.00982 4.69366 2.74334 4.69366ZM19.5515 19.1894H15.5992V12.9801C15.5992 11.5 15.5691 9.60245 13.5398 9.60245C11.4804 9.60245 11.1645 11.21 11.1645 12.8736V19.1894H7.2074V6.43364H11.0061V8.17362H11.0614C11.5903 7.17125 12.882 6.11362 14.809 6.11362C18.8179 6.11362 19.5549 8.75361 19.5549 12.1824V19.1894H19.5515Z" fill="#9D9BA3"/></svg>',
+} as const;
+
+const hasHobbies = person.hobbies.length >= 2;
+---
+
+<div class="hero-content">
+  <div class="info-content">
+    <div class="txt">
+      <div class="img-wrapper">
+        <div class="img" style={person.image ? `background-image:url('${person.image}')` : undefined}></div>
+      </div>
+
+      <h1>{person.name}</h1>
+      {person.role && <h2>{person.role}</h2>}
+      <div class="line"></div>
+
+      {person.bio ? <p>{person.bio}</p> : <p><em>Profile content pending.</em></p>}
+
+      {person.socials.length > 0 && (
+        <div class="svg">
+          {person.socials.map((s) => (
+            <a href={s.href} target="_blank" rel="noopener noreferrer">
+              <div class="insta" set:html={ICONS[s.kind]} />
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+</div>
+
+{hasHobbies && (
+  <div class="wrepper">
+    <div class="wrap-box">
+      <div class="product">
+        <div class="product-content">
+          <div class="title">
+            <div class="box">
+              <h2 style="font-size: 40px; border-bottom: 1px solid #898989; padding-bottom: 7px;">Improved</h2>
+              <div class="line"></div>
+            </div>
+          </div>
+          <p>{person.hobbies[0]}</p>
+        </div>
+        <div class="product-content">
+          <div class="title">
+            <h2 style="font-size: 40px; border-bottom: 1px solid #898989; padding-bottom: 7px;">Passionate</h2>
+            <div class="line"></div>
+          </div>
+          <p>{person.hobbies[1]}</p>
+        </div>
+      </div>
+      <div class="project">
+        <img src="/assets/images/about/projects.svg" alt="Projects" class="img-fluid" />
+      </div>
+    </div>
+  </div>
+)}

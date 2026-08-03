@@ -1,0 +1,100 @@
+---
+import Base from '../layouts/Base.astro';
+import { jobs } from '../data/jobs';
+
+// Ported from alpha-efficiency-2024 template-hiring.blade.php ->
+// partials.hiring.{header,offer,benefits,careers}.
+//
+// /hiring and /careers are near-duplicates of each other in the source theme —
+// same "What We Offer", same four benefits, same four role cards, different
+// markup and different stylesheets. Both are reproduced as published; worth
+// deciding later whether the site needs both.
+
+const IMG = '/assets/images';
+
+const benefits = [
+  { file: '1.png', label: 'Remote Work Available', small: false },
+  { file: '2.png', label: 'Opportunity For growth', small: false },
+  { file: '3.png', label: 'Work Life Balance', small: true },
+  { file: '4.png', label: 'Flexible Working Hours', small: false },
+];
+
+// The Blade listed "Graphic Artist" here where /careers says "Web Design", and
+// neither page linked these cards anywhere. Labels kept as published; the
+// links point at the matching job pages so the cards are actually useful.
+const roleCards = [
+  { slug: 'designer', label: 'Graphic Artist' },
+  { slug: 'content-writer', label: 'Content Writer' },
+  { slug: 'digital-marketer', label: 'Marketing Specialist' },
+  { slug: 'developer', label: 'Web Developer' },
+];
+
+const iconFor = (slug: string) => jobs.find((j) => j.slug === slug)?.icon ?? '';
+---
+
+<Base
+  title="We're Hiring — Alpha Efficiency"
+  description="Alpha Efficiency holds roots in productivity, technology and creativity. See what we offer, our benefits, and the roles we are hiring for."
+  path="/hiring"
+  image={`${IMG}/hiring/main.png`}
+  type="website"
+  fullBleed={true}
+  bodyClass="page-template page-template-template-hiring template-hiring page hiring"
+>
+  <section class="about-header">
+    <h2>We're Hiring</h2>
+  </section>
+
+  <section class="offer">
+    <div class="offer-frame">
+      <div class="offer-text">
+        <h2>What We Offer</h2>
+        <div class="line"></div>
+        <p class="first"><strong>Alpha Efficiency</strong> holds roots in productivity, technology and creativity.</p>
+        <p>We started off as a Magazine dedicated to challenging cliche status quo in Productivity, but we transcended into challenging status quo in communication, marketing and technology.</p>
+        <a href="/about">
+          See More About Us
+          <svg width="50" height="1" viewBox="0 0 50 1" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0.363281" width="49.5085" height="1" fill="#007BE7"/>
+          </svg>
+        </a>
+      </div>
+      <div class="offer-img">
+        <img src={`${IMG}/hiring/main.png`} alt="Cover Photo" class="img-fluid" />
+      </div>
+    </div>
+  </section>
+
+  <section class="benefits">
+    <div class="title-wrap">
+      <h2 class="title">Benefits</h2>
+      <div class="line-t"></div>
+    </div>
+    <div class="benefits-wrap">
+      {benefits.map((b) => (
+        <div class="benefit">
+          <img src={`${IMG}/hiring/${b.file}`} alt="Benefit" class="img-fluid" loading="lazy" />
+          <div class="text-box">
+            <p class={b.small ? 'text-box-sm' : undefined}>{b.label}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="careers">
+    <div class="title-wrap">
+      <h2 class="title">Careers</h2>
+      <div class="line-t"></div>
+    </div>
+    <div class="career-frame">
+      {roleCards.map((r) => (
+        <a class="career" href={`/${r.slug}`}>
+          <Fragment set:html={iconFor(r.slug)} />
+          <p class="job">{r.label}</p>
+          <div class="line"></div>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,16 @@
+node_modules/
+site/node_modules/
+site/dist/
+site/.astro/
+site/.wrangler/
+.dev.vars
+.env
+.DS_Store
+
+# Raw API dumps are large and regenerable via scripts/extract-wp.mjs.
+# The derived seed is committed so a clean checkout can populate D1.
+data/raw/
+site/public/_headers
+
+# Per-machine Claude Code permissions, not shared config.
+.claude/settings.local.json

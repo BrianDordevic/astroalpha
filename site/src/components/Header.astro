@@ -1,0 +1,157 @@
+---
+// Ported from alpha-efficiency-2024 resources/views/partials/header.blade.php.
+// Markup and class names are kept byte-identical where possible so the
+// compiled Sage stylesheet applies without modification — renaming anything
+// here silently unstyles the header.
+//
+// `@asset('images/x')` in Blade resolves to the theme's dist folder; here the
+// same files are copied to /assets/images/ by scripts/build-theme.mjs.
+const nav = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  {
+    label: 'Services',
+    children: [
+      { href: '/web-design-agency-chicago', label: 'Web Design' },
+      { href: '/seo-agency-chicago', label: 'SEO' },
+      { href: '/web-development-agency-chicago', label: 'Web Development' },
+      { href: '/ppc-agency-chicago', label: 'PPC' },
+      { href: '/wordpress-maintenance-chicago', label: 'WordPress Maintenance' },
+      { href: '/other-services', label: 'Other Services' },
+    ],
+  },
+  { href: '/blog', label: 'Blog' },
+  { href: '/portfolio', label: 'Portfolio' },
+  { href: '/careers', label: 'Careers' },
+  { href: '/contact', label: 'Contact' },
+];
+
+const { path } = Astro.props as { path: string };
+const isActive = (href: string) => href === path;
+---
+
+<header class="banner">
+  <div class="container-fluid">
+    <div class="menu-holder">
+      <nav class="nav-primary">
+        <div class="regular-menu">
+          <ul class="reg-menu-list">
+            {nav.map((item) =>
+              item.children ? (
+                <li class="dd">
+                  <a href="#">{item.label}</a>
+                  <ul>
+                    {item.children.map((c) => (
+                      <li><a href={c.href} class={isActive(c.href) ? 'active' : undefined}>{c.label}</a></li>
+                    ))}
+                  </ul>
+                </li>
+              ) : (
+                <li>
+                  <a href={item.href} class={isActive(item.href!) ? 'active' : undefined}>{item.label}</a>
+                </li>
+              )
+            )}
+          </ul>
+        </div>
+      </nav>
+      <div class="logo">
+        <div class="logo-img">
+          <a href="/"><img src="/assets/images/logo-desktop.svg" alt="Logo" loading="eager" /></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<header class="for-phone">
+  <div class="container-fluid">
+    <div class="headphone">
+      <a href="tel:13123006746" aria-label="Phone">
+        <svg width="35" height="45" viewBox="0 0 35 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M21.2029 35.3858C25.1972 37.5296 29.8585 38.0705 34.2373 36.8965L33.9456 35.8087C29.8439 36.9084 25.4774 36.4017 21.7355 34.3935L15.5505 31.074C10.8095 28.5295 5.3208 27.7456 0.0570902 28.8612L0.290603 29.963C5.29403 28.9025 10.5113 29.6477 15.0179 32.0663L21.2029 35.3858Z" fill="#FFB000"></path>
+          <circle cx="16.6314" cy="32.3456" r="1.84053" transform="rotate(-30 16.6314 32.3456)" fill="#1994FF"></circle>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M13.3606 12.8681C14.1317 12.2593 14.8814 11.574 15.6312 10.8886C16.6575 9.96788 16.6987 8.88998 15.7977 7.80805C15.5418 7.5044 15.2713 7.22503 15.0008 6.94566C14.7303 6.66629 14.4598 6.38693 14.2039 6.08328C13.9081 5.78989 13.6322 5.49137 13.3563 5.19284C13.0805 4.89433 12.8046 4.59581 12.5088 4.30242C11.5708 3.39422 10.4261 3.27805 9.39982 4.19872C8.65008 4.88409 7.90033 5.56947 7.1292 6.17824C6.43789 6.76649 6.05023 7.52297 5.86499 8.39159C5.66983 9.83747 5.97501 11.2368 6.43984 12.5951C7.39089 15.3882 8.87933 17.9611 10.7455 20.3547C13.2675 23.565 16.3795 26.1309 19.9805 27.9964C21.5999 28.8936 23.3148 29.5199 25.2635 29.7578C26.5892 29.9095 27.7067 29.6222 28.6532 28.722C28.9881 28.3896 29.3338 28.0955 29.6795 27.8013C30.0251 27.5072 30.3708 27.2131 30.7057 26.8807C31.732 25.96 31.7518 24.8055 30.8936 23.8768C29.7902 22.6827 28.6867 21.4886 27.6047 20.3711C26.6667 19.4629 25.522 19.3468 24.4957 20.2674C24.1208 20.6101 23.7406 20.9337 23.3604 21.2572C22.9802 21.5807 22.6 21.9043 22.2251 22.247C22.007 22.3851 21.8474 22.4262 21.6235 22.2374C21.3427 22.0392 21.0365 21.8831 20.7154 21.7194C20.5493 21.6347 20.3792 21.548 20.2065 21.4524C18.1979 20.0806 16.5242 18.3763 15.0473 16.4573C14.3487 15.4875 13.6501 14.5177 13.2495 13.3893C13.1853 13.1595 13.2223 12.9857 13.3606 12.8681Z" fill="#1994FF"></path>
+        </svg>
+      </a>
+    </div>
+
+    <div class="burger-menu burger-regular" id="menu-bars" data-clicked="0"></div>
+
+    <div class="burger-menu-content">
+      <nav class="nav-primary" id="nav-phone">
+        <div class="regular-menu">
+          <ul class="reg-menu-list">
+            {nav.map((item) =>
+              item.children ? (
+                <li class="dd menu-item">
+                  <a href="#">{item.label}</a>
+                  <ul>
+                    {item.children.map((c) => (
+                      <li><a href={c.href}>{c.label}</a></li>
+                    ))}
+                  </ul>
+                </li>
+              ) : (
+                <li class="menu-item"><a href={item.href}>{item.label}</a></li>
+              )
+            )}
+          </ul>
+        </div>
+      </nav>
+
+      <p><b>Chicago</b><br />875 N Michigan Ave Chicago,<br />IL, 60611</p>
+
+      <img class="decorative-burger-menu" src="/assets/images/home/explore-line.svg" alt="Decorative" loading="eager" />
+    </div>
+
+    <div class="logo">
+      <div class="logo-img-phone">
+        <a href="/"><img width="50" height="43" src="/assets/images/logo-mobile.svg" alt="Logo mobile" loading="eager" /></a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Vanilla port of routes/common.js. The original depended on jQuery for the
+  // html overflow lock and the mobile dropdown slide; neither is worth pulling
+  // a 90KB dependency back in for.
+  const bars = document.getElementById('menu-bars');
+  const panel = document.querySelector<HTMLElement>('.burger-menu-content');
+
+  if (bars && panel) {
+    bars.addEventListener('click', () => {
+      const isOpen = bars.classList.contains('burger-x');
+      bars.classList.toggle('burger-x', !isOpen);
+      bars.classList.toggle('burger-regular', isOpen);
+
+      panel.style.transform = isOpen ? 'scale(1,0)' : 'scale(1,1)';
+      panel.style.height = isOpen ? '' : '100vh';
+      panel.style.position = isOpen ? '' : 'fixed';
+      panel.style.width = isOpen ? '' : '100%';
+      bars.style.position = 'relative';
+      bars.style.zIndex = isOpen ? '' : '9999';
+
+      document.documentElement.style.overflow = isOpen ? 'auto' : 'hidden';
+
+      document.querySelectorAll<HTMLElement>('#nav-phone .menu-item').forEach((el) => {
+        el.style.opacity = isOpen ? '0' : '1';
+      });
+    });
+  }
+
+  // Desktop dropdown parents are toggles, not links.
+  document.querySelectorAll('header .reg-menu-list .dd > a').forEach((a) => {
+    a.addEventListener('click', (e) => e.preventDefault());
+  });
+
+  // Mobile dropdown: replaces jQuery slideToggle with a class flip.
+  document.querySelectorAll('#nav-phone .dd > a').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const sub = a.nextElementSibling as HTMLElement | null;
+      if (sub) sub.style.display = sub.style.display === 'block' ? '' : 'block';
+    });
+  });
+</script>

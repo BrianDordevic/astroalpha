@@ -1,0 +1,161 @@
+---
+// Ported from alpha-efficiency-2024 template-locations-single.blade.php ->
+// partials.locations.single.{header,subheader,article,third-section,form}.
+//
+// All 402 location pages run on this one template. Their body text lives in
+// D1, but the surrounding structure — header, form, sidebar, CTA sections —
+// came from the theme, so serving the stored HTML alone renders a third of the
+// site as bare paragraphs with none of its ~885 lines of template styling
+// applying.
+import ProjectForm from './ProjectForm.astro';
+import type { Page } from '../lib/db';
+
+const { page } = Astro.props as { page: Page };
+const IMG = '/assets/images';
+
+/**
+ * The Blade template split the content on `</p>` and wrapped each paragraph in
+ * `.section-N`, then tagged headings with `.content-subtitle` and appended a
+ * `.title-line` span. The location stylesheet keys off all three, so the
+ * structure has to be reproduced rather than the raw HTML emitted.
+ */
+function sectionise(html: string | null): string[] {
+  if (!html) return [];
+  return html
+    .split('</p>')
+    .map((chunk) => chunk.trim())
+    .filter(Boolean)
+    .map((chunk) =>
+      chunk.replace(
+        /<(h[1-6])>(.*?)<\/\1>/g,
+        (_, tag, inner) => `<${tag} class="content-subtitle">${inner}</${tag}><span class="title-line"></span>`
+      ) + '</p>'
+    );
+}
+
+const sections = sectionise(page.body_html);
+
+const asideCards = [
+  { href: 'https://get.alphaefficiency.com/local-seo', icon: 'seo.svg', alt: 'Seo image', heading: 'Local SEO', copy: 'Win conversion-ready local traffic.' },
+  { href: 'https://get.alphaefficiency.com/custom-web-design', icon: 'conversion-hub.svg', alt: 'Conversion hub', heading: 'Custom Built Websites', copy: 'Extreme speed for 1st page rankings.' },
+  { href: 'https://get.alphaefficiency.com/ux-consulting', icon: 'discovery.svg', alt: 'Discovery Session', heading: 'UX & Project Discovery', copy: 'Gain clarity & remove costly mistakes.' },
+  { href: 'https://get.alphaefficiency.com/conversion-rate-optimization', icon: 'rate-optimization.svg', alt: 'Conversion Rate', heading: 'Conversion Rate Optimization', copy: 'Turn more visitors into customers.' },
+];
+---
+
+<section class="locations-header">
+  <div class="container">
+    <p>Want to start your creative project today?</p>
+    <h1 class="title" set:html={page.title} />
+  </div>
+</section>
+
+<section class="location-subheader">
+  <div class="container">
+    <div class="form-wrapper">
+      <ProjectForm title="Have A Project</br> To Complete?" />
+    </div>
+    <div class="images-section">
+      <div class="featured-image-wrap">
+        <div class="img-cont">
+          <img
+            class="img-fluid"
+            src={page.hero_image ?? `${IMG}/blog/post-image-holder-min.png`}
+            alt="Location Image"
+            loading="lazy"
+          />
+        </div>
+      </div>
+      <div class="personalInfo">
+        <img src={`${IMG}/locations/brian.webp`} alt="Brian Decoded" loading="lazy" />
+        <div class="containerPersonal">
+          <p class="personalP">
+            Since 2010, we’ve built <span class="strongP">500+ websites</span> and boosted their
+            <span class="strongP">SEO</span> for better organic search results and more sales.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="location-content">
+  <div class="container" style="padding-top: 20px;">
+    <article class="location">
+      <div class="content-wrapper">
+        {sections.map((s, i) => <div class={`section-${i + 1}`} set:html={s} />)}
+      </div>
+    </article>
+
+    <aside class="right" style="padding-top: 20px;">
+      <div class="right-container">
+        <h3 class="aside-heading">Be The #1 Choice On Search Engines</h3>
+        <p class="aside-sub-heading">
+          Not seeing the profits you expected online? With over 15 years of experience and 500+
+          projects, Alpha Efficiency can help you attract and convert.
+        </p>
+
+        <div class="aside-card-holder">
+          {asideCards.map((c) => (
+            <a class="aside-single-card" href={c.href} target="_blank" rel="noopener noreferrer">
+              <img src={`${IMG}/blog/single/products/${c.icon}`} alt={c.alt} loading="lazy" />
+              <div class="card-text">
+                <h5 class="card-heading">{c.heading}</h5>
+                <p class="card-content">{c.copy}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="third-section">
+  <div class="container">
+    <div class="btn-wrapper">
+      <a class="schedule-button" href="tel:+13123006746">Call Us</a>
+    </div>
+    <div class="video-section">
+      <div class="video-container">
+        <img
+          class="buttonPlay video-image"
+          src={`${IMG}/alpha-new-home/video.png`}
+          alt="Alpha Efficiency Promo Video"
+          data-no-image-dimensions
+          loading="lazy"
+        />
+      </div>
+      <div class="ul-wrapper">
+        <ul>
+          <li>Google Compliant</li>
+          <li>ADA Compliant</li>
+          <li>Increase Sales</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="form-location" id="contact">
+  <div class="web-design-form-holder customContainer">
+    <div class="delivers">
+      <div class="aside-title">
+        <h2>Want to start your <span>creative project today?</span></h2>
+      </div>
+      <div class="aside-text">
+        <p>
+          At Alpha Site, we are committed to providing top-notch digital services that help our
+          clients succeed. Contact us today to learn more about how we can help your business grow.
+          <br /><br />Fill out this form, and let’s discuss your next steps.
+        </p>
+      </div>
+      <div class="partners">
+        <img src={`${IMG}/shared/partners.svg`} alt="Partners" loading="lazy" />
+      </div>
+    </div>
+    <div class="about-form">
+      <ProjectForm title="Have A Project</br> To Complete?" />
+    </div>
+  </div>
+</section>

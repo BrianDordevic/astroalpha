@@ -1,0 +1,145 @@
+---
+// Ported from alpha-efficiency-2024 partials/careers/careers-single/*:
+// hero, requirements, career-single-grow, career-single-form.
+import type { Job } from '../data/jobs';
+
+const { job } = Astro.props as { job: Job };
+
+// The Blade built this as `roleDetail . $page . 's'`, so the spacing quirks in
+// roleDetail are intentional — see the note in data/jobs.ts.
+const heading = `${job.roleDetail}${job.title}s`;
+---
+
+<div class="hero">
+  <div class="title-conent">
+    <Fragment set:html={job.icon} />
+    <h1>We’re looking for <br /> <strong>{heading}</strong></h1>
+    <a href="#form-cv">Join The Future</a>
+  </div>
+  <div class="bgImg">
+    <div class="anm">
+      <p>Explore The Opportunity</p>
+      <a href="#section2">
+        <svg width="29" height="12" viewBox="0 0 29 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 1L14.5 11L28 1" stroke="#878787"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="wrepper top" id="section2">
+  <div class="left">
+    <h2>Apply now and join the <br /> <strong>Alpha Efficiency</strong> Crew.</h2>
+    <div class="line"></div>
+  </div>
+  <div class="right">
+    <div class="line"></div>
+    <div class="ul">
+      <div class="svg">
+        <h2>If you...</h2>
+        <svg id="up" width="22" height="13" viewBox="0 0 22 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21 12L11 2L1 12" stroke="#1994FF" stroke-width="2"/>
+        </svg>
+        <svg id="down" width="22" height="13" viewBox="0 0 22 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21 1L11 11L1 0.999998" stroke="#1994FF" stroke-width="2"/>
+        </svg>
+      </div>
+      <ul id="ul">
+        {job.skills.map((s) => <li>{s}</li>)}
+      </ul>
+    </div>
+    <div class="line" id="line"></div>
+    <div class="line"></div>
+    <div class="if">
+      <div class="svg">
+        <h2>You get...</h2>
+        <svg id="up2" width="22" height="13" viewBox="0 0 22 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21 12L11 2L1 12" stroke="#1994FF" stroke-width="2"/>
+        </svg>
+        <svg id="down2" width="22" height="13" viewBox="0 0 22 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21 1L11 11L1 0.999998" stroke="#1994FF" stroke-width="2"/>
+        </svg>
+      </div>
+      <ul id="ul2">
+        {job.offers.map((o) => <li>{o}</li>)}
+      </ul>
+    </div>
+    <div class="line"></div>
+  </div>
+</div>
+
+<section class="second wrepper" id="section-1">
+  <div class="container-fluid">
+    <div class="content-holder">
+      <div class="circle-dots">
+        <svg width="74" height="74" viewBox="0 0 74 74" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="37" cy="37" r="37" fill="white"/>
+          <rect x="19" y="19" width="16.4286" height="16.4286" rx="8.21429" fill="#EE4631"/>
+          <rect x="37.5714" y="19" width="16.4286" height="16.4286" rx="8.21429" fill="#FFE600"/>
+          <rect x="19" y="37.5715" width="16.4286" height="16.4286" rx="8.21429" fill="#FFB000"/>
+          <rect x="37.5714" y="37.5715" width="16.4286" height="16.4286" rx="8.21429" fill="#1994FF"/>
+        </svg>
+      </div>
+      <div class="upper-content">
+        <div class="left"></div>
+        <div class="right">
+          <h2>Grow</h2>
+          <hr />
+          <p>We’re in business since 2010, and we’ve been delivering profitable projects to our clients ever since. We specialize in Web development and online marketing.</p>
+          <a href="/schedule-a-call">Grow Your Business</a>
+        </div>
+      </div>
+      <div class="bottom-content">
+        <div class="left">
+          <h2>Quality</h2>
+          <hr />
+          <p>We make our clients lives easier and less stressful. Our service based business is all about customer satisfaction.</p>
+          <a href="/schedule-a-call">Get Inspired</a>
+        </div>
+        <div class="right"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="from-content" id="form-cv">
+  <div class="wrepper">
+    <div class="title">
+      <h2>
+        We are committed to ensuring that all personnel is respected,
+        included, and valued for their diverse backgrounds,
+        experiences, skills and contributions.
+        <div class="line"></div>
+      </h2>
+    </div>
+
+    <div class="career-cta">
+      <a href={job.formUrl} class="btn-primary" target="_blank" rel="noopener noreferrer">
+        Join The Crew
+        <svg width="29" height="25" viewBox="0 0 29 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M27.9326 12.7783H3.86869L1.17188 23.3581L27.9326 12.7783Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3.28192 9.29789L1 1L23.1969 9.71279" stroke="#FFB000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // The theme collapsed these two lists on mobile via jQuery; the chevrons are
+  // already in the markup, so this just toggles the open state.
+  const pairs: [string, string, string][] = [
+    ['up', 'down', 'ul'],
+    ['up2', 'down2', 'ul2'],
+  ];
+  for (const [up, down, list] of pairs) {
+    const chevrons = [document.getElementById(up), document.getElementById(down)];
+    const ul = document.getElementById(list);
+    chevrons.forEach((c) =>
+      c?.addEventListener('click', () => {
+        ul?.classList.toggle('collapsed');
+      })
+    );
+  }
+</script>

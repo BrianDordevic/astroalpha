@@ -1,0 +1,141 @@
+---
+import Base from '../layouts/Base.astro';
+
+// Ported from alpha-efficiency-2024 template-privacy.blade.php ->
+// partials.privacy.{hero-content,wrepper-content}.
+//
+// The legal copy is transferred verbatim by script rather than retyped, so the
+// published wording cannot drift during the migration. Only @asset() paths were
+// rewritten.
+const bodyHtml = `<div class="hero">
+  <h1>Privacy Policy</h1>
+  <div class="bgImg"></div>
+</div>
+
+<div class="wrepper">
+  <div class="text-content">
+    <p><strong>Your Privacy is important to us.</strong></p>
+
+    <p>
+      To better protect your privacy, we provide this notice explaining our online information practices
+      and the choices you can make about the way your information is collected and used. To make this
+      notice easy to find, we make it available on our homepage and at every point where personally
+      identifiable information may be requested.
+    </p>
+
+    <br>
+
+    <p><strong>Google Adsense and the DoubleClick DART Cookie</strong></p>
+
+    <p>
+      Google, as a third-party advertising vendor, may use cookies to serve ads on this site. The use of
+      DART cookies by Google enables it to serve advertisements to visitors based on their visits to this
+      website and other sites on the internet.
+    </p>
+
+    <p>
+      To opt out of DART cookies, you may visit Google’s ad and content network privacy policy at:
+      <a href="http://www.google.com/privacy_ads.html" target="_blank" rel="noopener noreferrer">
+        http://www.google.com/privacy_ads.html
+      </a>.
+      Tracking of users through the DART cookie mechanisms is subject to Google’s own privacy policies.
+    </p>
+
+    <p>
+      Other third-party ad servers or ad networks may also use cookies to track users’ activities on this
+      website to measure advertisement effectiveness and for other reasons that will be provided in their
+      own privacy policies. Alpha Efficiency has no access to or control over these cookies that may be
+      used by third-party advertisers.
+    </p>
+
+    <br>
+
+    <p><strong>Collection of Personal Information</strong></p>
+
+    <p>
+      When visiting Alpha Efficiency, the IP address used to access the site may be logged along with the
+      dates and times of access. This information is used to analyze trends, administer the site, track user
+      movement, and gather broad demographic information for internal use. Most importantly, any recorded
+      IP addresses are not linked to personally identifiable information.
+    </p>
+
+    <p>
+      We may also collect personal information that you voluntarily provide through website forms, contact
+      requests, consultations, newsletter sign-ups, or other communications with us. This information may
+      include your name, email address, phone number, company information, and any other details you
+      choose to provide.
+    </p>
+
+    <br>
+
+    <p><strong>Use of Personal Information</strong></p>
+
+    <p>
+      The information you provide may be used to respond to inquiries, provide information about our
+      services, communicate regarding pricing, project details, or support requests, improve our website,
+      services, and customer experience, and send follow-up communications related to your inquiry or request.
+    </p>
+
+    <br>
+
+    <p><strong>SMS Communications</strong></p>
+
+    <p>
+      If you provide your phone number through our website or other communication channels, Alpha Efficiency
+      may send you text messages related to your inquiry, requested services, updates, scheduling, pricing,
+      or other service-related communications.
+    </p>
+
+    <p>
+      Text messaging originator opt-in data and consent will not be shared with any third parties, excluding
+      aggregators and providers of the text messaging services necessary to deliver these communications.
+    </p>
+
+    <p>
+      Mobile phone information is stored securely and will not be shared with third parties or affiliates for
+      marketing or promotional purposes.
+    </p>
+
+    <br>
+
+    <p><strong>Links to Third-Party Websites</strong></p>
+
+    <p>
+      We have included links on this site for your use and reference. We are not responsible for the privacy
+      policies on these websites. You should be aware that the privacy policies of these sites may differ
+      from our own.
+    </p>
+
+    <br>
+
+    <p><strong>Changes to this Privacy Statement</strong></p>
+
+    <p>
+      The contents of this statement may be altered at any time, at our discretion. Any updates will be
+      posted on this page.
+    </p>
+
+    <br>
+
+    <p><strong>Contact Information</strong></p>
+
+    <p>
+      If you have any questions regarding this Privacy Policy, you may contact us at
+      <i>
+        <a href="mailto:bojan@alphaefficiency.com">bojan@alphaefficiency.com</a>
+      </i>.
+    </p>
+  </div>
+</div>`;
+---
+
+<Base
+  title="Privacy Policy — Alpha Efficiency"
+  description="How Alpha Efficiency collects, uses and protects your information."
+  path="/privacy-policy"
+  type="website"
+  fullBleed={true}
+  bodyClass="page-template page-template-template-privacy template-privacy page"
+>
+  <Fragment set:html={bodyHtml} />
+</Base>

@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import ScheduleHero from '../components/ScheduleHero.astro';
+// Ported from alpha-efficiency-2024 template-schedule-a-call.blade.php.
+---
+<Base
+  title="Book Your Revenue Strategy Session — Alpha Efficiency"
+  description="Book a 30-minute strategy session. We'll identify conversion blockers, uncover quick wins, and map a clear path to more leads and sales."
+  path="/schedule-a-call"
+  type="website"
+  fullBleed={true}
+  bodyClass="page-template page-template-template-schedule-a-call template-schedule-a-call page"
+>
+  <ScheduleHero
+    titleStrong="Revenue"
+    titleRest="Strategy Session"
+    subtitle="Book a <b>30-minute strategy session</b>, we’ll identify conversion blockers, uncover quick wins, and map a clear path to more leads and sales."
+  />
+</Base>

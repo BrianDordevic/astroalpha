@@ -1,0 +1,119 @@
+---
+import Base from '../layouts/Base.astro';
+import { SERVICE_ORDER, serviceFor, placeFor, type Service } from '../lib/locations';
+
+// Ported from alpha-efficiency-2024 template-locations.blade.php ->
+// partials.locations.{hero,third-section,fourth-section,fifth-section}.
+//
+// Server-rendered because the list of locations comes from D1 rather than being
+// hardcoded — see src/lib/locations.ts for why the original custom fields could
+// not be carried across.
+export const prerender = false;
+
+const IMG = '/assets/images';
+
+const db = Astro.locals.runtime?.env?.DB;
+let rows: { path: string; title: string }[] = [];
+if (db) {
+  const { results } = await db
+    .prepare(
+      `SELECT path, title FROM pages
+        WHERE status = 'published' AND track = 'location'
+        ORDER BY path`
+    )
+    .all<{ path: string; title: string }>();
+  rows = results ?? [];
+}
+
+const grouped = new Map<Service, { path: string; place: string }[]>();
+for (const r of rows) {
+  const svc = serviceFor(r.path);
+  const list = grouped.get(svc) ?? [];
+  list.push({ path: r.path, place: placeFor(r.path) });
+  grouped.set(svc, list);
+}
+for (const list of grouped.values()) list.sort((a, b) => a.place.localeCompare(b.place));
+
+const clientLogos = [
+  'aeriform.svg', 'ignite.svg', 'jpar.svg', 'tangram.svg', 'joorney.svg', 'smith.svg',
+  'incomewiz.svg', 'breachlock.svg', 'brio.svg', 'amp.svg', 'better-weigh.svg', 'ci2a.svg',
+  'cih.svg', 'love.svg', 'reveal.svg', 'sverdloff.svg', 'afreeman.svg', 'BWM.svg',
+];
+---
+
+<Base
+  title="Find Your Nearest Location — Alpha Efficiency"
+  description="Web design, development, SEO and PPC services across the United States. Find Alpha Efficiency at your nearest location."
+  path="/locations"
+  image={`${IMG}/locations/map_2022.png`}
+  type="website"
+  fullBleed={true}
+  bodyClass="page-template page-template-template-locations template-locations page locations"
+>
+  <section class="location-section">
+    <div class="container">
+      <div class="locations-info">
+        <h1>Find Your <b>Nearest Location</b></h1>
+      </div>
+    </div>
+  </section>
+
+  <section class="third-section">
+    <div class="container">
+      <div class="third-part">
+        <div class="info">
+          <h2>Locations</h2>
+          <p>Finding an agency to fulfill your web development, design, SEO, and PPC goals can be challenging. Our mission is to connect our clients with our senior-level experts to come up with the most innovative and profitable solutions.</p>
+          <p>We'd love to offer you the convenience of setting up your digital transformation from the comfort of your home. Schedule a call with us to start your Alpha Efficiency journey, or find us at the nearest location in the Chicago area.</p>
+          <a href="/about">See More About Us</a>
+        </div>
+        <div class="third-img">
+          <img src={`${IMG}/locations/map_2022.png`} alt="map" class="img-fluid" loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fourth-section">
+    <div class="container">
+      {SERVICE_ORDER.filter((s) => grouped.get(s)?.length).map((service) => (
+        <div class="location-group">
+          <h3>{service}</h3>
+          <ul class="location-list">
+            {grouped.get(service)!.map((l) => (
+              <li><a href={l.path}>{l.place}</a></li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="clients">
+    <h4 class="title">Our Clients</h4>
+    <div class="line"></div>
+    <p class="partner">Get a reliable partner that can bring new ideas to the table, with no excuses.</p>
+    <div class="clients-frame">
+      {clientLogos.map((f) => (
+        <div class="client"><img src={`${IMG}/home/clients/desktop/${f}`} alt="Client logo" loading="lazy" /></div>
+      ))}
+    </div>
+  </section>
+
+  <style is:global>
+    /* The Blade fourth-section rendered four hardcoded custom-field columns;
+       this list is generated from D1 instead, so it needs its own minimal
+       layout. Scoped under the template body class to match the theme. */
+    .template-locations .fourth-section .location-group { margin: 0 0 2.5rem; }
+    .template-locations .fourth-section h3 {
+      font-size: 22px; margin: 0 0 .75rem; padding-bottom: .5rem;
+      border-bottom: 1px solid #e2e2e2;
+    }
+    .template-locations .location-list {
+      list-style: none; padding: 0; margin: 0;
+      display: grid; gap: .35rem 1.5rem;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    }
+    .template-locations .location-list a { font-size: 15px; }
+  </style>
+</Base>

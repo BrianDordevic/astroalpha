@@ -1,0 +1,226 @@
+---
+import Base from '../layouts/Base.astro';
+import { listPostsPaged, listPosts } from '../lib/db';
+import { categories, primaryCategory } from '../data/categories';
+
+// Ported from alpha-efficiency-2024 template-blog.blade.php + its
+// components.posts.{post-list,single-post} and components.blog.blog-pagination.
+//
+// Server-rendered rather than prerendered: the listing is paginated, searchable
+// and filterable, and the underlying 827 posts live in D1. Prerendering would
+// mean rebuilding the whole index every time a post changes, which is exactly
+// what the D1-backed design avoids.
+export const prerender = false;
+
+const IMG = '/assets/images';
+const PER_PAGE = 12;
+
+const url = Astro.url;
+// WordPress used ?pageNumber for pagination and ?s / ?category_name for the
+// filters; those parameter names are kept so old links and bookmarks still work.
+const page = Number(url.searchParams.get('pageNumber') ?? '1') || 1;
+const search = url.searchParams.get('s')?.trim() || undefined;
+const catSlug = url.searchParams.get('category_name') || undefined;
+const category = catSlug ? categories.find((c) => c.slug === catSlug) : undefined;
+
+const { posts, total, totalPages } = await listPostsPaged(Astro.locals, {
+  page,
+  perPage: PER_PAGE,
+  search,
+  categoryId: category?.id,
+});
+
+const recent = await listPosts(Astro.locals, 6, 0);
+
+const fmt = (iso: string | null) => {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return `${String(d.getUTCDate()).padStart(2, '0')} - ${d.toLocaleString('en', { month: 'short', timeZone: 'UTC' })} - ${d.getUTCFullYear()}`;
+};
+
+/** Preserve the active filters when moving between pages. */
+const pageHref = (n: number) => {
+  const p = new URLSearchParams();
+  if (search) p.set('s', search);
+  if (catSlug) p.set('category_name', catSlug);
+  if (n > 1) p.set('pageNumber', String(n));
+  const qs = p.toString();
+  return qs ? `/blog?${qs}` : '/blog';
+};
+
+// Two pages either side of the current one, as the Blade pagination did.
+const window = 2;
+const pageNumbers: number[] = [];
+for (let n = Math.max(1, page - window); n <= Math.min(totalPages, page + window); n += 1) {
+  pageNumbers.push(n);
+}
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  '@id': 'https://alphaefficiency.com/blog#blog',
+  url: 'https://alphaefficiency.com/blog',
+  name: 'Alpha Efficiency Blog',
+  description:
+    'Expert insights on web design, SEO, PPC, WordPress development, and digital strategy from Alpha Efficiency.',
+  publisher: { '@id': 'https://alphaefficiency.com/#organization' },
+  isPartOf: { '@id': 'https://alphaefficiency.com/#website' },
+};
+---
+
+<Base
+  title={page > 1 ? `Our Latest Blog Posts — page ${page} — Alpha Efficiency` : 'Our Latest Blog Posts — Alpha Efficiency'}
+  description="Expert insights on web design, SEO, PPC, WordPress development, and digital strategy from Alpha Efficiency."
+  path="/blog"
+  type="website"
+  fullBleed={true}
+  bodyClass="page-template page-template-template-blog template-blog page blog"
+>
+  <div class="hero-holder">
+    <div class="hero">
+      <h1>Our Latest <span>Blog Posts</span></h1>
+    </div>
+
+    <div class="blog-search">
+      <form class="form-blog-search" method="get" action="/blog">
+        <div class="search-text">
+          <button type="submit" class="search-icon" aria-label="Search">
+            <svg width="29" height="28" viewBox="0 0 29 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="9" stroke="#303030" stroke-width="2"/>
+              <path d="M19 19L27 27" stroke="#303030" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <input type="text" name="s" id="s" placeholder="Search Our Blog Posts" value={search ?? ''} />
+        </div>
+
+        <div class="dropdown-container">
+          <div class="dropdown">
+            <select class="dropdown-options" style="outline: none" name="category_name" id="category_name">
+              <option value="" selected={!catSlug}>All categories</option>
+              {categories.map((c) => (
+                <option value={c.slug} selected={c.slug === catSlug}>{c.name}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="content-holder">
+    <div class="blog">
+      {posts.length === 0 ? (
+        <p>Sorry, no posts matched your criteria.</p>
+      ) : (
+        <ul class="post-list">
+          {posts.map((post) => {
+            const cat = primaryCategory((post as any).categories ?? null);
+            return (
+              <article class={`single-post ${cat?.slug ?? ''}`}>
+                <div class="post-content-wrapper">
+                  <div class="post-title-wrapper">
+                    <a class="post-image-link" href={post.path}>
+                      <img
+                        src={post.hero_image ?? `${IMG}/blog/post-image-holder-min.png`}
+                        alt={post.title}
+                        loading="lazy"
+                      />
+                    </a>
+                  </div>
+
+                  <div class="author-card">
+                    <div class="image">
+                      <img src={`${IMG}/about/personel/bojan.webp`} alt="Brian Dordevic" class="img-fluid" loading="lazy" />
+                    </div>
+                    <div class="content"><p>Brian Dordevic</p></div>
+                  </div>
+
+                  {cat && (
+                    <a href={`/blog?category_name=${cat.slug}`} class={`post-category ${cat.slug}`}>
+                      <span>{cat.name}</span>
+                    </a>
+                  )}
+
+                  <div class={`entry-content ${cat?.slug ?? ''}`}>
+                    <div class="time-title">
+                      <div class="time">{fmt(post.published_at)}</div>
+                      <h2>
+                        <a class="post-title" href={post.path} set:html={post.title} />
+                      </h2>
+                    </div>
+                  </div>
+
+                  <a class="read-more" href={post.path}><p>READ MORE</p></a>
+                </div>
+              </article>
+            );
+          })}
+        </ul>
+      )}
+
+      {totalPages > 1 && (
+        <div class="bottom pagi-other">
+          <div class="container-fluid m-auto d-flex justify-content-center">
+            <nav class="blog-pagination" aria-label="Blog page navigation">
+              <ul class="pagination list-of-links">
+                {page > 1 && (
+                  <li class="page-item">
+                    <a class="page-link previous-page" href={pageHref(page - 1)} aria-label="Previous page">
+                      <svg width="8" height="12" viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 10.4575L4.58 5.92493L0 1.39236L1.41 0L7.41 5.92493L1.41 11.8499L0 10.4575Z" fill="#303030"/>
+                      </svg>
+                    </a>
+                  </li>
+                )}
+                {pageNumbers.map((n) => (
+                  <li class={`page-item${n === page ? ' active' : ''}`}>
+                    <a class="page-link" href={pageHref(n)} aria-current={n === page ? 'page' : undefined}>{n}</a>
+                  </li>
+                ))}
+                {page < totalPages && (
+                  <li class="page-item">
+                    <a class="page-link next-page" href={pageHref(page + 1)} aria-label="Next page">
+                      <svg width="8" height="12" viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(180deg)">
+                        <path d="M0 10.4575L4.58 5.92493L0 1.39236L1.41 0L7.41 5.92493L1.41 11.8499L0 10.4575Z" fill="#303030"/>
+                      </svg>
+                    </a>
+                  </li>
+                )}
+              </ul>
+            </nav>
+          </div>
+        </div>
+      )}
+    </div>
+
+    <div class="right">
+      <a href="/schedule-a-call" class="ma-frame">
+        <div class="marketing-audit">
+          <img src={`${IMG}/blog/marketing-audit.webp`} alt="Marketing" class="img-fluid" loading="lazy" />
+        </div>
+      </a>
+
+      <div class="first-issue-image">
+        <a href="/website-grader">
+          <img src={`${IMG}/blog/grader.webp`} width="330" height="152" alt="Grader" class="img-fluid" loading="lazy" />
+        </a>
+      </div>
+
+      <div class="platinum-text">
+        <p>Obtain our report that contains manual user testing insights from the team of seasoned QA experts. Don’t leave your website performance in disarray.</p>
+      </div>
+
+      <div class="recent-posts">
+        <p>Recent Posts</p>
+        <hr />
+        <ul>
+          {recent.map((p) => (
+            <li><a href={p.path} class="read-more" set:html={p.title} /></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+</Base>

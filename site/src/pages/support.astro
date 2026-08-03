@@ -1,0 +1,81 @@
+---
+import Base from '../layouts/Base.astro';
+
+// Ported from alpha-efficiency-2024 template-support.blade.php ->
+// partials.support.{form-section,hero-support} + components.forms.support.
+//
+// Unlike the project form, support uses HubSpot's own embedded widget
+// (hbspt.forms.create) rather than a hand-built form posting to the API. The
+// embed is loaded on production only — a test submission from staging would
+// open a real support ticket.
+const SITE = Astro.site?.origin ?? 'https://alphaefficiency.com';
+const IS_PROD = SITE === 'https://alphaefficiency.com';
+---
+
+<Base
+  title="Contact Support — Alpha Efficiency"
+  description="Technical, billing and project support for Alpha Efficiency clients. Open a ticket and we'll respond promptly."
+  path="/support"
+  type="website"
+  fullBleed={true}
+  bodyClass="page-template page-template-template-support template-support page support"
+>
+  <section class="support-form-section">
+    <div class="support-content">
+      <div class="card-container">
+        <div class="card-title">
+          <h2>Support Solutions</h2>
+        </div>
+        <p class="card-content">
+          Have questions or need assistance?
+          <br /><br />
+          All technical, billing or project support issues handled promptly and professionally.
+          <br /><br />
+          For the most immediate response fill out the form on the right.
+        </p>
+        <div class="line"></div>
+      </div>
+
+      <div class="form-container">
+        <h3>Open your <span>Ticket</span></h3>
+        <div id="hubspotForm"></div>
+        {!IS_PROD && (
+          <p style="margin-top:1rem;font-size:14px;opacity:.75">
+            <em>Staging: the HubSpot support form is not loaded here, so no test tickets are created.</em>
+          </p>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <div class="hero">
+    <div class="title-content">
+      <h1>Contact <span>Support</span></h1>
+    </div>
+    <div class="link-content">
+      <a href="tel:+12176694336" class="call">
+        <div class="svg-frame">
+          <svg width="41" height="55" viewBox="0 0 41 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M25.5477 42.8653C30.283 45.4067 35.809 46.048 41 44.6562L40.6542 43.3667C35.7917 44.6704 30.6151 44.0697 26.1791 41.6889L18.8468 37.7537C13.2264 34.7372 6.71957 33.8079 0.479463 35.1304L0.756288 36.4366C6.68784 35.1794 12.8729 36.0628 18.2154 38.9301L25.5477 42.8653Z" fill="#FFB000"/>
+            <circle cx="20.1281" cy="39.2596" r="2.18194" transform="rotate(-30 20.1281 39.2596)" fill="#1994FF"/>
+          </svg>
+        </div>
+        <p>Contact Us</p>
+      </a>
+    </div>
+  </div>
+
+  {IS_PROD && (
+    <Fragment>
+      <script charset="utf-8" type="text/javascript" src="https://js.hsforms.net/forms/embed/v2.js" is:inline></script>
+      <script is:inline>
+        hbspt.forms.create({
+          region: 'na1',
+          portalId: '4773320',
+          formId: '9b4a5cb0-05d9-48c2-8239-571793e052fc',
+          cssRequired: false,
+        });
+      </script>
+    </Fragment>
+  )}
+</Base>

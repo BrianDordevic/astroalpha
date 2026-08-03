@@ -1,0 +1,20 @@
+<svg width="36" height="32" viewBox="0 0 36 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 11113660">
+<g id="Mask Group">
+<mask id="mask0_217_5835" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="1" width="36" height="24">
+<rect id="Rectangle 1864" x="0.970886" y="15.7017" width="32.8817" height="10.2418" transform="rotate(-25.8376 0.970886 15.7017)" fill="#C4C4C4"/>
+</mask>
+<g mask="url(#mask0_217_5835)">
+<path id="Vector 350" d="M-1.47803 24.2507V24.2507C1.62426 20.0058 6.22896 17.1047 11.3968 16.1368L19.6599 14.5892C25.8373 13.4322 31.4056 10.1256 35.378 5.25545V5.25545" stroke="#FFB000" stroke-width="1.45973"/>
+</g>
+</g>
+<path id="Vector 392" d="M7.97815 0.0258789V30.4819" stroke="#1994FF" stroke-width="2.91946"/>
+<path id="Vector 393" d="M18.7587 4.60742L18.7587 30.4816" stroke="#FFB000" stroke-width="2.91946" stroke-linecap="round"/>
+<path id="Vector 394" d="M29.5399 10.5371L29.5399 30.4818" stroke="#FFB000" stroke-width="2.91946" stroke-linecap="round"/>
+<path id="Vector 395" d="M33.3137 25.6289L9.59576 25.6289" stroke="#FDFDFD" stroke-width="4.37919"/>
+<circle id="Ellipse 646" cx="7.97855" cy="17.0048" r="2.1896" fill="white" stroke="#1994FF" stroke-width="1.01125"/>
+<circle id="Ellipse 647" cx="18.7597" cy="14.8486" r="2.15618" fill="#1994FF"/>
+<circle id="Ellipse 648" cx="29.5398" cy="10.538" r="2.15618" fill="#1994FF"/>
+<path id="Vector 396" d="M33.0435 24.5522L2.58744 24.5522" stroke="#1994FF" stroke-width="2.91946"/>
+</g>
+</svg>

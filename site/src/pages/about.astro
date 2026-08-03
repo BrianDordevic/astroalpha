@@ -1,0 +1,241 @@
+---
+import Base from '../layouts/Base.astro';
+
+// Ported from alpha-efficiency-2024 template-about.blade.php:
+//   partials.about.{header,improved-productivity,decade-productivity,clients,project}
+//
+// bodyClass carries `template-about` because pages/_about.scss is scoped under
+// it — same rule as the homepage. See Base.astro's bodyClass doc comment.
+
+const IMG = '/assets/images';
+
+const team = {
+  left: [
+    { file: 'idk1.webp', cls: 'img-small', max: 206, style: 'margin-left:20%' },
+    { file: 'Fede.webp', cls: 'img-medium', max: 226, style: '' },
+    { file: 'idk2.webp', cls: 'img-large', max: 245, style: '' },
+  ],
+  right: [
+    { file: 'idk3.webp', cls: 'img-large', max: 245, style: '' },
+    { file: 'Facu.webp', cls: 'img-medium', max: 226, style: '' },
+    { file: 'Gonza.webp', cls: 'img-small', max: 206, style: '' },
+  ],
+};
+
+const flags = [
+  { file: 'spain.svg', alt: 'Spain' },
+  { file: 'serbia-rounded.svg', alt: 'Serbia' },
+  { file: 'usa-rounded.svg', alt: 'USA' },
+  { file: 'argentina-rounded.svg', alt: 'Argentina' },
+  { file: 'croatia.svg', alt: 'Croatia' },
+];
+
+const socials = [
+  { file: 'x.svg', alt: 'X', href: 'https://x.com/alphaefficiency' },
+  { file: 'instagram.svg', alt: 'Instagram', href: 'https://www.instagram.com/alphaefficiency/' },
+  { file: 'linkedin.svg', alt: 'LinkedIn', href: 'https://www.linkedin.com/company/alpha-efficiency' },
+  { file: 'facebook.svg', alt: 'Facebook', href: 'https://www.facebook.com/AlphaEfficiency' },
+];
+
+const experts = ['bojan.png', 'sara.webp', 'idk3.webp', 'ailin.webp'];
+const builtFor = ['client1.webp', 'client2.webp', 'client3.svg', 'client4.webp', 'client5.webp'];
+
+const clientLogos = [
+  'aeriform.svg', 'ignite.svg', 'jpar.svg', 'tangram.svg', 'joorney.svg', 'smith.svg',
+  'incomewiz.svg', 'breachlock.svg', 'brio.svg', 'amp.svg', 'better-weigh.svg', 'ci2a.svg',
+  'cih.svg', 'love.svg', 'reveal.svg', 'sverdloff.svg', 'afreeman.svg', 'BWM.svg',
+];
+---
+
+<Base
+  title="About Alpha Efficiency — Our Team Of Experts"
+  description="Alpha Efficiency is a Chicago-based web design and digital strategy agency helping businesses achieve exponential digital growth through high-performance websites and marketing strategies."
+  path="/about"
+  image={`${IMG}/about/personel/bojan.webp`}
+  type="website"
+  fullBleed={true}
+  bodyClass="page-template page-template-template-about template-about page about"
+>
+  <!-- ────────────────────────────── header ───────────────────────────── -->
+  <section class="about-header">
+    <div class="images-banner">
+      <div class="image-group left-images">
+        {team.left.map((m) => (
+          <img width="512" height="512" class={m.cls} src={`${IMG}/about/personel/${m.file}`} alt="Team member"
+            style={`max-width: ${m.max}px; max-height: ${m.max}px;${m.style ? ' ' + m.style : ''}`} />
+        ))}
+      </div>
+
+      <div class="middle-image">
+        <img width="512" height="512" src={`${IMG}/about/personel/bojan.webp`} alt="Team member"
+          style="max-width: 339px; max-height: 339px" />
+      </div>
+
+      <div class="image-group right-images">
+        {team.right.map((m) => (
+          <img width="512" height="512" class={m.cls} src={`${IMG}/about/personel/${m.file}`} alt="Team member"
+            style={`max-width: ${m.max}px; max-height: ${m.max}px`} />
+        ))}
+      </div>
+    </div>
+
+    <div class="flags">
+      {flags.map((f) => <img alt={f.alt} src={`${IMG}/about/personel/${f.file}`} />)}
+    </div>
+
+    <div class="titles">
+      <h1><span class="bold">Our Team</span> Of Experts</h1>
+      <p class="responsive-split">
+        <span>We are committed to ensure that all personnel are respected, included, and valued for their </span>
+        <span>diverse backgrounds, experiences, skills, and contributions to our mission and culture. </span>
+      </p>
+    </div>
+
+    <div class="hero-content">
+      <div class="info-box">
+        <p class="responsive-split">
+          <span>As the founder of <b class="bold">Alpha Efficiency</b>, I am passionate about combining the science of effective website development with the art of beautiful design. My team and I are dedicated to creating custom web solutions that not only look great, but also drive results for our clients through the use of artificial intelligence.</span>
+          <span>I have over a decade of experience in the web design industry, and am constantly seeking out new ways to push the boundaries of what is possible.</span>
+          <span>My vision for the future of web design includes the integration of AI and the use of cutting-edge technologies to enhance the user experience.</span>
+        </p>
+        <div class="brian-box">
+          <h6 class="brian">Brian Dordevic</h6>
+          <h6>President</h6>
+          <div class="social-links">
+            {socials.map((s) => (
+              <a target="_blank" rel="noopener noreferrer" href={s.href}>
+                <img alt={s.alt} src={`${IMG}/about/social/${s.file}`} />
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────────────── improved productivity ───────────────────── -->
+  <section class="productivity">
+    <div class="container">
+      <div class="decade">
+        <h4 class="title">A Decade Of <br /><b>Improved Productivity</b></h4>
+        <p class="big-hide">Alpha Efficiency began as a magazine challenging the status quo in productivity. Today, we push boundaries in communication, marketing, and technology, with roots in creativity and innovation.</p>
+        <div class="line"></div>
+
+        <div class="info-section">
+          <img src={`${IMG}/about/hero-improved-left.webp`} alt="" class="bg-image" aria-hidden="true" />
+          <div class="top-info-box">
+            <h6>Psychology at the Core</h6>
+            <p>Our expertise is technology and digital, but we never forget that there is a human being on the other side of the screen. People are now more informed than ever, and speaking to their logic doesn’t cut it anymore. Our advertising here ignites the emotion, connects to the core of the problem through our powerful creatives, design and intuitive understanding human psychology.</p>
+            <div class="bottom-links">
+              <div class="left-side">
+                <p><b>+ 25</b> Experts</p>
+                <div class="experts-images">
+                  {experts.map((f) => <img src={`${IMG}/about/personel/${f}`} alt="Team member" />)}
+                </div>
+              </div>
+              <div class="right-links">
+                <div class="contact-arrow section-circle-button">
+                  <a href="/portfolio">SEE OUR WORK <span></span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-info-box">
+          <div class="left-box">
+            <h5>Discover Your Growth Advantage</h5>
+            <p>Working with Alpha Efficiency means working with a partner invested in your long-term success. Whether you’re building a brand from scratch or scaling an established business, we’re here to help you create a digital presence that works as hard as you do.</p>
+          </div>
+
+          <div class="mini-container big-hide">
+            <div class="right-box">
+              <h2>500 +</h2>
+              <div class="experts-images">
+                {builtFor.map((f, i) => <img alt={`Client ${i + 1}`} src={`${IMG}/about/websites-built/${f}`} />)}
+              </div>
+              <p>Websites Built</p>
+            </div>
+            <img src={`${IMG}/about/hero-improved-right.webp`} alt="" class="img-fluid" />
+          </div>
+
+          <div class="right-box small-hide">
+            <h2>500 +</h2>
+            <div class="experts-images">
+              {builtFor.map((f, i) => <img alt={`Client ${i + 1}`} src={`${IMG}/about/websites-built/${f}`} />)}
+            </div>
+            <p>Websites Built</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-side">
+        <p>Alpha Efficiency began as a magazine challenging the status quo in productivity. Today, we push boundaries in communication, marketing, and technology, with roots in creativity and innovation.</p>
+        <img src={`${IMG}/about/hero-improved-right.webp`} alt="" class="img-fluid" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── decade productivity ────────────────────── -->
+  <section class="decade-productivity">
+    <div class="left-side">
+      <h4 class="title">A Decade Of Improved Productivity</h4>
+      <div class="line"></div>
+      <p>Behind every project, there’s a vision, a story, and a dream. We take the time to understand what matters most to you, transforming that passion into a powerful digital presence that reflects who you are and what you stand for. Your success becomes our shared mission.</p>
+      <div class="left-box">
+        <h5>Turning Vision Into Impact</h5>
+        <p>Recognized as USA web design experts with over a decade in business, we’ve empowered countless dreams and transformed them into tangible realities for hundreds of our clients. It’s time for you to join the tribe of digitally empowered businesses.</p>
+      </div>
+      <div class="left-box">
+        <h5>Your Dedicated Web Development Partners</h5>
+        <p>Every project we take on is a true collaboration. As your web development team, we provide full-service agency web development solutions. We align our expertise with your goals, ensuring that strategy, design, and code work seamlessly together.</p>
+      </div>
+    </div>
+
+    <div class="middle-side">
+      <img src={`${IMG}/about/third-section-mid-image.webp`} alt="" class="img-fluid" />
+    </div>
+
+    <div class="right-side">
+      <div class="right-little-box">
+        <h5>What You Gain</h5>
+        <p>Architects of precision, artists of creativity, and relentless builders of measurable results.<br />Tell us more about your next big project. We tailor every solution to your specific market, audience, and ambitions.</p>
+      </div>
+      <div class="right-big-box">
+        <img src={`${IMG}/about/third-section-right-image.webp`} alt="" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────── clients ───────────────────────────── -->
+  <section class="clients">
+    <h4 class="title">Our Clients</h4>
+    <div class="line"></div>
+    <p class="partner">Get a reliable partner that can bring new ideas to the table, with no excuses.</p>
+    <div class="clients-frame">
+      {clientLogos.map((f) => (
+        <div class="client"><img src={`${IMG}/home/clients/desktop/${f}`} alt="Client logo" loading="lazy" /></div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ────────────────────────────── project ───────────────────────────── -->
+  <section class="seventh" id="contact">
+    <div class="seventh-frame">
+      <div class="delivers">
+        <div class="info-content">
+          <div class="delivers-title">
+            <h2><span>Proven Process. </span> <br /> Friction-Free UX.</h2>
+          </div>
+          <div class="delivers-txt">
+            <p>Alpha Efficiency takes a <strong>process-driven approach</strong> to find solutions to the complex challenges businesses face when navigating the future. Our senior-level experts work in <strong>cross-functional teams of strategists</strong>, designers and developers to deliver fresh thinking on everything from apps to automation.</p>
+          </div>
+          <div class="contact-arrow section-circle-button small-hide">
+            <a href="/contact">Contact Us <span></span></a>
+          </div>
+        </div>
+        <img src={`${IMG}/home/banner4.svg`} alt="Partners" loading="lazy" />
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+import TeamBio from '../components/TeamBio.astro';
+import JobPosting from '../components/JobPosting.astro';
+import { team } from '../data/team';
+import { jobs } from '../data/jobs';
+
+// Team bios and job postings share this one route on purpose. Two separate
+// single-segment files (e.g. [person].astro and [job].astro) would both claim
+// the `/[param]` pattern and collide, so the route dispatches on kind instead.
+//
+// getStaticPaths emits only these nine paths; every other single-segment URL
+// still falls through to the D1-backed [...slug] route.
+export function getStaticPaths() {
+  return [
+    ...team.map((person) => ({ params: { slug: person.slug }, props: { kind: 'bio' as const, person } })),
+    ...jobs.map((job) => ({ params: { slug: job.slug }, props: { kind: 'job' as const, job } })),
+  ];
+}
+
+const props = Astro.props;
+
+const meta =
+  props.kind === 'bio'
+    ? {
+        title: props.person.role
+          ? `${props.person.name} — ${props.person.role} at Alpha Efficiency`
+          : `${props.person.name} — Alpha Efficiency`,
+        description: props.person.bio ?? `${props.person.name} at Alpha Efficiency.`,
+        path: `/${props.person.slug}`,
+        image: props.person.image,
+        bodyClass: 'page-template page-template-template-about-single template-about-single page',
+      }
+    : {
+        title: `We're looking for ${props.job.roleDetail}${props.job.title}s — Alpha Efficiency`,
+        description: `Join the Alpha Efficiency crew. We are hiring a ${props.job.title.toLowerCase()} — see the requirements and apply.`,
+        path: `/${props.job.slug}`,
+        image: null,
+        bodyClass: 'page-template page-template-template-careers-single template-careers-single page',
+      };
+---
+
+<Base
+  title={meta.title}
+  description={meta.description}
+  path={meta.path}
+  image={meta.image}
+  type="website"
+  fullBleed={true}
+  bodyClass={meta.bodyClass}
+>
+  {props.kind === 'bio' ? <TeamBio person={props.person} /> : <JobPosting job={props.job} />}
+</Base>

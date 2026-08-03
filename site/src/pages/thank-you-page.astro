@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import ScheduleHero from '../components/ScheduleHero.astro';
+// Ported from alpha-efficiency-2024 template-ty-page.blade.php, which was the
+// schedule-a-call template with a different H1. This is where the HubSpot
+// project form redirects on success.
+---
+<Base
+  title="Thank You — Alpha Efficiency"
+  description="Thanks for getting in touch. We'll be back to you shortly."
+  path="/thank-you-page"
+  type="website"
+  fullBleed={true}
+  noindex={true}
+  bodyClass="page-template page-template-template-ty-page template-ty-page page"
+>
+  <ScheduleHero
+    titleStrong="Thank You"
+    titleRest="for submitting."
+    subtitle="Book a <b>30-minute strategy session</b>, we’ll identify conversion blockers, uncover quick wins, and map a clear path to more leads and sales."
+  />
+</Base>

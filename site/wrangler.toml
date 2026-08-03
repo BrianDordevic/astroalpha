@@ -1,0 +1,17 @@
+name = "alpha-efficiency-astro"
+compatibility_date = "2026-07-25"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "dist"
+
+# Deliberately no [env.*] sections. Naming an environment in a Pages config
+# stops it inheriting top-level bindings, which silently drops DB and makes
+# every route 500. SITE_URL is not set here either — astro.config.mjs reads it
+# from the shell at *build* time, so a runtime Pages var would never reach it:
+#
+#   staging:    SITE_URL=https://dev.alphaefficiency.com npm run build
+#   production: SITE_URL=https://alphaefficiency.com      npm run build
+[[d1_databases]]
+binding = "DB"
+database_name = "ae-content"
+database_id = "51558479-ed49-4cc9-84e4-31490cafe226"
+migrations_dir = "../db/migrations"

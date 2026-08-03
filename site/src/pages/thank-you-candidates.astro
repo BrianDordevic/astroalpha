@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import ScheduleHero from '../components/ScheduleHero.astro';
+// Ported from alpha-efficiency-2024 template-ty-page-candidates.blade.php.
+// That template had the booking CTA commented out — candidates should not be
+// pushed into a sales call — so showCta/showBooking are off here.
+---
+<Base
+  title="Thank You — Alpha Efficiency"
+  description="Thanks for applying. Our hiring managers are reviewing your application."
+  path="/thank-you-candidates"
+  type="website"
+  fullBleed={true}
+  noindex={true}
+  bodyClass="page-template page-template-template-ty-page-candidates template-ty-page-candidates page"
+>
+  <ScheduleHero
+    titleStrong="Thank You"
+    titleRest="for submitting."
+    subtitle="We appreciate your interest in joining our team! Our hiring managers are currently reviewing your application. If your skills and experience are a good match for the role, we’ll be in touch soon with the next steps."
+    showCta={false}
+    showBooking={false}
+  />
+</Base>

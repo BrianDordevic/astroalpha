@@ -1,0 +1,108 @@
+---
+import Base from '../layouts/Base.astro';
+import { jobs } from '../data/jobs';
+
+// Ported from alpha-efficiency-2024 template-careers.blade.php ->
+// partials.careers.{hero-section,second-section,third-section}.
+
+const IMG = '/assets/images';
+
+const benefits = [
+  { file: 'remote.webp', alt: 'Remote Work Available', dot: '#EE4631', label: 'Remote Work <br/>Available' },
+  { file: 'growth.webp', alt: 'Opportunity For Growth', dot: '#FFE600', label: 'Opportunity For <br/>Growth' },
+  { file: 'balance.webp', alt: 'Work Life Balance', dot: '#FFB000', label: 'Work Life <br/>Balance' },
+  { file: 'flex.webp', alt: 'Flexible Working Hours', dot: '#1994FF', label: 'Flexible Working <br/>Hours' },
+];
+
+// The role cards link to the four job pages. Labels differ from the job titles
+// in data/jobs.ts — the Blade used "Marketing Specialist" and "Web Developer"
+// here while the job pages say "Digital Marketer" and "Developer". Kept as
+// published rather than harmonised.
+const roleCards = [
+  { slug: 'designer', label: 'Web Design' },
+  { slug: 'content-writer', label: 'Content Writer' },
+  { slug: 'digital-marketer', label: 'Marketing Specialist' },
+  { slug: 'developer', label: 'Web Developer' },
+];
+
+const iconFor = (slug: string) => jobs.find((j) => j.slug === slug)?.icon ?? '';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  '@id': 'https://alphaefficiency.com/careers#webpage',
+  url: 'https://alphaefficiency.com/careers',
+  name: 'Careers at Alpha Efficiency',
+  description:
+    'Explore career opportunities at Alpha Efficiency, a Chicago-based web design and digital marketing agency focused on delivering high-performance digital solutions.',
+  isPartOf: { '@id': 'https://alphaefficiency.com/#website' },
+  about: { '@id': 'https://alphaefficiency.com/#organization' },
+};
+---
+
+<Base
+  title="Web Design Careers — Alpha Efficiency"
+  description="Explore career opportunities at Alpha Efficiency, a Chicago-based web design and digital marketing agency focused on delivering high-performance digital solutions."
+  path="/careers"
+  image={`${IMG}/careers/offer.webp`}
+  type="website"
+  fullBleed={true}
+  bodyClass="page-template page-template-template-careers template-careers page careers"
+>
+  <div class="hero">
+    <div class="container">
+      <h1>Web Design <span>Careers</span></h1>
+    </div>
+  </div>
+
+  <div class="offer">
+    <div class="container">
+      <div class="text-wrap">
+        <h2 class="title">Respect for People</h2>
+        <div class="line"></div>
+        <p>We are committed to ensuring that all personnel is respected, included, and valued for their diverse backgrounds, experiences, skills, and contributions to our mission and culture.</p>
+        <a href="/about">
+          See More About Us
+          <svg width="50" height="1" viewBox="0 0 50 1" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0.363281" width="49.5085" height="1" fill="#007BE7"/>
+          </svg>
+        </a>
+      </div>
+      <div class="img-wrap">
+        <img src={`${IMG}/careers/offer.webp`} alt="What We Offer" class="img-fluid" />
+      </div>
+    </div>
+  </div>
+
+  <div class="benefits">
+    <h2 class="title">Benefits</h2>
+    <div class="line"></div>
+    <div class="container">
+      {benefits.map((b) => (
+        <div class="item">
+          <img src={`${IMG}/careers/${b.file}`} alt={b.alt} loading="lazy" />
+          <div class="desc">
+            <div class="dot" style={`background: ${b.dot}`}></div>
+            <p set:html={b.label} />
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="careers-section">
+    <h3 class="title">We're Hiring</h3>
+    <div class="line"></div>
+    <div class="container">
+      {roleCards.map((r) => (
+        <a href={`/${r.slug}`} class="item">
+          <Fragment set:html={iconFor(r.slug)} />
+          <p>{r.label}</p>
+          <div class="line"></div>
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+</Base>

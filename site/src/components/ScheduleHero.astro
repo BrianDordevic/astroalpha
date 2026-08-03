@@ -1,0 +1,144 @@
+---
+// Shared by /schedule-a-call, /thank-you-page and /thank-you-candidates.
+//
+// The three Blade templates were byte-identical apart from the H1, the
+// subtitle, and whether the "Book a Strategy Session Now" CTA was commented
+// out. Reproduced as one component with those three differences as props
+// rather than three near-duplicate files.
+
+interface Props {
+  /** Rendered inside <strong> at the start of the H1. */
+  titleStrong: string;
+  /** Plain text following the strong part. */
+  titleRest: string;
+  subtitle: string;
+  /** /thank-you-candidates had this CTA commented out. */
+  showCta?: boolean;
+  /** The booking embed is skipped on the candidates thank-you page. */
+  showBooking?: boolean;
+}
+
+const { titleStrong, titleRest, subtitle, showCta = true, showBooking = true } = Astro.props;
+
+const IMG = '/assets/images/schedule';
+
+const avatars = [
+  { file: 'av-1.webp', alt: 'Team member 1' },
+  { file: 'av-2.webp', alt: 'Team member 2' },
+  { file: 'av-3.webp', alt: 'Team member 3' },
+  { file: 'av-4.webp', alt: 'Team member 4' },
+  { file: 'av-5.webp', alt: 'Client 1' },
+  { file: 'av-6.webp', alt: 'Client 2' },
+  { file: 'av-7.webp', alt: 'Client 3' },
+];
+
+const features = [
+  { icon: 'infocard1.svg', label: 'Diagnose revenue leaks' },
+  { icon: 'infocard2.svg', label: 'Align traffic, message & UX' },
+  { icon: 'infocard3.svg', label: 'Get a clear action plan' },
+];
+
+const proofCards = [
+  { icon: 'Layer3.png', iconAlt: 'Message', copy: 'From traffic leaks to consistent <strong>inbound leads.</strong>', thumb: 'video.webp', video: 'G0X6JGXAhBU' },
+  { icon: 'ico.png', iconAlt: 'Man', copy: 'Turning traffic into <strong>qualified sales</strong> calls.', thumb: 'video1.webp', video: 'QNQcbWCN0MY' },
+  { icon: 'Layer2.png', iconAlt: 'Light', copy: 'How clarity &amp; conversion led to <strong>growth.</strong>', thumb: 'video2.webp', video: 'C7CZ0WfwcrE' },
+];
+---
+
+<div class="holder">
+  <section class="sc-hero-v2">
+    <div class="sc-hero-v2__inner">
+      <div class="sc-avatars" aria-label="Our team and clients">
+        <div class="sc-avatars__stage">
+          {avatars.map((a, i) => (
+            <img class={`sc-avatar a${i + 1}`} src={`${IMG}/${a.file}`} alt={a.alt} loading="eager" fetchpriority="high" />
+          ))}
+        </div>
+      </div>
+
+      <h1 class="sc-title-v2"><strong>{titleStrong}</strong> {titleRest}</h1>
+
+      <img class="hero-image" src={`${IMG}/trust.svg`} width="420" alt="trust brands" />
+
+      <p class="sc-subtitle-v2" set:html={subtitle} />
+
+      <div class="hero-features">
+        {features.map((f) => (
+          <div class="feature">
+            <img src={`${IMG}/${f.icon}`} alt="" />
+            <span set:html={f.label} />
+          </div>
+        ))}
+      </div>
+
+      {showCta && (
+        <a href="#booking" class="hero-cta">
+          Book a Strategy Session Now
+          <img src={`${IMG}/cta-down.png`} alt="" />
+        </a>
+      )}
+
+      {showBooking && (
+        <section id="booking" class="schedule-meeting-bg">
+          <div class="container">
+            <div
+              class="meetings-iframe-container"
+              data-src="https://get.alphaefficiency.com/meetings/hello-alpha/schedule-a-call?embed=true"
+            ></div>
+          </div>
+        </section>
+      )}
+    </div>
+  </section>
+</div>
+
+<section class="proof-section">
+  <div class="bigger-cont">
+    <h2 class="proof-title"><strong>Real Results</strong> for Businesses Like Yours</h2>
+    <p class="proof-subtitle">
+      See how we helped businesses transform underperforming websites into revenue drivers by aligning design, SEO, and marketing
+    </p>
+
+    <div class="proof-cards">
+      {proofCards.map((c) => (
+        <article class="proof-card">
+          <div class="proof-card__head">
+            <img src={`${IMG}/${c.icon}`} alt={c.iconAlt} />
+            <p set:html={c.copy} />
+          </div>
+          <div class="proof-thumb js-video" data-video={`https://www.youtube-nocookie.com/embed/${c.video}?autoplay=1`}>
+            <img src={`${IMG}/${c.thumb}`} alt="" loading="lazy" />
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="proof-cta">
+      <div class="section-circle-button">
+        <a href="/portfolio">See our work<span></span></a>
+      </div>
+      <a href="#booking" class="btn-primary-schedule">Book a call Now</a>
+    </div>
+  </div>
+</section>
+
+{showBooking && <script src="https://static.hsappstatic.net/MeetingsEmbed/ex/MeetingsEmbedCode.js" async></script>}
+
+<script>
+  // Click-to-load the proof videos, matching the homepage behaviour: no
+  // third-party iframe until the visitor asks for one.
+  document.querySelectorAll<HTMLElement>('.js-video').forEach((box) => {
+    box.addEventListener('click', () => {
+      const src = box.dataset.video;
+      if (!src) return;
+      const frame = document.createElement('iframe');
+      frame.width = '100%';
+      frame.height = '100%';
+      frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture';
+      frame.allowFullscreen = true;
+      frame.title = 'YouTube video player';
+      frame.src = src;
+      box.replaceChildren(frame);
+    });
+  });
+</script>

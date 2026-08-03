@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+
+// Ported from alpha-efficiency-2024 template-website-grader-appointmen.blade.php
+// (the theme filename is truncated; the page slug is website-grader-appointment-2).
+//
+// The HubSpot meetings embed is loaded on production only, matching /support and
+// the project form — a staging booking would land in a real calendar.
+const SITE = Astro.site?.origin ?? 'https://alphaefficiency.com';
+const IS_PROD = SITE === 'https://alphaefficiency.com';
+---
+
+<Base
+  title="Book Your Website Strategy Session — Alpha Efficiency"
+  description="Deep dive into the performance of your site. Book a website strategy session and we'll establish your game plan."
+  path="/website-grader-appointment-2"
+  type="website"
+  fullBleed={true}
+  bodyClass="page-template page-template-template-website-grader-appointmen template-website-grader-appointmen page"
+>
+  <div class="holder">
+    <div class="container">
+      <div class="wrapper">
+        <h1>Deep Dive Into Performance of Your Site.</h1>
+        <h2><b>Book Your Website Strategy Session.</b></h2>
+        <hr />
+        <small>We’ll establish your game plan &amp; prepare you for success.</small>
+      </div>
+
+      <div class="meetings-iframe-container" data-src="https://meetings.hubspot.com/bojan?embed=true"></div>
+      {!IS_PROD && (
+        <p style="margin-top:1rem;font-size:14px;opacity:.75;text-align:center">
+          <em>Staging: the HubSpot booking calendar is not loaded here, so no test appointments are created.</em>
+        </p>
+      )}
+    </div>
+  </div>
+
+  {IS_PROD && (
+    <script type="text/javascript" src="https://static.hsappstatic.net/MeetingsEmbed/ex/MeetingsEmbedCode.js" is:inline></script>
+  )}
+</Base>

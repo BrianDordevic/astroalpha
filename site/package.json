@@ -1,0 +1,28 @@
+{
+  "name": "alpha-efficiency-astro",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "SITE_URL=http://localhost:4321 astro dev",
+    "build": "astro build",
+    "preview": "wrangler pages dev ./dist",
+    "astro": "astro",
+    "d1:migrate:local": "wrangler d1 migrations apply ae-content --local",
+    "d1:migrate": "wrangler d1 migrations apply ae-content --remote",
+    "d1:seed:local": "wrangler d1 execute ae-content --local --file=../db/seed.sql",
+    "d1:seed": "wrangler d1 execute ae-content --remote --file=../db/seed.sql",
+    "prebuild": "node ../scripts/gen-headers.mjs",
+    "postbuild": "node ../scripts/fix-routes.mjs"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^12.6.10",
+    "@astrojs/sitemap": "^3.6.0",
+    "astro": "^5.14.1",
+    "bootstrap": "^4.3.1",
+    "sass": "^1.102.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.42.0"
+  }
+}

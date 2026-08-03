@@ -1,0 +1,91 @@
+---
+import Base from '../layouts/Base.astro';
+import { getPage, getRedirect } from '../lib/db';
+import { bodyClassFor } from '../lib/body-class';
+import LocationSingle from '../components/LocationSingle.astro';
+
+// Server-rendered from D1 rather than prerendered. With 1,269 pages a static
+// build would need a full rebuild for every agent edit; this way a rewrite is
+// a single UPDATE and is live immediately.
+export const prerender = false;
+
+const path = '/' + (Astro.params.slug ?? '');
+const clean = path.replace(/\/+$/, '') || '/';
+
+// Trailing-slash parity with the old WordPress site: /slug/ 301s to /slug.
+if (path !== clean) {
+  return Astro.redirect(clean, 301);
+}
+
+const redirect = await getRedirect(Astro.locals, clean);
+if (redirect) {
+  return Astro.redirect(redirect.to_path, redirect.code as 301 | 302);
+}
+
+const page = await getPage(Astro.locals, clean);
+if (!page) {
+  return new Response(null, { status: 404, statusText: 'Not Found' });
+}
+
+// The 40 Blade-only pages carry no body: their markup still lives in the Sage
+// theme and has not been ported yet. Render an explicit placeholder rather
+// than a convincing-looking empty page.
+const needsPort = page.track === 'template' && !page.body_html;
+
+// The 402 location pages run on their own theme template, which supplies the
+// header, form, sidebar and CTA sections around the stored copy. Without it a
+// third of the site renders as bare paragraphs.
+const isLocation = page.track === 'location';
+
+// Reproduce WordPress's body_class(); the theme's page stylesheets are all
+// scoped under it. See src/lib/body-class.ts.
+const bodyClass = bodyClassFor({
+  type: page.type,
+  slug: page.slug,
+  wp_template: page.wp_template,
+});
+
+// Pages on the theme's default template (page.blade.php) render the content
+// inside .content-holder and emit no heading at all — that template's
+// @include('partials.page-header') is commented out. Rendering our own <h1>
+// here gave /start-here two of them, since its copy already opens with one.
+const isDefaultPage = page.type === 'page' && !page.wp_template;
+---
+
+<Base
+  title={page.meta_title ?? page.title}
+  description={page.meta_description}
+  canonical={page.canonical}
+  path={page.path}
+  image={page.hero_image}
+  noindex={page.robots_index === 0}
+  publishedAt={page.published_at}
+  updatedAt={page.updated_at}
+  type={page.type === 'post' ? 'article' : 'website'}
+  bodyClass={bodyClass}
+  fullBleed={isLocation}
+>
+  {isLocation ? (
+    <LocationSingle page={page} />
+  ) : isDefaultPage && !needsPort ? (
+    <div class="content-holder">
+      <article set:html={page.body_html} />
+    </div>
+  ) : (
+    <Fragment>
+      <h1 set:html={page.title} />
+
+      {needsPort ? (
+        <div style="border:2px dashed #b91c1c;padding:1rem;margin:1rem 0">
+          <strong>Not yet ported.</strong>
+          <p>
+            This page is rendered by <code>{page.wp_template}</code> in the Sage theme,
+            so it has no content in the database. It needs porting to an Astro component.
+          </p>
+        </div>
+      ) : (
+        <article set:html={page.body_html} />
+      )}
+    </Fragment>
+  )}
+</Base>
