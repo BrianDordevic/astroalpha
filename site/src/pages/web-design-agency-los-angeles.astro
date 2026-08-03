@@ -1,0 +1,479 @@
+---
+import Base from '../layouts/Base.astro';
+
+// Ported by hand from alpha-efficiency-2024 template-locations-la.blade.php
+// (12 static partials + locations-la-fourth-section). Unlike the pages
+// scripts/port-template.mjs generates, fourth-section reads four WordPress
+// custom fields (get_post_meta 'Web Design Agency' / 'Web Development Agency'
+// / 'SEO Agency' / 'PPC Agency') to pick which of five near-identical blocks
+// to render. There is no live WP DB in this checkout to read those fields, so
+// this reproduces the "none of the four are set" default branch — the same
+// content five other branches would show too, just a different heading/link.
+// If this page's actual WordPress post has one of those fields set, swap in
+// the matching branch from the theme source.
+//
+// locations.fifth-section is skipped: the source template includes it inside
+// a {{-- Blade comment --}}, so it never rendered in production.
+const content = `
+<!-- locations-la-hero -->
+<section class="web-design-hero">
+    <div class="web-design-holder customContainer">
+        <article class="hero-content">
+            <h1>Reach New Business Heights With Our Web Design Agency in Los Angeles</h1>
+            <p>Everyone wants a website that allures visitors and turns them into loyal customers. You can take a step further with our web design agency in Los Angeles. At <a href="">Alpha Efficiency</a>, we deliver aesthetically pleasing and extensively functional web designs that drive results across various industries. And today, we'll show you our secret.</p>
+            <div class="content-img">
+              <img src="/assets/images/home/banner4.svg" alt="Partners" />
+            </div>
+        </article>
+        <article class="hero-img-full">
+            <div class="hero-img-holder">
+                <a class="hero-img-image">
+                    
+                    <img src="/assets/images/locations-la/locations-la-hero.svg" alt="Los Angeles LA Location Map">
+                </a>
+            </div>
+        </article>
+    </div>
+    <a href="#learn-more" class="down-arrow">
+        <p>Learn More</p>
+        <img src="/assets/images/services/web-design-img/arrow-down-hero.svg" alt="Learn More">
+    </a>
+</section>
+
+<!-- locations-la-subhero -->
+<section class="web-design-subhero customContainer" id="learn-more">
+    <h2>Are you looking for an amazing website design agency in LA?</h2>
+    <p>As one of the leading companies in the web design industry, Alpha Efficiency helped many businesses achieve their goals and grow their online presence. With a wealth of knowledge and expertise in various web design techniques, we know what it takes to deliver our clients a top-quality <a href="/website-creation-process">website creation process</a>. </p>
+    <p>We hire a team of web design experts passionate about creating beautiful and effective websites. And our goal is always the same - creating a website your business deserves. Luckily, years of experience helped us develop a robust workflow. And here's the secret - everything starts with understanding your company's unique needs and goals. That's why we'd love to hear your ideas and turn them into reality. And to make you an integral part of this digital journey, we provide trademark customer service. You'll be the center of our attention during each web design phase. </p>
+    <p>Let's explore exciting ways our web design Los Angeles agency can elevate your business.</p>
+    
+    
+    <div class="actions">
+        <a href="tel:+13123006746" class="call">
+          <div class="svg-frame">
+            <svg width="41" height="55" viewBox="0 0 41 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M25.5477 42.8644C30.283 45.4058 35.809 46.0471 41 44.6553L40.6542 43.3657C35.7917 44.6694 30.6151 44.0687 26.1791 41.6879L18.8468 37.7527C13.2264 34.7362 6.71957 33.8069 0.479462 35.1295L0.756289 36.4356C6.68784 35.1784 12.8729 36.0618 18.2154 38.9291L25.5477 42.8644Z" fill="#FFB000"/>
+              <circle cx="20.1281" cy="39.2606" r="2.18194" transform="rotate(-30 20.1281 39.2606)" fill="white"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M16.2511 16.1701C17.1653 15.4484 18.0541 14.636 18.9429 13.8235L18.943 13.8234C20.1596 12.7319 20.2085 11.4541 19.1404 10.1715C18.837 9.81149 18.5163 9.4803 18.1956 9.14911C17.8749 8.81792 17.5542 8.48673 17.2508 8.12675C16.9002 7.77894 16.5731 7.42505 16.2461 7.07115C15.9191 6.71726 15.592 6.36337 15.2414 6.01556C14.1293 4.93889 12.7723 4.80116 11.5557 5.89262C10.6668 6.70513 9.77802 7.51764 8.86385 8.23934C8.04431 8.9367 7.58473 9.83351 7.36513 10.8633C7.13377 12.5773 7.49556 14.2362 8.04662 15.8465C9.17408 19.1577 10.9386 22.2079 13.151 25.0455C16.1407 28.8513 19.8301 31.8931 24.099 34.1047C26.0188 35.1683 28.0518 35.9108 30.362 36.1928C31.9336 36.3727 33.2585 36.032 34.3805 34.9649C34.7776 34.5708 35.1873 34.2221 35.5971 33.8735C36.0069 33.5248 36.4166 33.1761 36.8137 32.782C38.0304 31.6905 38.0539 30.3219 37.0365 29.2209C35.7284 27.8053 34.4203 26.3897 33.1375 25.065C32.0254 23.9883 30.6684 23.8506 29.4518 24.942C29.0074 25.3483 28.5566 25.7318 28.1059 26.1154C27.6551 26.499 27.2044 26.8825 26.76 27.2888C26.5014 27.4526 26.3122 27.5012 26.0468 27.2775C25.7139 27.0424 25.3509 26.8574 24.9703 26.6634C24.7733 26.563 24.5716 26.4602 24.367 26.3468C21.9858 24.7205 20.0016 22.7001 18.2507 20.4251L18.2507 20.4251C17.4225 19.2754 16.5944 18.1258 16.1194 16.788C16.0433 16.5155 16.0872 16.3096 16.2511 16.1701ZM24.9024 28.6896C24.7621 28.5944 24.5915 28.4979 24.3548 28.3748C24.2911 28.3417 24.2158 28.3033 24.1333 28.2612C23.9247 28.1548 23.6695 28.0247 23.4355 27.895L23.3588 27.8526L23.2867 27.8033C20.7076 26.0419 18.5889 23.8738 16.7521 21.4872L16.7347 21.4647L16.7182 21.4416C16.6998 21.4162 16.6814 21.3906 16.6629 21.3649C15.8699 20.2645 14.9152 18.9397 14.3559 17.3645L14.3359 17.3082L14.3198 17.2507C14.1339 16.5849 14.1413 15.5761 15.0151 14.8325L15.0409 14.8106L15.0675 14.7895C15.9202 14.1164 16.7596 13.3502 17.6579 12.529L17.6643 12.5232L17.6707 12.5175C18.0202 12.2039 18.0356 12.0232 18.0376 11.9835C18.0404 11.9265 18.0293 11.7023 17.6881 11.2913C17.4324 10.9883 17.1564 10.7023 16.8308 10.366L16.814 10.3487C16.5196 10.0447 16.1827 9.69674 15.8553 9.31348C15.4981 8.95627 15.1673 8.59833 14.8634 8.26937L14.8522 8.25728C14.5241 7.90228 14.2259 7.57995 13.9111 7.26724C13.5901 6.95889 13.3874 6.92878 13.3375 6.92621L13.3368 6.92617C13.3106 6.92478 13.1449 6.91604 12.8334 7.19367L12.8163 7.20931C11.9533 7.99825 11.0338 8.83881 10.0781 9.59571C9.64743 9.97039 9.36197 10.4667 9.2042 11.1588C9.04196 12.4695 9.31152 13.8127 9.81664 15.2887L9.81751 15.2912C10.8706 18.3841 12.528 21.2617 14.6406 23.9719C17.4706 27.5735 20.9546 30.444 24.984 32.5315L25.0075 32.5437L25.0305 32.5564C26.7718 33.5212 28.5679 34.1706 30.5896 34.4184C31.6833 34.5423 32.4077 34.3184 33.0568 33.7067C33.4989 33.2695 33.948 32.8873 34.3412 32.5528L34.361 32.5359C34.7781 32.181 35.1348 31.8764 35.4744 31.5393L35.5071 31.5069L35.5414 31.4761C35.8655 31.1853 35.8986 30.9865 35.902 30.9194C35.9055 30.85 35.8891 30.6738 35.6426 30.407C34.3396 28.997 33.0539 27.6058 31.7958 26.3058C31.4815 26.0076 31.2829 25.9782 31.2337 25.9756L31.233 25.9756C31.2067 25.9742 31.041 25.9655 30.7294 26.2432C30.2633 26.669 29.7943 27.0681 29.3529 27.4437L29.342 27.453C28.8874 27.8398 28.4614 28.2025 28.045 28.5832L27.9249 28.693L27.7865 28.7807C27.611 28.8919 27.1367 29.1876 26.4863 29.2145C25.7893 29.2434 25.2548 28.9638 24.9024 28.6896Z" fill="white"/>
+              </svg>           
+          </div>
+          <p>Call us now</p>
+        </a> 
+        <a href="/schedule-a-call" class="call">
+          <div class="svg-frame">
+            <svg width="47" height="31" viewBox="0 0 47 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.2593 4.21075V2.06765C17.2593 1.78345 17.1464 1.5109 16.9455 1.30994C16.7445 1.10899 16.472 0.996094 16.1878 0.996094C15.9036 0.996094 15.631 1.10899 15.4301 1.30994C15.2291 1.5109 15.1162 1.78345 15.1162 2.06765V4.21075H17.2593Z" fill="white"/>
+              <path d="M32.7964 4.21075V2.06765C32.7964 1.78345 32.6835 1.5109 32.4826 1.30994C32.2816 1.10899 32.0091 0.996094 31.7249 0.996094C31.4407 0.996094 31.1681 1.10899 30.9672 1.30994C30.7662 1.5109 30.6533 1.78345 30.6533 2.06765V4.21075H32.7964Z" fill="white"/>
+              <path d="M36.0117 23.6634C36.4886 23.7706 37.0511 23.8777 37.619 23.9742V14.1855C37.0726 14.3515 36.536 14.5483 36.0117 14.7749V23.6634Z" fill="white"/>
+              <path d="M16.1887 5.28054C16.4729 5.28054 16.7455 5.16764 16.9464 4.96669C17.1474 4.76573 17.2603 4.49318 17.2603 4.20898H15.1172C15.1172 4.49318 15.2301 4.76573 15.431 4.96669C15.632 5.16764 15.9045 5.28054 16.1887 5.28054Z" fill="white"/>
+              <path d="M31.7258 5.28054C32.01 5.28054 32.2826 5.16764 32.4836 4.96669C32.6845 4.76573 32.7974 4.49318 32.7974 4.20898H30.6543C30.6543 4.49318 30.7672 4.76573 30.9681 4.96669C31.1691 5.16764 31.4417 5.28054 31.7258 5.28054Z" fill="white"/>
+              <path d="M35.5015 4.20904H32.7958C32.7958 4.49324 32.6829 4.76579 32.482 4.96675C32.281 5.1677 32.0085 5.2806 31.7243 5.2806C31.4401 5.2806 31.1675 5.1677 30.9666 4.96675C30.7656 4.76579 30.6527 4.49324 30.6527 4.20904H17.2583C17.2583 4.49324 17.1454 4.76579 16.9445 4.96675C16.7435 5.1677 16.471 5.2806 16.1868 5.2806C15.9026 5.2806 15.63 5.1677 15.4291 4.96675C15.2281 4.76579 15.1152 4.49324 15.1152 4.20904H11.9005C11.3322 4.20904 10.7871 4.43484 10.3851 4.83675C9.98323 5.23866 9.75744 5.78376 9.75744 6.35215V11.142C9.76008 11.1633 9.76008 11.1849 9.75744 11.2063L10.3307 11.3402C10.5665 11.3884 10.8022 11.4259 11.0326 11.4635C11.0426 11.4199 11.0551 11.377 11.0701 11.3349L11.413 10.1454L11.6166 9.56681H35.5604C35.5658 9.60232 35.5658 9.63844 35.5604 9.67396L34.6871 12.7815L34.3013 14.1745L31.8636 23.0523L31.5635 24.156L31.4189 24.6918C31.394 24.7754 31.3432 24.8489 31.2739 24.9018C31.2046 24.9548 31.1203 24.9844 31.0331 24.9864H7.45896C7.39651 24.9869 7.33484 24.9725 7.27897 24.9446C7.22311 24.9167 7.17463 24.8759 7.1375 24.8257C7.09961 24.775 7.07408 24.7161 7.06292 24.6538C7.05176 24.5915 7.05528 24.5275 7.07321 24.4667L9.75209 15.6264L10.2879 13.9548C10.1218 13.9173 9.95032 13.8852 9.75209 13.8584C9.47943 13.8051 9.20395 13.7676 8.92699 13.7459L5.80342 24.0649C5.6781 24.5032 5.72967 24.9732 5.94705 25.3739C6.16443 25.7746 6.53029 26.0741 6.96605 26.208C7.12941 26.2573 7.29906 26.2825 7.46968 26.283H31.0438C31.4247 26.2816 31.7948 26.1558 32.0975 25.9246C32.4003 25.6934 32.6192 25.3696 32.7208 25.0025L32.769 24.8257L33.0583 23.7542L35.4747 15.0585L35.9301 13.4137L36.0533 12.9476L36.2087 12.4118L36.2837 12.1439C36.7338 11.9832 37.1945 11.8331 37.6607 11.6938V6.35215C37.6607 6.06935 37.6047 5.78936 37.496 5.52829C37.3873 5.26722 37.228 5.03025 37.0273 4.83103C36.8266 4.63182 36.5884 4.47429 36.3266 4.36754C36.0647 4.26079 35.7843 4.20692 35.5015 4.20904ZM36.0373 8.28094C35.9788 8.17487 35.9106 8.07444 35.8337 7.98091C35.6338 7.86127 35.4015 7.80695 35.1693 7.82553H12.0345C11.8045 7.82422 11.5766 7.8698 11.3648 7.95948V6.35215C11.3648 6.21005 11.4212 6.07378 11.5217 5.9733C11.6222 5.87282 11.7585 5.81637 11.9005 5.81637H35.4747C35.6168 5.81637 35.7531 5.87282 35.8535 5.9733C35.954 6.07378 36.0105 6.21005 36.0105 6.35215L36.0373 8.28094Z" fill="white"/>
+              <path d="M17.7455 26.3132C15.7665 27.4563 13.6094 28.2586 11.3645 28.6867C10.8287 28.7867 10.2929 28.8671 9.75713 28.9278C9.11955 28.9974 8.47662 29.0457 7.82833 29.0564L4.33507 29.1153C4.15699 29.6054 3.80637 30.0137 3.34887 30.2638C2.89137 30.5139 2.35838 30.5886 1.84973 30.474C1.34108 30.3594 0.891664 30.0633 0.585654 29.6411C0.279644 29.219 0.138033 28.6997 0.187344 28.1807C0.236656 27.6616 0.473507 27.1783 0.853536 26.8213C1.23356 26.4643 1.7307 26.2581 2.25183 26.2413C2.77297 26.2246 3.28235 26.3983 3.68457 26.7301C4.08678 27.0619 4.35425 27.5289 4.43687 28.0437L7.81226 27.9902C8.45519 27.9902 9.10348 27.9259 9.74641 27.8455C10.2822 27.7866 10.818 27.6955 11.3537 27.5883C12.7304 27.3134 14.0726 26.8875 15.356 26.3185L17.7455 26.3132Z" fill="#FFB000"/>
+              <path d="M46.4147 11.8672C46.4268 12.4356 46.2126 12.9855 45.8192 13.3959C45.4259 13.8064 44.8855 14.0437 44.3172 14.0558C43.7488 14.0679 43.1989 13.8537 42.7884 13.4603C42.378 13.067 42.1406 12.5266 42.1285 11.9583C41.3326 12.0068 40.5412 12.1124 39.7604 12.2744C39.0371 12.419 38.3191 12.5958 37.6173 12.8101C37.0601 12.9744 36.5243 13.162 36.0099 13.3727L35.8867 13.4209L36.0099 12.9548L36.1653 12.419L36.2403 12.1511C36.6904 11.9904 37.1512 11.8404 37.6173 11.7011C39.1459 11.2453 40.7231 10.9719 42.316 10.8867C42.5256 10.4392 42.8833 10.0779 43.3286 9.86382C43.774 9.64979 44.2796 9.59624 44.76 9.71222C45.2403 9.8282 45.6658 10.1066 45.9644 10.5003C46.263 10.894 46.4164 11.3787 46.3986 11.8725L46.4147 11.8672Z" fill="#FFB000"/>
+              <path d="M37.6174 25.4497C37.0816 25.3318 36.5726 25.1925 36.0529 25.0371V26.1087V28.8572C36.0529 28.9993 35.9965 29.1356 35.896 29.236C35.7955 29.3365 35.6592 29.393 35.5171 29.393H13.3628C12.4031 29.7855 11.4187 30.1148 10.416 30.3788C10.8112 30.7709 11.3435 30.9937 11.9001 31.0003H35.4743C36.0427 31.0003 36.5878 30.7745 36.9897 30.3726C37.3916 29.9707 37.6174 29.4256 37.6174 28.8572V26.5266V25.4497Z" fill="white"/>
+              <path d="M20.6449 15.9011C18.4101 13.9907 15.7874 12.588 12.9579 11.7897C10.1283 10.9915 7.15921 10.8167 4.25551 11.2774C4.04406 10.7919 3.66276 10.4002 3.18313 10.1757C2.70349 9.9513 2.15845 9.90953 1.65022 10.0583C1.14199 10.207 0.705466 10.536 0.42251 10.9836C0.139554 11.4313 0.0295989 11.9667 0.113263 12.4896C0.196927 13.0125 0.468463 13.4869 0.876955 13.8239C1.28545 14.1609 1.80284 14.3373 2.33211 14.32C2.86137 14.3028 3.36617 14.093 3.75183 13.7302C4.1375 13.3673 4.37754 12.8762 4.42695 12.3489C7.18087 11.9088 9.99762 12.0744 12.681 12.834C15.3644 13.5937 17.8499 14.9293 19.9645 16.7476C20.0609 16.8275 20.1822 16.8711 20.3074 16.8709C20.4177 16.8711 20.5254 16.8372 20.6157 16.774C20.7061 16.7107 20.7747 16.621 20.8123 16.5173C20.8498 16.4135 20.8543 16.3007 20.8253 16.1943C20.7964 16.0878 20.7352 15.9929 20.6503 15.9226L20.6449 15.9011Z" fill="#FFB000"/>
+              <path d="M44.3895 24.2962C43.8677 24.2042 43.3303 24.3089 42.8811 24.5899C42.4319 24.8709 42.1027 25.3083 41.9571 25.8178V25.8821C39.4247 25.8875 36.9191 25.3637 34.6009 24.3444L34.3223 25.3784C36.6682 26.3803 39.1868 26.9153 41.7374 26.9536H41.9731C42.0808 27.3478 42.2989 27.703 42.6017 27.9773C42.9045 28.2517 43.2794 28.4337 43.6823 28.502C43.8025 28.5236 43.9244 28.5344 44.0466 28.5342C44.5819 28.5315 45.0969 28.3286 45.4901 27.9653C45.8834 27.602 46.1264 27.1047 46.1714 26.5713C46.2165 26.0378 46.0602 25.5069 45.7334 25.0828C45.4066 24.6588 44.9329 24.3724 44.4056 24.2801L44.3895 24.2962ZM45.0807 26.5947C45.0467 26.7972 44.9553 26.9857 44.8173 27.1377C44.6793 27.2898 44.5006 27.399 44.3023 27.4523C44.104 27.5057 43.8946 27.501 43.6989 27.4387C43.5032 27.3765 43.3296 27.2593 43.1986 27.1012C43.0676 26.943 42.9848 26.7506 42.9601 26.5468C42.9353 26.3429 42.9697 26.1363 43.059 25.9514C43.1484 25.7665 43.2889 25.6112 43.464 25.5039C43.6391 25.3966 43.8413 25.3419 44.0466 25.3463C44.1072 25.3409 44.1682 25.3409 44.2288 25.3463C44.5069 25.3996 44.7526 25.5608 44.9123 25.7947C45.0719 26.0286 45.1324 26.3162 45.0807 26.5947Z" fill="#FFB000"/>
+              </svg>                        
+          </div>
+          <p>Schedule a call</p>
+        </a>    
+      </div>
+</section>
+
+<!-- locations-la-creating -->
+<section class="card-list locations-la-creating gray-background" id="locations-la-creating">
+    <div class="card-list-holder half-half customContainer section">
+          <article class="card-list-img">
+            
+            <img src="/assets/images/locations-la/creating-profit.svg" alt="">
+          </article>
+          <article class="card-list-text">
+            <h2>Creating a Better Online Presence for Your Business</h2>
+            <p>Today, business growth starts with establishing a strong online presence. This is true no matter how large your business is. Here are just some of the ways our web design solutions can help you succeed:</p>
+          </article>
+          <article class="card-list-cards">
+            <div class="card-list-card">
+                <p><strong>Attract new customers:</strong> Our web design company creations help clients attract new customers by making a solid first impression and utilizing various design elements to influence customer behavior in the desired direction. We'll help you draw potential customers into exploring your digital environment, and turn them into regular clients.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>Enhance credibility and trust:</strong> Getting a world-class web design is a proven way to establish credibility and trust with your potential customers. It shows you are serious about your business and willing to invest in its online presence. But our web design experts scratch deep beyond the surface when creating business websites. From the color palette to your site architecture, we'll conduct tests with real people until we find the perfect web design combination that builds trust on both subconscious and conscious levels.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>Create an enjoyable experience for your potential customers:</strong> By creating an aesthetically pleasing web design, crafting user-friendly navigation, and implementing custom features, we'll help you create a memorable experience for your visitors. They'll be excited about returning to your website in the future.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>Showcase your products in the best light:</strong> By paying close attention to details such as background contrast, page layout, the angle of your photos, product descriptions, and more - our web design company in Los Angeles will help you highlight all the qualities of your products.</p>
+            </div>
+          </article>
+    </div> 
+</section>
+
+<!-- locations-la-custom-wp -->
+<section class="card-list locations-la-custom-wp white-background" id="locations-la-custom-wp">
+    <div class="card-list-holder half-half customContainer section">
+          <article class="card-list-text">
+            <h2>Custom WordPress Web Design</h2>
+            <p>A custom WordPress web design makes standing out in today's crowded online market and driving business success easier. Combining this open-source platform with creativity will give you a wide range of options to showcase your band and build strong connections with your target audience. Here's what you'll get with our <a href="/custom-wordpress-website-design">custom web design services</a>:</p>
+          </article>
+          <article class="card-list-img">
+            
+            <img src="/assets/images/locations-la/custom-wp.svg" alt="">
+          </article>
+          <article class="card-list-cards">
+            <div class="card-list-card">
+                <p><strong>Fantastic user experience:</strong> We'll tailor your web design to your target audience's specific needs and preferences to create a fantastic user experience. Potential customers will enjoy exploring unique features that no other website has. </p>
+            </div>
+            <div class="card-list-card">
+            </div>
+            <div class="card-list-card">
+                <p><strong>Tailor-made web design for your brand:</strong> Custom WordPress web design allows our web design Los Angeles company to create a unique and customized website that reflects your brand and meets the specific needs of your business. We'll help you customize the layout, color scheme, font, and other design elements to ensure customers will fall in love with your brand. This open-source platform is an excellent choice for companies wanting to stand out online and better serve their customers.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>Enhanced Functionality:</strong> With a custom WordPress web design, we can make people enjoy the functionality of your website. For example, you can get unique forms, online payment systems, and eCommerce capabilities for your digital environment. Our web design Los Angeles agency can also implement custom plugins and features that will allow you to streamline your workflows and make it easier for your team to manage the website.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>SEO advantage:</strong> Ranking high on Google is something that every business desires. And the quality of your web design plays a significant role in your SEO success. Our Los Angeles web design agency uses the <a href="/sage-framework-wordpress">WordPress Sage theme</a> as a foundation when building a custom web design. This SEO-friendly framework gives us total control over the design and development process, which is crucial for achieving impressive page speeds and creating user-friendly environments. We also follow the best SEO practices when optimizing meta elements and URLs, creating site structure, <a href="/core-web-vitals-update">Core Web Vitals</a>, and more. Your business will gain a competitive advantage in the search engine optimization race.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>A professional look for your website:</strong> There are not many better ways to achieve a cohesive and professional website look other than with WordPress web design. This platform provides endless opportunities to customize design elements. Our web design agency in Los Angeles knows how to use that to help you build trust with your customers. With high levels of website functionality and the quality of graphic design work, we'll help your business secure positive first impressions.</p>
+            </div>
+          </article>
+    </div>
+</section>
+
+<!-- locations-la-wp-cms -->
+<section class="card-list locations-la-wp-cms gray-background" id="locations-la-wp-cms">
+    <div class="card-list-holder half-half customContainer section">
+          <article class="card-list-img">
+            
+            <img src="/assets/images/locations-la/wp-cms.svg" alt="">
+          </article>
+          <article class="card-list-text">
+            <h2>Is WordPress the best CMS for Your Business?</h2>
+            <p>WordPress is an excellent choice for everyone, from non-profit organizations and small businesses to large corporations. And this is not just because of endless customization options. It also includes a user-friendly content management system your business can benefit from. Here are just some of the reasons why we firmly believe that WordPress is currently the best CMS:</p>
+          </article>
+          <article class="card-list-cards">
+            <div class="card-list-card">
+                <p><strong>Flexibility:</strong> WordPress makes adding, editing, and deleting content simple. Once we fine-tune your CMS, you'll be able to keep your website up-to-date and relevant to your customers with minimum effort. </p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>Scalability:</strong> When set up correctly, WordPress websites are highly scalable. Your website will easily handle increased traffic or new features as your business grows. Hiring experts from our web design company in Los Angeles to build your website on WordPress will save time and resources in the long run by eliminating the need for constant updates and redesigns.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>Cost-effectiveness:</strong> WordPress is an open-source platform that is free to use. You won't need to pay monthly subscriptions like on some other platforms. Instead, you can redirect the budget to get high-quality web hosting services.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>Wide support:</strong> This platform powers millions of websites worldwide and has a large community of developers. If you need any help with your website, you'll quickly find support and resources. But if you want to keep your website secure, high-performing, and available to your potential customers 24/7 without any effort from your side, feel free to explore our <a href="/wordpress-maintenance-chicago">WordPress maintenance</a> services.</p>
+            </div>
+          </article>
+    </div> 
+</section>
+
+<!-- locations-la-ecommerce -->
+<section class="card-list locations-la-ecommerce white-background" id="locations-la-ecommerce">
+    <div class="card-list-holder half-half customContainer section">
+          <article class="card-list-text">
+            <h2>E-Commerce Web Design That Boosts Sales</h2>
+            <p>Creating a smooth shopping experience is crucial for making more sales and building quality relationships. That's why our web design Los Angeles agency pays attention to the following areas to create profitable online stores:</p>
+          </article>
+          <article class="card-list-img">
+            
+            <img src="/assets/images/locations-la/ecommerce.webp" alt="Ecommerce">
+          </article>
+          <article class="card-list-cards">
+            <div class="card-list-card">
+                <p><strong>Product display:</strong> Alpha Efficiency's web design experts will help you display products in an organized and visually appealing way. We'll help you implement high-quality product images, engaging product descriptions, options for customization and personalization, and much more. You'll be able to stand out in the competitive industry and build long-term relationships with your customers.</p>
+            </div>
+            <div class="card-list-card">
+            </div>
+            <div class="card-list-card">
+                <p><strong>Building trust with your customers:</strong> Knowing how to build trust with customers is vital to successful eCommerce web design development work. By using appropriate color palettes, placing customer reviews and testimonials at the right spot, implementing secure payment methods, and writing high-quality copy, we'll help you build trust with your customer base.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>Shopping cart and smooth checkout process:</strong> With our eCommerce web design development services, you'll get a shopping cart and checkout process that is easy to use and secure. Your customers will be able to enjoy features such as the ability to save items for later, apply discounts or coupons, and quickly fill out forms necessary for making a payment.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>High level of security:</strong> Your eCommerce business needs strong security measures to protect customer data and transactions. We'll implement SSL certificates and secure payment gateways to make everyone feel safe while shopping on your website.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>Integration with inventory and order management systems:</strong> By integrating your eCommerce website with the desired inventory and order management system, we'll help you smoothly run your eCommerce business on daily basis. You'll be able to track and fulfill orders without leaving your website.</p>
+            </div>
+          </article>
+    </div>
+</section>
+
+<!-- locations-la-responsive -->
+<section class="card-list locations-la-responsive gray-background" id="locations-la-responsive">
+    <div class="card-list-holder half-half customContainer section">
+          <article class="card-list-img">
+            
+            <img src="/assets/images/locations-la/responsive.svg" alt="">
+          </article>
+          <article class="card-list-text">
+            <h2>Responsive Web Design Everyone Will Enjoy</h2>
+            <p>People increasingly use mobile devices for both business and private purposes, which makes responsive design crucial for ensuring success. Our web design Los Angeles agency can help you create a <a href="/how-to-make-your-website-mobile-friendly">mobile-friendly web design</a> that looks amazing and functions flawlessly on smartphones and tablets. Your business and its customers will enjoy:</p>
+          </article>
+          <article class="card-list-cards">
+            <div class="card-list-card">
+                <p><strong>Smooth navigation:</strong> Web design experts will ensure that your website's layout and navigation are optimized for small screens, so mobile users can easily find information that interests them. From designing mobile-friendly navigation menus to carefully placing graphic design elements on each page, we take care of every detail to boost user experience.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>Fast loading times:</strong> We'll reduce the amount of data that needs to load, which will secure faster loading times on mobile devices. And fast page speeds will help you achieve better SEO results and create positive first impressions with customers.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>Enhanced readability:</strong> Finding the perfect font size, line spacing, and layout allows us to make your content more readable on small screens. Our web design experts conduct comprehensive readability tests with real users to ensure your customers will enjoy reading your content without getting their eyes strained. We'll establish a clear visual hierarchy and help you naturally draw people's attention to the most important page areas.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>Improved usability:</strong> It's crucial to make it easy for users to interact with your website using mobile devices. Experts from our web design Los Angeles agency will use appropriate button sizes and follow the best practices for designing mobile-friendly forms to ensure that people won't wish they had a mouse in their hands. Every action on your website will be performable with a single thumb.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>Reduced maintenance and development costs:</strong> A responsive design allows you to create a single website that can be accessed on all devices, including desktop computers, tablets, and smartphones. This means you won't have to maintain and update separate websites for different devices, which can save time and resources. Our web design Los Angeles agency will help you keep the high performance of your website at an affordable price. For more detailed insight, check our <a href="/website-design-cost-calculator">web design calculator</a>.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>Increased traffic and engagement:</strong> Google favors mobile-friendly websites in its search rankings, and that's something you should pay attention to. A responsive web design can improve your search engine visibility and obtain more organic traffic. And the user-friendly environment will also encourage visitors to stay on your website longer.</p>
+            </div>
+          </article>
+    </div> 
+</section>
+
+<!-- locations-la-reach -->
+<section class="locations-la-reach white-background" id="locations-la-reach">
+    <div class="half-half customContainer section">
+        <div class="section-container">
+            <div class="section-text change-order">
+              <h2>Reach New Heights with our SEO-Friendly Website Redesign</h2>
+              <p>An <a href="/when-is-it-time-to-redesign-your-website">average website lifespan</a> is less than three years, and without occasional redesigns, you risk falling behind your competition. Also, if you recently changed your brand identity system, your website must reflect these changes. There are also many other signs that it's time for a redesign. However, many business owners worry about losing long-built SEO success by taking such drastic measures. And that's understandable, as a poorly executed redesign usually does more harm than good. But we've found the solution.</p>
+            </div>
+            <div class="section-img">
+              
+              <img src="/assets/images/locations-la/reach.svg" alt="">
+            </div>
+        </div>
+        <div class="section-container">          
+            <div class="section-img hidden">
+              
+              <img src="/assets/images/locations-la/satisfied.svg" alt="">
+            </div>
+            <div class="section-text second-text-section">
+              <p>Our web design Los Angeles agency developed an advanced method that will help you prevent <a href="/redesign-without-losing-seo">losing SEO after the redesign</a>. SEO and web design experts will work closely together to ensure your website reaches new heights after the redesign process is over. You'll be able to enjoy:</p>
+              <ul>
+                <li>A fresh website look</li>
+                <li>Improved search engine rankings</li>
+                <li>Faster loading times</li>
+                <li>Enhanced branding</li>
+                <li>Improved mobile optimization</li>
+                <li>Increased credibility</li>
+              </ul>
+            </div>
+        </div>
+    </div> 
+</section>
+
+<!-- locations-la-strategy -->
+<section class="locations-la-strategy gray-background" id="locations-la-strategy">
+    <div class="half-half customContainer section">
+        <div class="section-container">
+            <div class="section-text change-order">
+              <h2>Create a Profitable Digital Strategy For Your Business</h2>
+              <p>Working with our web design agency helps you to create a profitable digital strategy, grow your business, and reach your goals.</p>
+              <p>Before our web design agency in Los Angeles begins designing your website, we'll thoroughly analyze your business to understand your goals, target audience, and competitors. This will help us create a customized digital marketing strategy to help you thrive online.</p>
+              <p>We can also integrate your website with your social media and other marketing channels to create a cohesive digital presence and boost brand engagement. Over the years, we've helped many clients shake the internet and start new social media trends. Who says your business is not worth the global audience's attention too?</p>
+            </div>
+            <div class="section-img">
+              
+              <img src="/assets/images/locations-la/strategy.svg" alt="">
+            </div>
+        </div>
+        
+    </div> 
+</section>
+
+<!-- locations-la-ada -->
+<section class="card-list locations-la-ada white-background" id="locations-la-ada">
+    <div class="card-list-holder half-half customContainer section">
+          <article class="card-list-img">
+            
+            <img src="/assets/images/locations-la/ada.svg" alt="ADA">
+          </article>
+          <article class="card-list-text">
+            <h2>Is Your Current Website ADA Compliant?</h2>
+            <p>Americans with Disabilities Act (ADA) is a federal law requiring you to design and develop a website accessible to people with disabilities, including those who are blind, deaf, or have limited mobility. Here at our web design agency in Los Angeles, we believe everyone deserves equal access to information and resources on the internet. That's why we'll invest lots of effort to ensure your website meets various <a href="/wordpress-ada-compliance-website">WordPress ADA compliance</a> requirements. Some of the best practices our web design experts follow include: </p>
+          </article>
+          <article class="card-list-cards">
+            <div class="card-list-card">
+                <p><strong>Using semantic HTML:</strong> Instead of using tags solely for formatting purposes, we use HTML tags that accurately describe the content on the page. This makes it easier for screen readers and other assistive technologies to understand and navigate the content on your website.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>Providing alternative text for images:</strong> We'll include a short description for every image on your website, which will help screen readers describe visual elements to users who are blind or have low vision.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>Using descriptive link text:</strong> By writing descriptive link texts, we'll make sure both users and assistive technologies get enough context to understand where each link points.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>Adjustable font sizes and color schemes:</strong> Besides choosing the perfect font size and adjusting the contrast for maximum readability, we'll also implement features that allow visitors to adjust these elements. This way, everyone will be able to explore your website in the way they find most enjoyable.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>Testing your website with assistive technologies:</strong> During the design process, our web design company in Los Angeles uses tools such as screen readers and keyboard navigation to test the accessibility of your website. This allows us to identify any potential issues early on and fix them on time.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>Following web accessibility guidelines and standards:</strong> Alpha Efficiency's web design experts follow web accessibility guidelines and standards, such as WCAG, to ensure your website is accessible to everyone.</p>
+            </div>
+            <div class="card-list-card">
+                <p>In addition to being the right thing to do, ADA compliance is important from legal and SEO perspectives. If it's not accessible to people with disabilities, your website might face penalties from search engines. We can help you protect your business and ensure all users have an equally great experience on your website.</p>
+            </div>
+            <div class="card-list-card">
+                <article class="card-list-img">
+                    <img src="/assets/images/locations-la/Img 168.webp" alt="ADA">
+                </article>
+            </div>
+          </article>
+          
+    </div>
+</section>
+
+<!-- locations-la-agency -->
+<section class="card-list locations-la-agency gray-background" id="locations-la-agency">
+    <div class="card-list-holder half-half customContainer section">
+          <article class="card-list-img">
+            
+            <img src="/assets/images/locations-la/work-with-agency.svg" alt="">
+          </article>
+          <article class="card-list-text">
+            <h2>Here's How it Looks Like to Work with our Web Design Agency in Los Angeles, CA</h2>
+            <p>As one of the best web design companies in Los Angeles, CA - we make sure to provide high-quality treatment for our clients. Here's the bare minimum you can expect by contacting us:</p>
+          </article>
+          <article class="card-list-cards">
+            <div class="card-list-card">
+            </div>
+            <div class="card-list-card">
+                <p><strong>Highly productive consultation calls:</strong> We'll start with an initial consultation to understand your needs and goals. You'll get to tell us everything about your target audience, your branding, and all the specific features or functionality you want on your website. Our web design experts will then outline their recommendations for your website, including the scope of the work, the timeline, and the cost. We'll make sure to set realistic deadlines, present you with expected results, and transparently break down our pricing policy to you.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>A complete insight into your projects:</strong> Our Los Angeles web design agency will secure transparency and clear communication by keeping you informed about what is happening at every step of your web design project. If any challenges or issues arise, we'll inform you on time and show you possible solutions.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>Flexible approach:</strong> Our web design agency in Los Angeles is always open to making changes or adjustments to the project in order to meet your needs and goals. We'll carefully consider each of your recommendations and strive toward what's best for your business. Whether you want us to completely change how users interact with the website or give it a different look with graphic design, we'll listen to your ideas.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>Professionalism:</strong> Alpha Efficiency's web design experts maintain a high level of professionalism in all interactions with clients. We respect your busy schedule, so we'll make sure to be available whenever your company needs us.</p>
+            </div>
+            <div class="card-list-card">
+                <p><strong>On-going support:</strong> After completing your project, we'll stay in touch to ensure you're satisfied with the final product. We'll give you an opportunity to address any potential issues or concerns. You can also hire our web design Los Angeles agency to regularly maintain your website and keep a high level of performance in the long run.</p>
+            </div>
+          </article>
+    </div> 
+</section>
+
+<!-- locations-la-call -->
+<section class="web-design-subhero customContainer" id="locations-la-call">
+    <h2>Let's build a great website together</h2>
+    <p>Web design is fun, and we should enjoy it together. Our web design agency in Los Angeles will help you turn your ideas into reality. We will only stop your project once it delivers results beyond your expectations.</p>
+    <p><a href="/schedule-a-call">Schedule a free consultation call</a> and introduce us to your company. Together, we'll craft a world-class web design, elevate your online presence, and maximize your business potential.</p>
+    
+    
+    <div class="actions">
+        <a href="tel:+13123006746" class="call">
+          <div class="svg-frame">
+            <svg width="41" height="55" viewBox="0 0 41 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M25.5477 42.8644C30.283 45.4058 35.809 46.0471 41 44.6553L40.6542 43.3657C35.7917 44.6694 30.6151 44.0687 26.1791 41.6879L18.8468 37.7527C13.2264 34.7362 6.71957 33.8069 0.479462 35.1295L0.756289 36.4356C6.68784 35.1784 12.8729 36.0618 18.2154 38.9291L25.5477 42.8644Z" fill="#FFB000"/>
+              <circle cx="20.1281" cy="39.2606" r="2.18194" transform="rotate(-30 20.1281 39.2606)" fill="white"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M16.2511 16.1701C17.1653 15.4484 18.0541 14.636 18.9429 13.8235L18.943 13.8234C20.1596 12.7319 20.2085 11.4541 19.1404 10.1715C18.837 9.81149 18.5163 9.4803 18.1956 9.14911C17.8749 8.81792 17.5542 8.48673 17.2508 8.12675C16.9002 7.77894 16.5731 7.42505 16.2461 7.07115C15.9191 6.71726 15.592 6.36337 15.2414 6.01556C14.1293 4.93889 12.7723 4.80116 11.5557 5.89262C10.6668 6.70513 9.77802 7.51764 8.86385 8.23934C8.04431 8.9367 7.58473 9.83351 7.36513 10.8633C7.13377 12.5773 7.49556 14.2362 8.04662 15.8465C9.17408 19.1577 10.9386 22.2079 13.151 25.0455C16.1407 28.8513 19.8301 31.8931 24.099 34.1047C26.0188 35.1683 28.0518 35.9108 30.362 36.1928C31.9336 36.3727 33.2585 36.032 34.3805 34.9649C34.7776 34.5708 35.1873 34.2221 35.5971 33.8735C36.0069 33.5248 36.4166 33.1761 36.8137 32.782C38.0304 31.6905 38.0539 30.3219 37.0365 29.2209C35.7284 27.8053 34.4203 26.3897 33.1375 25.065C32.0254 23.9883 30.6684 23.8506 29.4518 24.942C29.0074 25.3483 28.5566 25.7318 28.1059 26.1154C27.6551 26.499 27.2044 26.8825 26.76 27.2888C26.5014 27.4526 26.3122 27.5012 26.0468 27.2775C25.7139 27.0424 25.3509 26.8574 24.9703 26.6634C24.7733 26.563 24.5716 26.4602 24.367 26.3468C21.9858 24.7205 20.0016 22.7001 18.2507 20.4251L18.2507 20.4251C17.4225 19.2754 16.5944 18.1258 16.1194 16.788C16.0433 16.5155 16.0872 16.3096 16.2511 16.1701ZM24.9024 28.6896C24.7621 28.5944 24.5915 28.4979 24.3548 28.3748C24.2911 28.3417 24.2158 28.3033 24.1333 28.2612C23.9247 28.1548 23.6695 28.0247 23.4355 27.895L23.3588 27.8526L23.2867 27.8033C20.7076 26.0419 18.5889 23.8738 16.7521 21.4872L16.7347 21.4647L16.7182 21.4416C16.6998 21.4162 16.6814 21.3906 16.6629 21.3649C15.8699 20.2645 14.9152 18.9397 14.3559 17.3645L14.3359 17.3082L14.3198 17.2507C14.1339 16.5849 14.1413 15.5761 15.0151 14.8325L15.0409 14.8106L15.0675 14.7895C15.9202 14.1164 16.7596 13.3502 17.6579 12.529L17.6643 12.5232L17.6707 12.5175C18.0202 12.2039 18.0356 12.0232 18.0376 11.9835C18.0404 11.9265 18.0293 11.7023 17.6881 11.2913C17.4324 10.9883 17.1564 10.7023 16.8308 10.366L16.814 10.3487C16.5196 10.0447 16.1827 9.69674 15.8553 9.31348C15.4981 8.95627 15.1673 8.59833 14.8634 8.26937L14.8522 8.25728C14.5241 7.90228 14.2259 7.57995 13.9111 7.26724C13.5901 6.95889 13.3874 6.92878 13.3375 6.92621L13.3368 6.92617C13.3106 6.92478 13.1449 6.91604 12.8334 7.19367L12.8163 7.20931C11.9533 7.99825 11.0338 8.83881 10.0781 9.59571C9.64743 9.97039 9.36197 10.4667 9.2042 11.1588C9.04196 12.4695 9.31152 13.8127 9.81664 15.2887L9.81751 15.2912C10.8706 18.3841 12.528 21.2617 14.6406 23.9719C17.4706 27.5735 20.9546 30.444 24.984 32.5315L25.0075 32.5437L25.0305 32.5564C26.7718 33.5212 28.5679 34.1706 30.5896 34.4184C31.6833 34.5423 32.4077 34.3184 33.0568 33.7067C33.4989 33.2695 33.948 32.8873 34.3412 32.5528L34.361 32.5359C34.7781 32.181 35.1348 31.8764 35.4744 31.5393L35.5071 31.5069L35.5414 31.4761C35.8655 31.1853 35.8986 30.9865 35.902 30.9194C35.9055 30.85 35.8891 30.6738 35.6426 30.407C34.3396 28.997 33.0539 27.6058 31.7958 26.3058C31.4815 26.0076 31.2829 25.9782 31.2337 25.9756L31.233 25.9756C31.2067 25.9742 31.041 25.9655 30.7294 26.2432C30.2633 26.669 29.7943 27.0681 29.3529 27.4437L29.342 27.453C28.8874 27.8398 28.4614 28.2025 28.045 28.5832L27.9249 28.693L27.7865 28.7807C27.611 28.8919 27.1367 29.1876 26.4863 29.2145C25.7893 29.2434 25.2548 28.9638 24.9024 28.6896Z" fill="white"/>
+              </svg>           
+          </div>
+          <p>Call us now</p>
+        </a> 
+        <a href="/schedule-a-call" class="call">
+          <div class="svg-frame">
+            <svg width="47" height="31" viewBox="0 0 47 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.2593 4.21075V2.06765C17.2593 1.78345 17.1464 1.5109 16.9455 1.30994C16.7445 1.10899 16.472 0.996094 16.1878 0.996094C15.9036 0.996094 15.631 1.10899 15.4301 1.30994C15.2291 1.5109 15.1162 1.78345 15.1162 2.06765V4.21075H17.2593Z" fill="white"/>
+              <path d="M32.7964 4.21075V2.06765C32.7964 1.78345 32.6835 1.5109 32.4826 1.30994C32.2816 1.10899 32.0091 0.996094 31.7249 0.996094C31.4407 0.996094 31.1681 1.10899 30.9672 1.30994C30.7662 1.5109 30.6533 1.78345 30.6533 2.06765V4.21075H32.7964Z" fill="white"/>
+              <path d="M36.0117 23.6634C36.4886 23.7706 37.0511 23.8777 37.619 23.9742V14.1855C37.0726 14.3515 36.536 14.5483 36.0117 14.7749V23.6634Z" fill="white"/>
+              <path d="M16.1887 5.28054C16.4729 5.28054 16.7455 5.16764 16.9464 4.96669C17.1474 4.76573 17.2603 4.49318 17.2603 4.20898H15.1172C15.1172 4.49318 15.2301 4.76573 15.431 4.96669C15.632 5.16764 15.9045 5.28054 16.1887 5.28054Z" fill="white"/>
+              <path d="M31.7258 5.28054C32.01 5.28054 32.2826 5.16764 32.4836 4.96669C32.6845 4.76573 32.7974 4.49318 32.7974 4.20898H30.6543C30.6543 4.49318 30.7672 4.76573 30.9681 4.96669C31.1691 5.16764 31.4417 5.28054 31.7258 5.28054Z" fill="white"/>
+              <path d="M35.5015 4.20904H32.7958C32.7958 4.49324 32.6829 4.76579 32.482 4.96675C32.281 5.1677 32.0085 5.2806 31.7243 5.2806C31.4401 5.2806 31.1675 5.1677 30.9666 4.96675C30.7656 4.76579 30.6527 4.49324 30.6527 4.20904H17.2583C17.2583 4.49324 17.1454 4.76579 16.9445 4.96675C16.7435 5.1677 16.471 5.2806 16.1868 5.2806C15.9026 5.2806 15.63 5.1677 15.4291 4.96675C15.2281 4.76579 15.1152 4.49324 15.1152 4.20904H11.9005C11.3322 4.20904 10.7871 4.43484 10.3851 4.83675C9.98323 5.23866 9.75744 5.78376 9.75744 6.35215V11.142C9.76008 11.1633 9.76008 11.1849 9.75744 11.2063L10.3307 11.3402C10.5665 11.3884 10.8022 11.4259 11.0326 11.4635C11.0426 11.4199 11.0551 11.377 11.0701 11.3349L11.413 10.1454L11.6166 9.56681H35.5604C35.5658 9.60232 35.5658 9.63844 35.5604 9.67396L34.6871 12.7815L34.3013 14.1745L31.8636 23.0523L31.5635 24.156L31.4189 24.6918C31.394 24.7754 31.3432 24.8489 31.2739 24.9018C31.2046 24.9548 31.1203 24.9844 31.0331 24.9864H7.45896C7.39651 24.9869 7.33484 24.9725 7.27897 24.9446C7.22311 24.9167 7.17463 24.8759 7.1375 24.8257C7.09961 24.775 7.07408 24.7161 7.06292 24.6538C7.05176 24.5915 7.05528 24.5275 7.07321 24.4667L9.75209 15.6264L10.2879 13.9548C10.1218 13.9173 9.95032 13.8852 9.75209 13.8584C9.47943 13.8051 9.20395 13.7676 8.92699 13.7459L5.80342 24.0649C5.6781 24.5032 5.72967 24.9732 5.94705 25.3739C6.16443 25.7746 6.53029 26.0741 6.96605 26.208C7.12941 26.2573 7.29906 26.2825 7.46968 26.283H31.0438C31.4247 26.2816 31.7948 26.1558 32.0975 25.9246C32.4003 25.6934 32.6192 25.3696 32.7208 25.0025L32.769 24.8257L33.0583 23.7542L35.4747 15.0585L35.9301 13.4137L36.0533 12.9476L36.2087 12.4118L36.2837 12.1439C36.7338 11.9832 37.1945 11.8331 37.6607 11.6938V6.35215C37.6607 6.06935 37.6047 5.78936 37.496 5.52829C37.3873 5.26722 37.228 5.03025 37.0273 4.83103C36.8266 4.63182 36.5884 4.47429 36.3266 4.36754C36.0647 4.26079 35.7843 4.20692 35.5015 4.20904ZM36.0373 8.28094C35.9788 8.17487 35.9106 8.07444 35.8337 7.98091C35.6338 7.86127 35.4015 7.80695 35.1693 7.82553H12.0345C11.8045 7.82422 11.5766 7.8698 11.3648 7.95948V6.35215C11.3648 6.21005 11.4212 6.07378 11.5217 5.9733C11.6222 5.87282 11.7585 5.81637 11.9005 5.81637H35.4747C35.6168 5.81637 35.7531 5.87282 35.8535 5.9733C35.954 6.07378 36.0105 6.21005 36.0105 6.35215L36.0373 8.28094Z" fill="white"/>
+              <path d="M17.7455 26.3132C15.7665 27.4563 13.6094 28.2586 11.3645 28.6867C10.8287 28.7867 10.2929 28.8671 9.75713 28.9278C9.11955 28.9974 8.47662 29.0457 7.82833 29.0564L4.33507 29.1153C4.15699 29.6054 3.80637 30.0137 3.34887 30.2638C2.89137 30.5139 2.35838 30.5886 1.84973 30.474C1.34108 30.3594 0.891664 30.0633 0.585654 29.6411C0.279644 29.219 0.138033 28.6997 0.187344 28.1807C0.236656 27.6616 0.473507 27.1783 0.853536 26.8213C1.23356 26.4643 1.7307 26.2581 2.25183 26.2413C2.77297 26.2246 3.28235 26.3983 3.68457 26.7301C4.08678 27.0619 4.35425 27.5289 4.43687 28.0437L7.81226 27.9902C8.45519 27.9902 9.10348 27.9259 9.74641 27.8455C10.2822 27.7866 10.818 27.6955 11.3537 27.5883C12.7304 27.3134 14.0726 26.8875 15.356 26.3185L17.7455 26.3132Z" fill="#FFB000"/>
+              <path d="M46.4147 11.8672C46.4268 12.4356 46.2126 12.9855 45.8192 13.3959C45.4259 13.8064 44.8855 14.0437 44.3172 14.0558C43.7488 14.0679 43.1989 13.8537 42.7884 13.4603C42.378 13.067 42.1406 12.5266 42.1285 11.9583C41.3326 12.0068 40.5412 12.1124 39.7604 12.2744C39.0371 12.419 38.3191 12.5958 37.6173 12.8101C37.0601 12.9744 36.5243 13.162 36.0099 13.3727L35.8867 13.4209L36.0099 12.9548L36.1653 12.419L36.2403 12.1511C36.6904 11.9904 37.1512 11.8404 37.6173 11.7011C39.1459 11.2453 40.7231 10.9719 42.316 10.8867C42.5256 10.4392 42.8833 10.0779 43.3286 9.86382C43.774 9.64979 44.2796 9.59624 44.76 9.71222C45.2403 9.8282 45.6658 10.1066 45.9644 10.5003C46.263 10.894 46.4164 11.3787 46.3986 11.8725L46.4147 11.8672Z" fill="#FFB000"/>
+              <path d="M37.6174 25.4497C37.0816 25.3318 36.5726 25.1925 36.0529 25.0371V26.1087V28.8572C36.0529 28.9993 35.9965 29.1356 35.896 29.236C35.7955 29.3365 35.6592 29.393 35.5171 29.393H13.3628C12.4031 29.7855 11.4187 30.1148 10.416 30.3788C10.8112 30.7709 11.3435 30.9937 11.9001 31.0003H35.4743C36.0427 31.0003 36.5878 30.7745 36.9897 30.3726C37.3916 29.9707 37.6174 29.4256 37.6174 28.8572V26.5266V25.4497Z" fill="white"/>
+              <path d="M20.6449 15.9011C18.4101 13.9907 15.7874 12.588 12.9579 11.7897C10.1283 10.9915 7.15921 10.8167 4.25551 11.2774C4.04406 10.7919 3.66276 10.4002 3.18313 10.1757C2.70349 9.9513 2.15845 9.90953 1.65022 10.0583C1.14199 10.207 0.705466 10.536 0.42251 10.9836C0.139554 11.4313 0.0295989 11.9667 0.113263 12.4896C0.196927 13.0125 0.468463 13.4869 0.876955 13.8239C1.28545 14.1609 1.80284 14.3373 2.33211 14.32C2.86137 14.3028 3.36617 14.093 3.75183 13.7302C4.1375 13.3673 4.37754 12.8762 4.42695 12.3489C7.18087 11.9088 9.99762 12.0744 12.681 12.834C15.3644 13.5937 17.8499 14.9293 19.9645 16.7476C20.0609 16.8275 20.1822 16.8711 20.3074 16.8709C20.4177 16.8711 20.5254 16.8372 20.6157 16.774C20.7061 16.7107 20.7747 16.621 20.8123 16.5173C20.8498 16.4135 20.8543 16.3007 20.8253 16.1943C20.7964 16.0878 20.7352 15.9929 20.6503 15.9226L20.6449 15.9011Z" fill="#FFB000"/>
+              <path d="M44.3895 24.2962C43.8677 24.2042 43.3303 24.3089 42.8811 24.5899C42.4319 24.8709 42.1027 25.3083 41.9571 25.8178V25.8821C39.4247 25.8875 36.9191 25.3637 34.6009 24.3444L34.3223 25.3784C36.6682 26.3803 39.1868 26.9153 41.7374 26.9536H41.9731C42.0808 27.3478 42.2989 27.703 42.6017 27.9773C42.9045 28.2517 43.2794 28.4337 43.6823 28.502C43.8025 28.5236 43.9244 28.5344 44.0466 28.5342C44.5819 28.5315 45.0969 28.3286 45.4901 27.9653C45.8834 27.602 46.1264 27.1047 46.1714 26.5713C46.2165 26.0378 46.0602 25.5069 45.7334 25.0828C45.4066 24.6588 44.9329 24.3724 44.4056 24.2801L44.3895 24.2962ZM45.0807 26.5947C45.0467 26.7972 44.9553 26.9857 44.8173 27.1377C44.6793 27.2898 44.5006 27.399 44.3023 27.4523C44.104 27.5057 43.8946 27.501 43.6989 27.4387C43.5032 27.3765 43.3296 27.2593 43.1986 27.1012C43.0676 26.943 42.9848 26.7506 42.9601 26.5468C42.9353 26.3429 42.9697 26.1363 43.059 25.9514C43.1484 25.7665 43.2889 25.6112 43.464 25.5039C43.6391 25.3966 43.8413 25.3419 44.0466 25.3463C44.1072 25.3409 44.1682 25.3409 44.2288 25.3463C44.5069 25.3996 44.7526 25.5608 44.9123 25.7947C45.0719 26.0286 45.1324 26.3162 45.0807 26.5947Z" fill="#FFB000"/>
+              </svg>                        
+          </div>
+          <p>Schedule a call</p>
+        </a>    
+      </div>
+</section>
+
+<!-- locations-la-fourth-section (default branch: no location-category custom fields set) -->
+<section class="fourth-section">
+    <div class="container">
+        <div class="fourth-part">
+<div class="email">
+                <a class="fourth-part-heading" href="/web-design-agency-chicago">
+                    <svg width="74" height="48" viewBox="0 0 74 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5.32459 44.2542H72.5053C72.9017 44.2542 73.2819 44.4104 73.5622 44.6884C73.8425 44.9665 74 45.3437 74 45.7369C74 46.1302 73.8425 46.5074 73.5622 46.7854C73.2819 47.0635 72.9017 47.2197 72.5053 47.2197H5.32459C4.92819 47.2197 4.54802 47.0635 4.26772 46.7854C3.98743 46.5074 3.82996 46.1302 3.82996 45.7369C3.82996 45.3437 3.98743 44.9665 4.26772 44.6884C4.54802 44.4104 4.92819 44.2542 5.32459 44.2542V44.2542Z" fill="#1994FF" />
+                        <path d="M14.2769 23.2092C13.24 23.426 12.2354 23.7738 11.2877 24.2441V28.3604L14.2769 27.5881V23.2092Z" fill="#1994FF" />
+                        <path d="M11.2877 20.8306L14.2769 20.0583V14.7141C13.24 14.9309 12.2354 15.2786 11.2877 15.749V20.8306Z" fill="#1994FF" />
+                        <path d="M61.5525 0.812744H16.2698C14.951 0.816806 13.6874 1.3378 12.7542 2.26218C11.8209 3.18656 11.2938 4.4394 11.2877 5.74769V12.3353L14.2769 11.563V5.74769C14.279 5.22468 14.4899 4.72378 14.8634 4.35468C15.2369 3.98558 15.7426 3.77834 16.2698 3.77834H61.5525C62.0797 3.77834 62.5854 3.98558 62.9589 4.35468C63.3324 4.72378 63.5433 5.22468 63.5454 5.74769V34.8785C63.5413 35.4016 63.33 35.9022 62.9572 36.2721C62.5843 36.642 62.0798 36.8516 61.5525 36.8556H16.2698C15.7425 36.8516 15.238 36.642 14.8651 36.2721C14.4923 35.9022 14.281 35.4016 14.2769 34.8785V30.7468C13.2607 30.953 12.2615 31.2344 11.2877 31.5886V34.8785C11.2938 36.1868 11.8209 37.4397 12.7542 38.364C13.6874 39.2884 14.951 39.8094 16.2698 39.8135H61.5525C62.8705 39.8094 64.1334 39.2882 65.0654 38.3636C65.9974 37.439 66.5227 36.1861 66.5269 34.8785V5.74769C66.5227 4.44011 65.9974 3.18726 65.0654 2.26266C64.1334 1.33806 62.8705 0.816818 61.5525 0.812744V0.812744Z" fill="#1994FF" />
+                        <path d="M40.7366 28.7388C40.6196 28.2839 40.3661 27.8749 40.0096 27.5661C39.6531 27.2573 39.2104 27.0632 38.7402 27.0096C38.2701 26.956 37.7946 27.0454 37.3767 27.266C36.9589 27.4865 36.6185 27.8278 36.4006 28.2446L26.6621 26.9934C17.3441 25.7985 7.90025 27.9103 0 32.9556L0.840732 34.2531C8.43334 29.4016 17.5112 27.3717 26.4675 28.5226L36.1982 29.7737C36.3039 30.2434 36.5543 30.6688 36.9147 30.9908C37.2752 31.3128 37.7278 31.5155 38.2096 31.5707C38.6915 31.6258 39.1787 31.5308 39.6037 31.2988C40.0286 31.0667 40.3701 30.7091 40.5809 30.2757C47.2481 30.731 53.8846 29.0322 59.4974 25.4334V23.5721C54.0162 27.3571 47.4 29.1791 40.7366 28.7388Z" fill="#FFB000" />
+                        <path d="M40.7599 12.8451C40.6601 12.3679 40.4111 11.9342 40.0484 11.6055C39.6857 11.2768 39.2278 11.0699 38.7398 11.0143C38.2518 10.9587 37.7585 11.0572 37.3301 11.2958C36.9018 11.5343 36.5602 11.9008 36.3539 12.3431L26.6621 11.0997C17.3477 9.89429 7.90373 11.9952 0 17.0309L0.840732 18.3284C8.43892 13.4915 17.5151 11.4729 26.4675 12.6289L36.2293 13.8877C36.3519 14.3354 36.607 14.7363 36.9618 15.0385C37.3166 15.3407 37.7546 15.5303 38.2193 15.5827C38.6839 15.6351 39.1536 15.548 39.5678 15.3325C39.9819 15.117 40.3213 14.7832 40.542 14.3742C47.2192 14.8443 53.8695 13.1474 59.4896 9.53969V7.67847C54.0167 11.456 47.4129 13.2777 40.7599 12.8451Z" fill="#FFB000" />
+                        <path d="M40.7288 20.792C40.6501 20.4978 40.5138 20.2219 40.3277 19.9801C40.1415 19.7382 39.9091 19.5351 39.6438 19.3823C39.3785 19.2296 39.0855 19.1302 38.7814 19.0898C38.4774 19.0494 38.1683 19.0688 37.8719 19.147C37.5613 19.2286 37.271 19.3729 37.0191 19.5709C36.7673 19.7689 36.5594 20.0163 36.4084 20.2977L26.6621 19.0466C17.3441 17.8516 7.90025 19.9634 0 25.0086L0.840732 26.2983C8.43487 21.451 17.5122 19.4239 26.4675 20.5757L36.1904 21.8268C36.2903 22.304 36.5393 22.7377 36.9019 23.0664C37.2646 23.3951 37.7225 23.602 38.2106 23.6576C38.6986 23.7132 39.1919 23.6147 39.6202 23.3761C40.0486 23.1376 40.3902 22.7711 40.5965 22.3288C47.2588 22.7847 53.8906 21.0857 59.4974 17.4866V15.6254C54.0133 19.4102 47.3947 21.2322 40.7288 20.792V20.792Z" fill="#FFB000" />
+                    </svg>
+                    <h2>Web design agency locations in Los Angeles</h2>
+                </a>
+                <hr>
+                <div class="locations-first">
+                    <ul>
+                        <li>
+                            <a href="https://alphaefficiency.com/web-design-agency-in-glendale-ca">
+                                Glendale, CA
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://alphaefficiency.com/web-design-agency-in-beverly-hills-ca">
+                                Beverly Hills, CA
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://alphaefficiency.com/web-design-agency-in-malibu-ca">
+                                Malibu, CA
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://alphaefficiency.com/web-design-agency-in-calabasas-ca">
+                                Calabasas, CA
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://alphaefficiency.com/web-design-agency-in-bel-air-ca">
+                                Bel Air, CA
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://alphaefficiency.com/web-design-agency-in-santa-monica-ca">
+                                Santa Monica, CA
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://alphaefficiency.com/web-design-agency-in-thousand-oaks-ca">
+                                Thousand Oaks, CA
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+`;
+---
+
+<Base
+  title="Los Angeles Locations - Alpha Efficiency.™"
+  description="Los Angeles Web Agency Locations"
+  path="/web-design-agency-los-angeles"
+  type="website"
+  fullBleed={true}
+  bodyClass="page-template page-template-template-locations-la template-locations-la page"
+>
+  <Fragment set:html={content} />
+</Base>

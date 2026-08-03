@@ -82,8 +82,49 @@ npx wrangler pages deploy ./dist --project-name=alpha-efficiency-astro --branch=
 |---|---:|---|
 | Blog posts | 827 | in D1 |
 | Location pages | 402 | in D1 |
-| Blade-only templates | 40 | **4 ported** — rest render a "Not yet ported" placeholder |
+| Blade-only templates | 40 | **38 ported**, 2 blocked — see below |
+
+Ported means one of two things: a static file in `site/src/pages/` (28 pages,
+e.g. `about.astro`, `careers.astro`), or an entry in `site/src/pages/[slug].astro`'s
+`getStaticPaths()` — that one route generates the 9 team-bio and job-posting
+pages (`/brian`, `/nenad`, `/jovan`, `/bane`, `/alex`, `/developer`, `/designer`,
+`/digital-marketer`, `/content-writer`) from `src/data/team.ts` and
+`src/data/jobs.ts`. Anything not in either place falls through to
+`[...slug].astro`, which renders the "Not yet ported" placeholder for D1 rows
+with `track = 'template'` and no `body_html`.
+
+Still blocked — 2 pages:
+
+| Page | Blade template | Why it's blocked |
+|---|---|---|
+| `/code-4` | `template-services-development.blade.php` | File does not exist in the `alpha-efficiency-2024` theme checkout — not found by name or by content search anywhere under `wp-content`. |
+| `/schedule-a-hr-call` | `template-schedule-hr.blade.php` | Same — missing from the checkout entirely. |
+
+Both need either a different/older checkout that still has these files, or a
+look at the live WP admin to see what content (if any) those pages carry today.
+Neither is fabricatable from the D1 metadata alone.
 
 The `metric_snapshots`, `page_keywords`, `revisions` and `agent_runs` tables
 exist and are empty — they are the SEO loop that Ahrefs/GSC/Ubersuggest pulls
 will populate. GSC is not yet connected to the Ahrefs project.
+
+## Recent changes (2026-08-03)
+
+- **Ported `/web-design-agency-los-angeles`** (`template-locations-la.blade.php`)
+  by hand from the `alpha-efficiency-2024` theme checkout. 12 of its 13
+  partials are static markup; the 13th (`locations-la-fourth-section`) branches
+  on four WordPress custom fields (`get_post_meta` for Web Design/Development/
+  SEO/PPC Agency) that can't be read without a live WP database, so it renders
+  the "none of the four set" default branch — the same content the other four
+  branches show anyway, just under a different heading/link. Verified in
+  browser: correct title, no console errors, all assets 200, theme CSS applied.
+- **Recompiled `site/public/assets`** (`scripts/build-theme.mjs` against the
+  theme checkout) — the committed `main.css` predated the `locations-la` SCSS
+  partial, so that page would have shipped unstyled otherwise.
+- **Restored the missing project-inquiry form on `/` and `/about`.** Both
+  pages' "Proven Process. Friction-Free UX." section was ported without the
+  `<div class="about-form">` + HubSpot form (`components/forms/project.blade.php`
+  in the source), even though it's on both original Blade templates
+  (`partials/home/home-seventh.blade.php`, `partials/about/project.blade.php`).
+  Added the existing `ProjectForm.astro` component to both. Other already-ported
+  pages weren't re-audited for the same gap — worth a pass.

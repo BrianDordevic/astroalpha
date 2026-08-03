@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import ProjectForm from '../components/ProjectForm.astro';
 
 // Ported from alpha-efficiency-2024 template-home.blade.php and its
 // partials/home/* includes. Section wrappers and class names match the
@@ -535,6 +536,9 @@ const strategyCards = [
           </div>
         </div>
         <img src={`${IMG}/home/banner4.svg`} alt="Partners" loading="lazy" />
+      </div>
+      <div class="about-form" id="contact">
+        <ProjectForm title="Have A Project</br> To Complete?" />
       </div>
     </div>
   </section>

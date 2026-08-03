@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import ProjectForm from '../components/ProjectForm.astro';
 
 // Ported from alpha-efficiency-2024 template-about.blade.php:
 //   partials.about.{header,improved-productivity,decade-productivity,clients,project}
@@ -235,6 +236,9 @@ const clientLogos = [
           </div>
         </div>
         <img src={`${IMG}/home/banner4.svg`} alt="Partners" loading="lazy" />
+      </div>
+      <div class="about-form">
+        <ProjectForm title="Have A Project</br> To Complete?" />
       </div>
     </div>
   </section>

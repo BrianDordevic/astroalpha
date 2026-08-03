@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "SITE_URL=http://localhost:4321 astro dev",
+    "dev": "cross-env SITE_URL=http://localhost:4321 astro dev",
     "build": "astro build",
     "preview": "wrangler pages dev ./dist",
     "astro": "astro",
@@ -23,6 +23,7 @@
     "sass": "^1.102.0"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "wrangler": "^4.42.0"
   }
 }
