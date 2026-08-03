@@ -93,6 +93,13 @@ pages (`/brian`, `/nenad`, `/jovan`, `/bane`, `/alex`, `/developer`, `/designer`
 `[...slug].astro`, which renders the "Not yet ported" placeholder for D1 rows
 with `track = 'template'` and no `body_html`.
 
+The Header/Footer "Services" links (`/web-design-agency-chicago`,
+`/seo-agency-chicago`, `/web-development-agency-chicago`, `/ppc-agency-chicago`,
+`/wordpress-maintenance-chicago`, `/chicago-custom-web-app-development`) are
+**not** part of this list — they're `track = 'blog'` D1 rows with real
+`body_html` already, migrated the same as the other 827 blog posts. No
+hand-porting needed; verified rendering correctly.
+
 Still blocked — 2 pages:
 
 | Page | Blade template | Why it's blocked |
@@ -128,3 +135,24 @@ will populate. GSC is not yet connected to the Ahrefs project.
   (`partials/home/home-seventh.blade.php`, `partials/about/project.blade.php`).
   Added the existing `ProjectForm.astro` component to both. Other already-ported
   pages weren't re-audited for the same gap — worth a pass.
+- **Local D1 was empty** (`npm run d1:seed:local` had never successfully
+  completed) — every D1-backed page was 404ing locally, including the six
+  Services links above. On the wrangler version this repo had pinned, seeding
+  `db/seed.sql` directly crashed the local D1/workerd emulator with an internal
+  `HashIndex`/statement-cache error partway through the `redirects` table's two
+  large multi-row `INSERT`s. Re-ran it in small batched statements to populate
+  locally and confirmed both `pages` (1,269) and `redirects` (1,269) are fully
+  seeded now. Wrangler has since been upgraded to 4.118.0 (from 4.42.0), which
+  may already fix this — worth trying the plain `npm run d1:seed:local` first
+  next time before reaching for a workaround.
+- **Ported `/web-design-agency-chicago`** via `scripts/port-template.mjs`
+  (`template-service-web-design.blade.php`, 16 partials, converted cleanly, no
+  manual attention needed). This page is `track = 'blog'` in D1 with real
+  `body_html`, but that body is a plain blog-style article — not what actually
+  renders in production. Its `wp_template` column (usually null for blog-track
+  rows) is set to a real service template, meaning the D1 content and the
+  assigned Blade template had diverged. The new static page in
+  `site/src/pages/` takes priority over the D1 catch-all, so only this one URL
+  changed. **Other `track = 'blog'` rows may have the same non-null
+  `wp_template` divergence and look wrong the same way — not checked.**
+
