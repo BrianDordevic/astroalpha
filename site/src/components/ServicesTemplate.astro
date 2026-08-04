@@ -1,0 +1,178 @@
+---
+// Ported by hand from alpha-efficiency-2024 template-services.blade.php +
+// its partials/services/{hero,subhero,faq}.blade.php.
+//
+// The Blade template is a shared shell whose real copy comes from a
+// per-page PHP data file, picked by a switch() on the page slug (see
+// partials/services/content/*.php). Only two live pages actually use this
+// template — /wordpress-maintenance-chicago and /chicago-custom-web-app-development
+// (checked in D1: every other slug the old switch() still has a case for,
+// e.g. web-design-agency-chicago, now has its own dedicated template).
+//
+// Because of that, the branches in hero/subhero/faq that only fire for
+// OTHER slugs (a custom SVG in the subhero for web-design-agency-chicago, a
+// tech-stack icon row and a bulleted FAQ layout for web-development-agency-chicago,
+// the icon-section for web-design-agency-chicago) are dead for both real
+// callers and are not implemented here. If a future page adopts this
+// template and needs one of them, port the relevant branch from the Blade
+// source then, rather than carrying unused logic now.
+import ProjectForm from '../components/ProjectForm.astro';
+
+export interface ServiceFaq {
+  question: string;
+  answer?: string[];
+  listItem?: string[];
+}
+
+interface Props {
+  heroTitle: string;
+  description: string;
+  subheroTitle: string;
+  subheroParagraphs: string[];
+  faqHeader: string;
+  faqParagraphs: string[];
+  faqs: ServiceFaq[];
+  formTitle: string;
+}
+
+const { heroTitle, description, subheroTitle, subheroParagraphs, faqHeader, faqParagraphs, faqs, formTitle } =
+  Astro.props;
+
+const IMG = '/assets/images';
+
+// Matches partials/services/faq.blade.php's
+// @if($key != 0 && $key % 2 == 1 && $key != count($faqs) - 1).
+const showIntersectionAfter = (key: number) => key !== 0 && key % 2 === 1 && key !== faqs.length - 1;
+---
+
+<section class="services-hero-wrap">
+  <div class="container">
+    <div class="content-wrap">
+      <h1>{heroTitle}</h1>
+      <p set:html={description} />
+      <div class="buttons-wrap">
+        <a href="/schedule-a-call" class="get-started-btn">Get Started</a>
+        <a href="/portfolio" class="get-started-btn white">View Our Portfolio</a>
+      </div>
+    </div>
+    <div class="img-wrap">
+      <img src={`${IMG}/services/hero_image.webp`} alt="Services Hero Image" class="img-fluid" />
+      <img src={`${IMG}/services/hero_image_mobile.webp`} alt="Services Hero Image Mobile" class="img-fluid" />
+    </div>
+  </div>
+</section>
+
+<section class="subhero">
+  <div class="container">
+    <h2 class="title" set:html={subheroTitle} />
+    <div class="content-wrap">
+      {subheroParagraphs.map((p) => (
+        <p set:html={p} />
+      ))}
+    </div>
+    <div class="actions">
+      <a href="tel:+13123006746" class="call">
+        <div class="svg-frame">
+          <svg width="41" height="55" viewBox="0 0 41 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M25.5477 42.8653C30.283 45.4067 35.809 46.048 41 44.6562L40.6542 43.3667C35.7917 44.6704 30.6151 44.0697 26.1791 41.6889L18.8468 37.7537C13.2264 34.7372 6.71957 33.8079 0.479463 35.1304L0.756288 36.4366C6.68784 35.1794 12.8729 36.0628 18.2154 38.9301L25.5477 42.8653Z"
+              fill="#FFB000"
+            />
+            <circle cx="20.1281" cy="39.2596" r="2.18194" transform="rotate(-30 20.1281 39.2596)" fill="#1994FF" />
+          </svg>
+        </div>
+        <p>Call us now</p>
+      </a>
+      <a href="/schedule-a-call" class="call">
+        <div class="svg-frame">
+          <svg width="47" height="31" viewBox="0 0 47 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M17.2603 4.21075V2.06765C17.2603 1.78345 17.1474 1.5109 16.9464 1.30994C16.7455 1.10899 16.4729 0.996094 16.1887 0.996094C15.9045 0.996094 15.632 1.10899 15.431 1.30994C15.2301 1.5109 15.1172 1.78345 15.1172 2.06765V4.21075H17.2603Z"
+              fill="#1994FF"
+            />
+          </svg>
+        </div>
+        <p>Schedule a call</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="faq">
+  <div class="container">
+    <div class="faq-header">
+      <h2 set:html={faqHeader} />
+      <div class="img-wrap">
+        <img src={`${IMG}/home/banner4.svg`} alt="Our Clients" class="img-fluid" style="align-self: flex-start" />
+      </div>
+    </div>
+    <div class="content-wrap">
+      {faqParagraphs.map((p) => (
+        <p set:html={p} />
+      ))}
+    </div>
+    <div class="faq-single-wrap">
+      {faqs.map((faq, key) => (
+        <Fragment>
+          <article class="single-service">
+            <div class="card-header-service">
+              <h3 set:html={faq.question} />
+            </div>
+            <div class="card-body-service">
+              {faq.answer?.map((a) => <p set:html={a} />)}
+              {faq.listItem && (
+                <ul>
+                  {faq.listItem.map((li) => <li set:html={li} />)}
+                </ul>
+              )}
+            </div>
+          </article>
+
+          {showIntersectionAfter(key) && (
+            <div class="contact-slide-intersection">
+              <a href="tel:+13123006746" class="call-slide-btn">
+                <div class="svg-frame">
+                  <svg width="41" height="55" viewBox="0 0 41 55" fill="none" xmlns="http://www.w3.org/2000/svg" class="button-contact">
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M25.5477 42.8653C30.283 45.4067 35.809 46.048 41 44.6562L40.6542 43.3667C35.7917 44.6704 30.6151 44.0697 26.1791 41.6889L18.8468 37.7537C13.2264 34.7372 6.71957 33.8079 0.479463 35.1304L0.756288 36.4366C6.68784 35.1794 12.8729 36.0628 18.2154 38.9301L25.5477 42.8653Z"
+                      fill="#FFB000"
+                    />
+                    <circle cx="20.1281" cy="39.2596" r="2.18194" transform="rotate(-30 20.1281 39.2596)" fill="#1994FF" />
+                  </svg>
+                </div>
+                <p>Call us now</p>
+              </a>
+              <a href="/schedule-a-call" class="call-slide-btn">
+                <div class="svg-frame">
+                  <svg width="47" height="31" viewBox="0 0 47 31" fill="none" xmlns="http://www.w3.org/2000/svg" class="button-contact">
+                    <path
+                      d="M17.2603 4.21075V2.06765C17.2603 1.78345 17.1474 1.5109 16.9464 1.30994C16.7455 1.10899 16.4729 0.996094 16.1887 0.996094C15.9045 0.996094 15.632 1.10899 15.431 1.30994C15.2301 1.5109 15.1172 1.78345 15.1172 2.06765V4.21075H17.2603Z"
+                      fill="#1994FF"
+                    />
+                  </svg>
+                </div>
+                <p>Schedule a call</p>
+              </a>
+            </div>
+          )}
+        </Fragment>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="form-services">
+  <div class="container">
+    <div class="text-wrap">
+      <h3 set:html={formTitle} />
+      <p>Fill out this form, and let's discuss<br /> your next steps.</p>
+      <a href="/contact" class="contact-link">Contact Us</a>
+    </div>
+      <ProjectForm  />
+
+  </div>
+</section>

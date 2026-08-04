@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import ProjectForm from '../components/ProjectForm.astro';
+import ServicesTemplate from '../components/ServicesTemplate.astro';
+import * as pageData from '../data/services/app-development';
+
+// Ported by hand from alpha-efficiency-2024 template-services.blade.php —
+// see src/components/ServicesTemplate.astro for why this can't go through
+// scripts/port-template.mjs, and src/data/services/app-development.ts
+// for the source of the copy below.
+---
+
+<Base
+  title="Chicago Based Custom Web App Development Agency - Alpha Efficiency.™"
+  description="Chicago offers many Web App Development agencies, but none like Alpha Efficiency. We here at Alpha Efficiency make your visions a reality."
+  path="/chicago-custom-web-app-development"
+  type="website"
+  fullBleed={true}
+  bodyClass="page-template page-template-template-services template-services page"
+>
+  <ServicesTemplate {...pageData} />
+</Base>

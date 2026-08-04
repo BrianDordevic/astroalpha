@@ -80,8 +80,11 @@
  * than a shorter one) is required to outrank it — see the note above every
  * other fix in this file about not touching generated pages directly.
  */
-.single-post .single-post-container .aside-right {
-  top: 0;
+
+.single-post .single-post-container {
+  grid-template-columns: 1fr 35%;
+  gap:50px;
+
 }
 
 /* ── Blog single-post: subscribe-form send button all but invisible ──────
@@ -109,4 +112,55 @@
 .portfolio-form button img {
   width: 100%;
   height: 100%;
+}
+
+/* ── Blog single-post: aside card should stay visible while scrolling ────
+ * A previous attempt here targeted `.right` inside `.content-post-wrap
+ * .post-wrap-container` — that's the theme's old, unused single-post markup
+ * (the commented-out "Old code for keeping" block in content-single-in-use.
+ * blade.php). Our page uses `.aside-right` inside `.single-post-container`
+ * instead, so that rule never matched anything.
+ *
+ * `position: sticky` keeps the card in view as the visitor scrolls through
+ * the (much taller) article column, then lets it scroll away normally once
+ * its own grid area ends — no JS scroll-listener needed, unlike the
+ * `.is-fixed` / `.is-bottom` classes the theme SCSS defines but never wires
+ * up. `top` clears the 70px fixed header plus a little breathing room.
+ */
+.single-post .single-post-container .aside-right {
+  position: sticky;
+  top: 48px;
+}
+
+@media (max-width: 1193px) {
+  /* Below the breakpoint where the layout drops to a single column, a
+     sticky sidebar would float mid-article instead of sitting where the
+     reader expects it — back to normal in-flow positioning there. */
+  .single-post .single-post-container .aside-right {
+    position: relative;
+    top: 0;
+  }
+}
+
+/* ── position: sticky doesn't stick anywhere on the site ─────────────────
+ * `html` sets `overflow-x: hidden` (to hide the horizontal bleed from all
+ * the "break out" decorative widths used elsewhere, e.g. .aside-right's own
+ * @media (min-width: 1281px) rule) with overflow-y left unset — and per the
+ * CSS overflow spec, an element with one axis non-visible and the other
+ * unset/visible has that second axis computed to `auto`, not `visible`.
+ * body *also* sets its own overflow-x: hidden (in _just-single-blog.scss),
+ * so the same thing happens there too. The result is two ancestors — html
+ * and body — each independently becoming a scroll container, and a sticky
+ * element positions itself relative to whichever one the browser resolves
+ * first, which does not reliably match the one the visitor is actually
+ * scrolling. `position: sticky` computes fine (DevTools shows it applied)
+ * but visually never sticks.
+ *
+ * html's overflow-x: hidden already clips any horizontal overflow from
+ * body's descendants at the outer boundary, so body doesn't need its own —
+ * removing it leaves html as the single, unambiguous scroll container.
+ */
+body {
+  overflow-x: visible;
+  overflow-y: visible;
 }

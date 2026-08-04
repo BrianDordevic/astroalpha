@@ -82,7 +82,7 @@ if (isPost) {
   updatedAt={page?.updated_at}
   type={page?.type === 'post' ? 'article' : 'website'}
   bodyClass={bodyClass}
-  fullBleed={isLocation || !page}
+  fullBleed={isLocation || isPost || !page}
 >
   {!page ? (
     <NotFound posts={recentPosts} />

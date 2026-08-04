@@ -162,7 +162,7 @@ const beforeForm = `
     </div>
 
   </div>
-</div>)
+</div>
 
 <!-- partials.portfolio.purplecare -->
 <section class="purplecare" id="purplecare">
@@ -271,7 +271,7 @@ const beforeForm = `
     </div>
 
   </div>
-</div>)
+</div>
 
 <!-- components.portfolio.cta-btn -->
 <section class="cta-section">
@@ -435,7 +435,7 @@ const beforeForm = `
     </div>
 
   </div>
-</div>)
+</div>
 
 <!-- partials.portfolio.breachlock -->
 <section class="breachlock" id="breachlock">
@@ -580,7 +580,7 @@ const beforeForm = `
     </div>
 
   </div>
-</div>)
+</div>
 
 <!-- components.portfolio.cta-btn -->
 <section class="cta-section">
@@ -752,7 +752,7 @@ const beforeForm = `
     </div>
 
   </div>
-</div>)
+</div>
 
 <!-- partials.portfolio.aeriform -->
 <section class="aeriform" id="aeriform">
@@ -894,7 +894,7 @@ const beforeForm = `
     </div>
 
   </div>
-</div>)
+</div>
 
 <!-- components.portfolio.cta-btn -->
 <section class="cta-section">
@@ -1066,7 +1066,7 @@ const beforeForm = `
     </div>
 
   </div>
-</div>)
+</div>
 
 <!-- partials.portfolio.school -->
 <section class="school" id="school">
@@ -1206,7 +1206,7 @@ const beforeForm = `
     </div>
 
   </div>
-</div>)
+</div>
 
 <!-- components.portfolio.cta-btn -->
 <section class="cta-section">
@@ -1391,7 +1391,7 @@ const beforeForm = `
     </div>
 
   </div>
-</div>)
+</div>
 
 <!-- partials.book-strategy-session -->
 <section class="book-strategy-session">
@@ -1445,7 +1445,7 @@ const beforeForm = `
         <div class="cta-section">
     <div class="cta-actions">
         
-        <a href="" class="call-btn btn-left">
+        <a href="/contact" class="call-btn btn-left">
             <div class="svg-frame">
                 <svg width="52" height="31" viewBox="0 0 52 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M29.1113 26.8955L19.1176 24.173C12.706 22.4157 5.86492 23.1808 0 26.3111L0.624193 27.4799C6.19054 24.5119 12.6818 23.7872 18.7656 25.4545L28.7594 28.1771C31.6202 28.9588 34.5723 29.3562 37.5379 29.3591C39.5288 29.3561 41.5154 29.1761 43.4744 28.8212V27.4931C38.703 28.3812 33.7924 28.1769 29.1113 26.8955Z" fill="#FFB000"></path>
@@ -1461,7 +1461,7 @@ const beforeForm = `
         </a> 
 
         
-        <a href="" class="call-btn btn-right">
+        <a href="/schedule-a-call" class="call-btn btn-right">
             <div class="svg-frame">
                 <svg width="47" height="31" viewBox="0 0 47 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M17.2593 4.21075V2.06765C17.2593 1.78345 17.1464 1.5109 16.9455 1.30994C16.7445 1.10899 16.472 0.996094 16.1878 0.996094C15.9036 0.996094 15.631 1.10899 15.4301 1.30994C15.2291 1.5109 15.1162 1.78345 15.1162 2.06765V4.21075H17.2593Z" fill="white"/>
@@ -1480,12 +1480,47 @@ const beforeForm = `
             <p>Schedule a call</p>
         </a>    
     </div>    
-</div>)
+</div>
     </div>
 </section>
 `;
 const afterForm = ``;
 ---
+<script>
+   // Click-to-load YouTube: keeps the thumbnail until the user opts in, so the
+  // homepage never ships a third-party iframe on first paint.
+  document.querySelectorAll<HTMLElement>('.youtube-lazy-load').forEach((box) => {
+    box.addEventListener('click', () => {
+      const id = box.dataset.embed;
+      if (!id) return;
+      const frame = document.createElement('iframe');
+      frame.width = '100%';
+      frame.height = '100%';
+      frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture';
+      frame.allowFullscreen = true;
+      frame.title = 'YouTube video player';
+      frame.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1`;
+      box.replaceChildren(frame);
+    });
+  });
+
+  const promoButton = document.querySelector<HTMLImageElement>('.buttonPlay.video-image');
+  if (promoButton) {
+    promoButton.addEventListener('click', () => {
+      const container = promoButton.closest('.video-container');
+      if (!container) return;
+      const iframe = document.createElement('iframe');
+      iframe.src = 'https://www.youtube.com/embed/REgdFeNIXc4?autoplay=1&rel=0';
+      iframe.frameBorder = '0';
+      iframe.allow = 'autoplay; accelerometer; encrypted-media; gyroscope; picture-in-picture';
+      iframe.allowFullscreen = true;
+      iframe.title = 'Alpha Efficiency Promo Video';
+      iframe.width = '100%';
+      iframe.height = '100%';
+      container.replaceChildren(iframe);
+    });
+  }
+</script>
 
 <Base
   title="Website Design Portfolio - Alpha Efficiency.™"
