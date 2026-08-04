@@ -1,8 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
-import { getPage, getRedirect } from '../lib/db';
+import { getPage, getRedirect, listPosts, listPostsPaged } from '../lib/db';
 import { bodyClassFor } from '../lib/body-class';
 import LocationSingle from '../components/LocationSingle.astro';
+import NotFound from '../components/NotFound.astro';
+import SinglePost from '../components/SinglePost.astro';
 
 // Server-rendered from D1 rather than prerendered. With 1,269 pages a static
 // build would need a full rebuild for every agent edit; this way a rewrite is
@@ -23,50 +25,71 @@ if (redirect) {
 }
 
 const page = await getPage(Astro.locals, clean);
+
+// Ported from alpha-efficiency-2024 404.blade.php. Rendered here rather than
+// as its own src/pages/404.astro because this catch-all matches every path —
+// a sibling 404.astro would never be reached.
+let recentPosts: Awaited<ReturnType<typeof listPosts>> = [];
 if (!page) {
-  return new Response(null, { status: 404, statusText: 'Not Found' });
+  Astro.response.status = 404;
+  recentPosts = await listPosts(Astro.locals, 6);
 }
 
 // The 40 Blade-only pages carry no body: their markup still lives in the Sage
 // theme and has not been ported yet. Render an explicit placeholder rather
 // than a convincing-looking empty page.
-const needsPort = page.track === 'template' && !page.body_html;
+const needsPort = page ? page.track === 'template' && !page.body_html : false;
 
 // The 402 location pages run on their own theme template, which supplies the
 // header, form, sidebar and CTA sections around the stored copy. Without it a
 // third of the site renders as bare paragraphs.
-const isLocation = page.track === 'location';
+const isLocation = page ? page.track === 'location' : false;
 
 // Reproduce WordPress's body_class(); the theme's page stylesheets are all
-// scoped under it. See src/lib/body-class.ts.
-const bodyClass = bodyClassFor({
-  type: page.type,
-  slug: page.slug,
-  wp_template: page.wp_template,
-});
+// scoped under it. See src/lib/body-class.ts. The 404 template's styles are
+// scoped under .error404, same rule.
+const bodyClass = page
+  ? bodyClassFor({ type: page.type, slug: page.slug, wp_template: page.wp_template })
+  : 'error404';
 
 // Pages on the theme's default template (page.blade.php) render the content
 // inside .content-holder and emit no heading at all — that template's
 // @include('partials.page-header') is commented out. Rendering our own <h1>
 // here gave /start-here two of them, since its copy already opens with one.
-const isDefaultPage = page.type === 'page' && !page.wp_template;
+const isDefaultPage = page ? page.type === 'page' && !page.wp_template : false;
+
+// Blog posts use partials/content-single-in-use.blade.php — a full layout
+// (author sidebar, cross-sell cards, related posts, a second lead form)
+// around the body, not just the article text. Rendering only the body here
+// was the gap: real content, but with none of the surrounding page.
+const isPost = page?.type === 'post';
+let relatedPosts: Awaited<ReturnType<typeof listPosts>> = [];
+if (isPost) {
+  const categoryId = JSON.parse((page as any).categories ?? '[]')[0];
+  const { posts } = await listPostsPaged(Astro.locals, { categoryId, perPage: 4 });
+  relatedPosts = posts.filter((p) => p.path !== page!.path).slice(0, 3);
+}
 ---
 
 <Base
-  title={page.meta_title ?? page.title}
-  description={page.meta_description}
-  canonical={page.canonical}
-  path={page.path}
-  image={page.hero_image}
-  noindex={page.robots_index === 0}
-  publishedAt={page.published_at}
-  updatedAt={page.updated_at}
-  type={page.type === 'post' ? 'article' : 'website'}
+  title={page ? (page.meta_title ?? page.title) : 'Page Not Found — Alpha Efficiency'}
+  description={page ? page.meta_description : 'Sorry, we couldn’t find the page you are looking for.'}
+  canonical={page?.canonical}
+  path={page ? page.path : clean}
+  image={page?.hero_image}
+  noindex={page ? page.robots_index === 0 : true}
+  publishedAt={page?.published_at}
+  updatedAt={page?.updated_at}
+  type={page?.type === 'post' ? 'article' : 'website'}
   bodyClass={bodyClass}
-  fullBleed={isLocation}
+  fullBleed={isLocation || !page}
 >
-  {isLocation ? (
+  {!page ? (
+    <NotFound posts={recentPosts} />
+  ) : isLocation ? (
     <LocationSingle page={page} />
+  ) : isPost && !needsPort ? (
+    <SinglePost page={page} relatedPosts={relatedPosts} />
   ) : isDefaultPage && !needsPort ? (
     <div class="content-holder">
       <article set:html={page.body_html} />

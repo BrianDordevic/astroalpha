@@ -3,7 +3,7 @@
 WordPress → Astro on Cloudflare Pages, with content served from D1 so an edit is
 a database write rather than a rebuild of 1,269 pages.
 
-Staging: <https://alpha-efficiency-astro.pages.dev> (noindex, canonicals point at production)
+Staging: <https://alpha-efficiency-astro-staging.pages.dev/> (noindex, canonicals point at production)
 
 ## Layout
 
@@ -155,4 +155,22 @@ will populate. GSC is not yet connected to the Ahrefs project.
   `site/src/pages/` takes priority over the D1 catch-all, so only this one URL
   changed. **Other `track = 'blog'` rows may have the same non-null
   `wp_template` divergence and look wrong the same way — not checked.**
+- **Ported the real single-post layout** for all 827 `type = 'post'` blog
+  articles, via a new `SinglePost.astro` component wired into `[...slug].astro`.
+  Previously every post rendered as bare `<h1>` + article text; the real Blade
+  partial (`partials/content-single-in-use.blade.php` — "in-use" because an
+  older, unused `content-single.blade.php` is still sitting in the theme) wraps
+  that in an author-bio sidebar with a subscribe form, a cross-sell card column,
+  and a "Recent Post" section pulling 3 posts from the same category, plus a
+  second lead-gen form at the bottom. The two forms submit to real HubSpot
+  form GUIDs found in the theme's `app/setup.php`, with the same staging
+  no-submit guard as `ProjectForm.astro`. The "Recent Post" cards reuse
+  `blog.astro`'s existing card markup/classes rather than inventing new ones.
+- **Added a personal staging deploy path** for anyone without access to the
+  production Cloudflare account: `site/wrangler.staging.toml` (gitignored — see
+  below) holds an alternate D1 binding pointed at that person's own database.
+  `wrangler pages deploy` doesn't support `--config` for a custom-named file
+  (only `wrangler d1 …` commands do), so deploying with this config means
+  temporarily swapping it in as `wrangler.toml`, deploying, then restoring the
+  real file immediately after — never commit over the real `wrangler.toml`.
 

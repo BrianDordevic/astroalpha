@@ -67,3 +67,46 @@
     gap: 24px;
   }
 }
+
+/* ── Blog single-post: aside card 105px lower than the author card ───────
+ * The compiled theme CSS defines `.single-post .single-post-container
+ * .aside-right { top: 0px }` and then, later in the same file, the identical
+ * selector again with `top: 105px` — a duplicate rule left over from the
+ * theme's SCSS, and the second one wins the cascade. The 105px offset was
+ * written for a sticky-on-scroll behaviour (there's also `.aside-right.is-fixed`
+ * / `.is-bottom` alongside it) but no script anywhere in the theme ever adds
+ * those classes, so the aside card just sits 105px below the author card with
+ * nothing to explain it. Matching the theme's own selector exactly (rather
+ * than a shorter one) is required to outrank it — see the note above every
+ * other fix in this file about not touching generated pages directly.
+ */
+.single-post .single-post-container .aside-right {
+  top: 0;
+}
+
+/* ── Blog single-post: subscribe-form send button all but invisible ──────
+ * Two theme stylesheets style `#conversionSuscription` for two different,
+ * incompatible markups: _single-post.scss expects the id on a form *nested
+ * inside* a `.author-suscription` div (the theme's old, unused single-post
+ * layout); the "in-use" partial we ported puts both the class and the id on
+ * the same <form>, so that descendant selector can never match it. What
+ * *does* end up matching is a mix of both files' generic child rules, which
+ * leaves the button at a stray 12x26px — present, but easy to miss next to
+ * the input. Sizing it explicitly makes it a real, visible send button.
+ */
+.author-suscription button,
+.portfolio-form button {
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.author-suscription button img,
+.portfolio-form button img {
+  width: 100%;
+  height: 100%;
+}

@@ -1,0 +1,220 @@
+---
+// Ported from alpha-efficiency-2024 partials/content-single-in-use.blade.php
+// (the "in use" name distinguishes it from content-single.blade.php, an older
+// version left in the theme but not actually rendered).
+//
+// The author bio is static in the source too — every post shows Brian's bio
+// regardless of who wrote it, so it's hardcoded here rather than pulled from
+// any per-post field. Same for the cross-sell cards, which are fixed links to
+// get.alphaefficiency.com regardless of post content.
+import type { Page } from '../lib/db';
+import { primaryCategory } from '../data/categories';
+
+interface Props {
+  page: Page;
+  relatedPosts: Page[];
+}
+const { page, relatedPosts } = Astro.props;
+const IMG = '/assets/images';
+
+const fmt = (iso: string | null) => {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return `${String(d.getUTCDate()).padStart(2, '0')} - ${d.toLocaleString('en', { month: 'short', timeZone: 'UTC' })} - ${d.getUTCFullYear()}`;
+};
+---
+
+<h1 class="title" set:html={page.title} />
+
+<section class="single-post-container">
+  <article class="author">
+    <div class="author-heading">
+      <img class="author-image" src={`${IMG}/blog/author-brian.webp`} width="103" height="103" alt="Brian Bojan Dordevic" />
+      <p class="ata">About The Author</p>
+      <h3 class="author-name">Brian Dordevic</h3>
+      <h5 class="pae">Founder of Alpha Efficiency</h5>
+    </div>
+
+    <p class="author-text">
+      From $4/hour virtual assistant to running a leading Chicago web design agency. I will help you occupy the
+      minds of your ideal customers, improve your aesthetics, and increase sales.
+    </p>
+
+    <div class="author-links">
+      <a href="/portfolio">View Our Portfolio</a>
+      <a href="https://get.alphaefficiency.com/authority-peak-project-inquiry" target="_blank">Rank #1 on Google</a>
+    </div>
+
+    <form class="author-suscription" id="conversionSuscription" data-portal="4773320" data-form="8f3ac3e6-9bf6-4e5e-a671-b89433d961d0">
+      <p class="as-subhero">Subscribe to Conversion Insider</p>
+      <div>
+        <input type="email" name="email" class="suscriber-email" placeholder="Forever Free" required />
+        <button type="submit">
+          <img src={`${IMG}/blog/single/icons/send.svg`} alt="Send" />
+        </button>
+      </div>
+      <p class="form-status" role="status" aria-live="polite" hidden></p>
+    </form>
+  </article>
+
+  <aside class="aside-right">
+    <h3 class="aside-heading">Be The #1 Choice On Search Engines</h3>
+    <p class="aside-sub-heading">
+      Not seeing the profits you expected online? With over 15 years of experience and 500+ projects, Alpha
+      Efficiency can help you attract and convert.
+    </p>
+
+    <div class="aside-card-holder">
+      <a class="aside-single-card" href="https://get.alphaefficiency.com/authority-peak-project-inquiry" target="_blank">
+        <img src={`${IMG}/blog/single/products/seo.webp`} alt="Seo image" width="80" height="80" loading="lazy" />
+        <h5 class="card-heading">Authority Peak</h5>
+        <p class="card-content">Attract conversion-ready local visitors.</p>
+      </a>
+      <a class="aside-single-card" href="https://get.alphaefficiency.com/custom-web-design" target="_blank">
+        <img src={`${IMG}/blog/single/products/conversion-hub.webp`} alt="Conversion hub" width="80" height="80" loading="lazy" />
+        <h5 class="card-heading">Custom Built Websites</h5>
+        <p class="card-content">Extreme speed for 1st page rankings.</p>
+      </a>
+      <a class="aside-single-card" href="https://get.alphaefficiency.com/ux-consulting" target="_blank">
+        <img src={`${IMG}/blog/single/products/discovery.webp`} alt="Discovery Session" width="80" height="80" loading="lazy" />
+        <h5 class="card-heading">UX &amp; Project Discovery</h5>
+        <p class="card-content">Gain clarity &amp; remove costly mistakes.</p>
+      </a>
+      <a class="aside-single-card" href="https://get.alphaefficiency.com/conversion-rate-optimization" target="_blank">
+        <img src={`${IMG}/blog/single/products/rate-optimization.webp`} alt="Conversion Rate" width="80" height="80" loading="lazy" />
+        <h5 class="card-heading">Conversion Rate Optimization</h5>
+        <p class="card-content">Maximize revenue on existing digital assets.</p>
+      </a>
+    </div>
+  </aside>
+
+  <article class="content-holder" set:html={page.body_html} />
+</section>
+
+<section class="comment-recent-post-holder">
+  <div class="crph-container">
+    <div class="titles">
+      <h3>Recent Post</h3>
+      <div class="section-circle-button">
+        <a href="/blog">Read Other Posts<span></span></a>
+      </div>
+    </div>
+
+    <ul class="post-list">
+      {relatedPosts.map((post) => {
+        const cat = primaryCategory((post as any).categories ?? null);
+        return (
+          <article class={`single-post ${cat?.slug ?? ''}`}>
+            <div class="post-content-wrapper">
+              <div class="post-title-wrapper">
+                <a class="post-image-link" href={post.path}>
+                  <img src={post.hero_image ?? `${IMG}/blog/post-image-holder-min.png`} alt={post.title} loading="lazy" />
+                </a>
+              </div>
+              <div class="author-card">
+                <div class="image">
+                  <img src={`${IMG}/about/personel/bojan.webp`} alt="Brian Dordevic" class="img-fluid" loading="lazy" />
+                </div>
+                <div class="content"><p>Brian Dordevic</p></div>
+              </div>
+              {cat && (
+                <a href={`/blog?category_name=${cat.slug}`} class={`post-category ${cat.slug}`}>
+                  <span>{cat.name}</span>
+                </a>
+              )}
+              <div class={`entry-content ${cat?.slug ?? ''}`}>
+                <div class="time-title">
+                  <div class="time">{fmt(post.published_at)}</div>
+                  <h2><a class="post-title" href={post.path} set:html={post.title} /></h2>
+                </div>
+              </div>
+              <a class="read-more" href={post.path}><p>READ MORE</p></a>
+            </div>
+          </article>
+        );
+      })}
+    </ul>
+  </div>
+</section>
+
+<div class="content-single portfolio-form-wrapper">
+  <div class="box">
+    <div class="portfolio-form">
+      <img src={`${IMG}/forms/portfolio/portfolio2025.svg`} width="510" height="723" alt="Portfolio" />
+      <div class="text">
+        <h3>Fresh inspiration is a fingertip away, <br /> <span>Download Our Portfolio.</span></h3>
+        <div class="download-tab">
+          <form id="downloadPortfolioSuscription" data-portal="4773320" data-form="33092ac5-787b-4a9c-ba5a-35b57206c6fe">
+            <div class="submit-container">
+              <div class="input-container">
+                <input class="suscriber-email" type="email" name="email" placeholder="email@example.com" required />
+                <button type="submit"><img src={`${IMG}/forms/portfolio/button-send.svg`} alt="Send" /></button>
+              </div>
+              <p class="form-submit-btn">Download Our Portfolio</p>
+            </div>
+            <div class="sms-consent">
+              <label class="sms-consent-label">
+                <input type="checkbox" required />
+                By submitting this form, you agree to receive SMS communications from
+                <strong>Alpha Efficiency</strong> regarding your inquiry. Message and data rates may apply.
+                Reply STOP to opt out at any time.
+              </label>
+            </div>
+            <p class="form-status" role="status" aria-live="polite" hidden></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Ported from alpha-efficiency-2024 routes/common.js. Staging does not
+  // submit live, same rule as ProjectForm — a test fill here would otherwise
+  // create a real contact/download lead in the production CRM.
+  const IS_PROD = location.origin === 'https://alphaefficiency.com';
+
+  function wireSubscribeForm(formEl: HTMLFormElement | null) {
+    if (!formEl) return;
+    const portal = formEl.dataset.portal!;
+    const form = formEl.dataset.form!;
+    const status = formEl.querySelector<HTMLElement>('.form-status');
+    const email = formEl.querySelector<HTMLInputElement>('.suscriber-email');
+    const button = formEl.querySelector<HTMLButtonElement>('button');
+
+    const say = (msg: string) => {
+      if (!status) return;
+      status.textContent = msg;
+      status.hidden = false;
+    };
+
+    formEl.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!email?.value) return;
+      if (button) button.disabled = true;
+
+      if (!IS_PROD) {
+        say('Staging: form validated but not submitted, so no test lead reaches HubSpot.');
+        if (button) button.disabled = false;
+        return;
+      }
+
+      try {
+        const res = await fetch(`https://api.hsforms.com/submissions/v3/integration/submit/${portal}/${form}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fields: [{ name: 'email', value: email.value }] }),
+        });
+        if (!res.ok) throw new Error(`HubSpot returned ${res.status}`);
+        email.value = 'Successfully subscribed';
+        email.disabled = true;
+      } catch {
+        say('Something went wrong. Please try again.');
+        if (button) button.disabled = false;
+      }
+    });
+  }
+
+  wireSubscribeForm(document.querySelector('#conversionSuscription'));
+  wireSubscribeForm(document.querySelector('#downloadPortfolioSuscription'));
+</script>
