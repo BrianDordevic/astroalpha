@@ -180,3 +180,9 @@ body {
 .category .hero-category .hero .category-description-container .category-description:not(.expanded) {
   max-height: 48px;
 }
+
+.img-fluid {
+  width:100%;
+  max-width: 256px;
+  height: auto;
+}
