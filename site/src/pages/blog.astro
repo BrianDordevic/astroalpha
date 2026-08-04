@@ -23,12 +23,15 @@ const search = url.searchParams.get('s')?.trim() || undefined;
 const catSlug = url.searchParams.get('category_name') || undefined;
 const category = catSlug ? categories.find((c) => c.slug === catSlug) : undefined;
 
-const { posts, total, totalPages } = await listPostsPaged(Astro.locals, {
+const { posts, total,} = await listPostsPaged(Astro.locals, {
   page,
   perPage: PER_PAGE,
   search,
   categoryId: category?.id,
 });
+const totalPages = 3;
+ console.log(totalPages);
+
 
 const recent = await listPosts(Astro.locals, 6, 0);
 
@@ -52,7 +55,9 @@ const pageHref = (n: number) => {
 const window = 2;
 const pageNumbers: number[] = [];
 for (let n = Math.max(1, page - window); n <= Math.min(totalPages, page + window); n += 1) {
+  console.log("aca se cargan las pages"+n);
   pageNumbers.push(n);
+  console.log("pages array"+pageNumbers);
 }
 
 const schema = {
@@ -95,7 +100,7 @@ const schema = {
 
         <div class="dropdown-container">
           <div class="dropdown">
-            <select class="dropdown-options" style="outline: none" name="category_name" id="category_name">
+            <select class="dropdown-options" style="outline: none" name="category_name" id="category_name" onchange="this.form.submit()">
               <option value="" selected={!catSlug}>All categories</option>
               {categories.map((c) => (
                 <option value={c.slug} selected={c.slug === catSlug}>{c.name}</option>
@@ -159,6 +164,7 @@ const schema = {
       )}
 
       {totalPages > 1 && (
+        
         <div class="bottom pagi-other">
           <div class="container-fluid m-auto d-flex justify-content-center">
             <nav class="blog-pagination" aria-label="Blog page navigation">
@@ -167,22 +173,23 @@ const schema = {
                   <li class="page-item">
                     <a class="page-link previous-page" href={pageHref(page - 1)} aria-label="Previous page">
                       <svg width="8" height="12" viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0 10.4575L4.58 5.92493L0 1.39236L1.41 0L7.41 5.92493L1.41 11.8499L0 10.4575Z" fill="#303030"/>
-                      </svg>
+                <path d="M0 10.4575L4.58 5.92493L0 1.39236L1.41 0L7.41 5.92493L1.41 11.8499L0 10.4575Z" fill="#303030"></path>
+              </svg>
                     </a>
                   </li>
                 )}
                 {pageNumbers.map((n) => (
-                  <li class={`page-item${n === page ? ' active' : ''}`}>
+                    console.log(n+"page in the selector"),
+                  <li class={`page-item${n === page ? ' active disabled' : ''}`}>
                     <a class="page-link" href={pageHref(n)} aria-current={n === page ? 'page' : undefined}>{n}</a>
                   </li>
                 ))}
                 {page < totalPages && (
                   <li class="page-item">
                     <a class="page-link next-page" href={pageHref(page + 1)} aria-label="Next page">
-                      <svg width="8" height="12" viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(180deg)">
-                        <path d="M0 10.4575L4.58 5.92493L0 1.39236L1.41 0L7.41 5.92493L1.41 11.8499L0 10.4575Z" fill="#303030"/>
-                      </svg>
+                      <svg width="8" height="12" viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 10.4575L4.58 5.92493L0 1.39236L1.41 0L7.41 5.92493L1.41 11.8499L0 10.4575Z" fill="#303030"></path>
+              </svg>
                     </a>
                   </li>
                 )}
@@ -222,5 +229,46 @@ const schema = {
     </div>
   </div>
 
+  <div class=" portfolio-form-wrapper">
+  <div class="box">
+        <div class="portfolio-form">
+            <img src="https://alphaefficiency.com/wp-content/themes/alpha-efficiency-2024/dist/images/forms/portfolio/portfolio2025_b97ddefc.svg" width="510" height="723" alt="Portfolio" data-lazy-src="https://alphaefficiency.com/wp-content/themes/alpha-efficiency-2024/dist/images/forms/portfolio/portfolio2025_b97ddefc.svg" data-ll-status="loaded" class="entered lazyloaded"><noscript><img src="https://alphaefficiency.com/wp-content/themes/alpha-efficiency-2024/dist/images/forms/portfolio/portfolio2025_b97ddefc.svg" width="510" height="723" alt="Portfolio"></noscript>
+
+            <div class="text">
+                <h3>Fresh inspiration is a fingertip away, <br> <span>Download Our Portfolio.</span></h3>
+                <div class="download-tab">
+                    <form id="downloadPortfolioSuscription" data-hs-cf-bound="true">
+
+                        <div class="submit-container">
+                            <div class="input-container">
+                            <input class="suscriber-email" type="text" name="email" placeholder="email@example.com">
+
+                            <button>
+                                <img width="32" height="32" src="https://alphaefficiency.com/wp-content/themes/alpha-efficiency-2024/dist/images/forms/portfolio/button-send_b08a455e.svg" alt="Send" data-lazy-src="https://alphaefficiency.com/wp-content/themes/alpha-efficiency-2024/dist/images/forms/portfolio/button-send_b08a455e.svg" data-ll-status="loaded" class="entered lazyloaded"><noscript><img width="32" height="32" src="https://alphaefficiency.com/wp-content/themes/alpha-efficiency-2024/dist/images/forms/portfolio/button-send_b08a455e.svg" alt="Send"></noscript>
+                            </button>
+                        </div>
+                            <p class="form-submit-btn">Download Our Portfolio</p>
+                        </div>
+                        
+            
+                        <div class="sms-consent">
+                            <label class="sms-consent-label">
+                            <input type="checkbox" required="">
+                            By submitting this form, you agree to receive SMS communications from 
+                            <strong>Alpha Efficiency</strong> regarding your inquiry. Message and data rates may apply.
+                            Reply STOP to opt out at any time.
+                            </label>
+                        </div>
+                    
+                    </form>
+                </div>
+            </div>
+    
+        </div>
+
+    </div>
+</div>
+
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 </Base>
+

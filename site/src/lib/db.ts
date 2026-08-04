@@ -98,9 +98,12 @@ export async function listPostsPaged(
   }
 
   if (opts.categoryId) {
-    where.push(`(categories LIKE ? OR categories LIKE ? OR categories LIKE ? OR categories = ?)`);
-    const id = opts.categoryId;
-    params.push(`[${id},%`, `%,${id},%`, `%,${id}]`, `[${id}]`);
+    where.push(`EXISTS (
+      SELECT 1
+      FROM json_each(categories)
+      WHERE json_each.value = ?
+    )`);
+    params.push(opts.categoryId);
   }
 
   const clause = where.join(' AND ');

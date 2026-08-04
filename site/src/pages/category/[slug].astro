@@ -1,0 +1,238 @@
+---
+import Base from '../../layouts/Base.astro';
+import { listPostsPaged } from '../../lib/db';
+import { categories, primaryCategory } from '../../data/categories';
+import { categoryIcons, defaultCategoryIcon } from '../../data/category-icons';
+import { categoryDescriptions } from '../../data/category-descriptions';
+
+// Ported from alpha-efficiency-2024 resources/views/category.blade.php.
+//
+// The Blade template's top grid comes from an ACF `featured_posts` field on
+// the category term, falling back to the category's latest 7 posts when that
+// field is empty. ACF fields aren't exposed over the public WP REST API (see
+// SinglePost.astro's author card for the same limitation elsewhere in this
+// migration), so only the fallback branch is reachable here — the "all posts"
+// grid below it is a second, independent, paginated query and is NOT excluding
+// the top grid's posts, exactly as the Blade does once $excludedIDs is empty.
+export const prerender = false;
+
+const IMG = '/assets/images';
+const PER_PAGE = 9;
+
+const slug = Astro.params.slug ?? '';
+const category = categories.find((c) => c.slug === slug);
+
+if (!category) {
+  Astro.response.status = 404;
+}
+
+const page = Number(Astro.url.searchParams.get('pageNumber') ?? '1') || 1;
+
+const { posts: topPosts } = category
+  ? await listPostsPaged(Astro.locals, { categoryId: category.id, perPage: 7, page: 1 })
+  : { posts: [] };
+
+const { posts: allPosts, totalPages } = category
+  ? await listPostsPaged(Astro.locals, { categoryId: category.id, perPage: PER_PAGE, page })
+  : { posts: [], totalPages: 1 };
+
+const description = category ? categoryDescriptions[category.slug] : undefined;
+const icon = category ? (categoryIcons[category.slug] ?? defaultCategoryIcon) : defaultCategoryIcon;
+
+const fmt = (iso: string | null) => {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return `${String(d.getUTCDate()).padStart(2, '0')} - ${d.toLocaleString('en', { month: 'short', timeZone: 'UTC' })} - ${d.getUTCFullYear()}`;
+};
+
+const pageHref = (n: number) => {
+  const p = new URLSearchParams();
+  if (n > 1) p.set('pageNumber', String(n));
+  const qs = p.toString();
+  return qs ? `/category/${slug}?${qs}` : `/category/${slug}`;
+};
+
+// Matches the Blade's numbered-with-ellipsis pagination: always show the
+// first and last page, plus one page either side of the current one.
+const pageNumbers: (number | 'dots')[] = [];
+for (let i = 1; i <= totalPages; i += 1) {
+  if (i === 1 || i === totalPages || Math.abs(i - page) <= 1) {
+    pageNumbers.push(i);
+  } else if (pageNumbers[pageNumbers.length - 1] !== 'dots') {
+    pageNumbers.push('dots');
+  }
+}
+---
+
+<Base
+  title={category ? `${category.name} — Alpha Efficiency Blog` : 'Category Not Found — Alpha Efficiency'}
+  description={category ? `Read our latest ${category.name} posts.` : 'Sorry, we couldn’t find that category.'}
+  path={`/category/${slug}`}
+  type="website"
+  fullBleed={true}
+  bodyClass="category blog"
+>
+  {!category ? (
+    <div class="content-holder">
+      <h1>Category not found</h1>
+      <p><a href="/blog">Back to the blog</a></p>
+    </div>
+  ) : (
+    <Fragment>
+      <div class="hero-category hero-holder customContainer">
+        <div class="hero">
+          <div class="category-icon" set:html={icon} />
+          <h1 class="category-title">{category.name}</h1>
+
+          {description && (
+            <div class="category-description-container">
+              <div class="category-description" id={`description-${category.slug}`} set:html={description} />
+              <button class="read-more" id={`button-${category.slug}`} data-toggle-slug={category.slug}>
+                Read more
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5.70711 9.71069C5.31658 10.1012 5.31658 10.7344 5.70711 11.1249L10.5993 16.0123C11.3805 16.7927 12.6463 16.7924 13.4271 16.0117L18.3174 11.1213C18.708 10.7308 18.708 10.0976 18.3174 9.70708C17.9269 9.31655 17.2937 9.31655 16.9032 9.70708L12.7176 13.8927C12.3271 14.2833 11.6939 14.2832 11.3034 13.8927L7.12132 9.71069C6.7308 9.32016 6.09763 9.32016 5.70711 9.71069Z" fill="#1994ff" />
+                </svg>
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div class="blog-search">
+          <form class="form-blog-search" method="get" action="/blog">
+            <div class="search-text">
+              <button type="submit" class="search-icon" aria-label="Search">
+                <svg width="29" height="28" viewBox="0 0 29 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M28.4708 25.0194L22.8574 19.5978C27.0576 14.1789 25.9123 6.49873 20.2994 2.44372C14.6865 -1.61129 6.73139 -0.50562 2.53121 4.91329C-1.66897 10.3322 -0.523721 18.0124 5.08919 22.0674C9.59794 25.3247 15.7906 25.3247 20.2994 22.0674L25.9152 27.489C26.6209 28.1703 27.7651 28.1703 28.4707 27.489C29.1764 26.8077 29.1764 25.7031 28.4707 25.0218L28.4708 25.0194ZM12.7411 21.021C7.75262 21.021 3.7087 17.1168 3.7087 12.3007C3.7087 7.48466 7.75262 3.58051 12.7411 3.58051C17.7296 3.58051 21.7735 7.48466 21.7735 12.3007C21.7682 17.1146 17.7274 21.0158 12.7411 21.021Z" fill="#1994FF" />
+                </svg>
+              </button>
+              <input type="text" name="s" id="s" placeholder="Search Our Blog Posts" />
+            </div>
+          </form>
+
+          <div class="dropdown-container">
+            <div class="dropdown">
+              <select
+                class="dropdown-options"
+                style="outline: none"
+                onchange="if(this.value) window.location.href = '/category/' + this.value;"
+              >
+                <option value="" disabled>Select Blog Category</option>
+                <option value="" selected={!category}>All categories</option>
+                {categories.map((c) => (
+                  <option value={c.slug} selected={c.slug === category.slug}>{c.name}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-categories">
+        <div class="blog category-posts">
+          {topPosts.length === 0 ? (
+            <p>Sorry, no posts matched your criteria.</p>
+          ) : (
+            <div class="category-posts-grid">
+              {topPosts.map((post) => (
+                <div class="post-item">
+                  <a href={post.path}>
+                    <img
+                      src={post.hero_image ?? `${IMG}/blog/post-image-holder-min.png`}
+                      alt={post.title}
+                      loading="lazy"
+                    />
+                  </a>
+                  <div class="post-time">{fmt(post.published_at)}</div>
+                  <h2 class="post-title">
+                    <a href={post.path} style="font-weight: 600" set:html={post.title} />
+                  </h2>
+                  <div class="post-excerpt" set:html={post.excerpt} />
+                  <a href={post.path}>Read More</a>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div class="blog category-allposts">
+          <h2 class="title-cat-allposts">{category.name} Posts</h2>
+          <img src={`${IMG}/about/lines.svg`} style="height: 1px; width: 30px" alt="" />
+
+          {allPosts.length === 0 ? (
+            <p>Sorry, no posts matched your criteria.</p>
+          ) : (
+            <div class="all-posts-grid">
+              {allPosts.map((post) => {
+                const cat = primaryCategory((post as any).categories ?? null);
+                return (
+                  <div class="post-item">
+                    <a href={post.path} class="post-thumb">
+                      <img
+                        src={post.hero_image ?? `${IMG}/blog/post-image-holder-min.png`}
+                        alt={post.title}
+                        loading="lazy"
+                      />
+                    </a>
+                    {cat && (
+                      <a href={`/category/${cat.slug}`} class={`post-category ${cat.slug}`}>
+                        <span>{cat.name}</span>
+                      </a>
+                    )}
+                    <div class="post-time">{fmt(post.published_at)}</div>
+                    <h2 class="post-title">
+                      <a class="post-title" href={post.path} set:html={post.title} />
+                    </h2>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {totalPages > 1 && (
+            <div class="pagination-all-posts">
+              {page > 1 && (
+                <a href={pageHref(page - 1)} class="pagination-link prev" aria-label="Previous page">
+                  <svg width="8" height="12" viewBox="0 0 8 12" fill="none">
+                    <path d="M7.41 1.39236L2.83 5.92493L7.41 10.4575L6 11.8499L0 5.92493L6 0L7.41 1.39236Z" fill="#303030" />
+                  </svg>
+                </a>
+              )}
+
+              {pageNumbers.map((n) =>
+                n === 'dots' ? (
+                  <span class="page-dots">...</span>
+                ) : (
+                  <a href={pageHref(n)} class={`page-link ${page === n ? 'active' : ''}`} aria-current={page === n ? 'page' : undefined}>
+                    {n}
+                  </a>
+                )
+              )}
+
+              {page < totalPages && (
+                <a href={pageHref(page + 1)} class="pagination-link next" aria-label="Next page">
+                  <svg width="8" height="12" viewBox="0 0 8 12" fill="none">
+                    <path d="M0 10.4575L4.58 5.92493L0 1.39236L1.41 0L7.41 5.92493L1.41 11.8499L0 10.4575Z" fill="#303030" />
+                  </svg>
+                </a>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <script>
+        // Matches category.blade.php's toggleDescription() — the same
+        // expand/collapse behaviour, minus the inline-onclick indirection.
+        document.querySelectorAll<HTMLButtonElement>('.category-description-container .read-more').forEach((button) => {
+          const slug = button.dataset.toggleSlug;
+          const description = document.getElementById(`description-${slug}`);
+          if (!description) return;
+          button.addEventListener('click', () => {
+            const expanded = description.classList.toggle('expanded');
+            button.firstChild!.textContent = expanded ? 'Read less' : 'Read more';
+          });
+        });
+      </script>
+    </Fragment>
+  )}
+</Base>
