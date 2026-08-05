@@ -75,8 +75,15 @@
     .single-post .single-post-container {
     grid-template-columns: none!important;
     gap: 50px;
+    }
+    .page-template-template-careers .careers-section .container .item {
+        width: 150px;
+        margin: 0 0 50px !important;
+        height: 157px;
+    }
+
 }
-}
+
 
 /* ── Blog single-post: aside card 105px lower than the author card ───────
  * The compiled theme CSS defines `.single-post .single-post-container
