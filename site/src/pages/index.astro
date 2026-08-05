@@ -85,7 +85,7 @@ const strategyCards = [
       <div class="text">
         <div class="titles">
           <h1 class="subtitle">Website Design, SEO &amp; AI Development Agency.</h1>
-          <h2>Stop losing profit to a dead website.<br />Our sites <span>make your phone ring.</span></h2>
+          <h2>Stop losing profit to a dead website.<br /> Our sites <span>make your phone ring.</span></h2>
         </div>
 
         <a href="#contact" class="call-btn call-btn-red">
@@ -204,12 +204,11 @@ const strategyCards = [
            track is a separate element from .cards-container because the arrows
            are absolutely positioned against the container and must not scroll
            away with the cards. -->
-      <div class="cards-container">
+      <div class="cards-container" data-services-track>
         <button class="arrow left" aria-label="Previous services" data-services-prev>
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="20" viewBox="0 0 12 20" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.82843 9.70711L11.1213 1.41421L9.70711 0L0 9.70711L9.70711 19.4142L11.1213 18L2.82843 9.70711Z" fill="#1994FF"/></svg>
         </button>
 
-        <div class="cards-track" data-services-track>
           {services.map((s) => (
             <div class="service-card">
               <img src={`${IMG}/home/services/${s.icon}`} alt="" class="service-icon" loading="lazy" />
@@ -218,7 +217,7 @@ const strategyCards = [
               <a href={s.href} class="card-link">VIEW DETAILS</a>
             </div>
           ))}
-        </div>
+        
 
         <button class="arrow right" aria-label="Next services" data-services-next>
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="20" viewBox="0 0 12 20" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.82843 9.70711L11.1213 1.41421L9.70711 0L0 9.70711L9.70711 19.4142L11.1213 18L2.82843 9.70711Z" fill="#1994FF"/></svg>
@@ -371,35 +370,8 @@ const strategyCards = [
        sliced by the viewport edge rather than aligned to the site grid. The
        track now clips at the container and scrolls, so the row starts and ends
        on the grid and the arrows reveal the rest. */
-    .homepage-services .cards-track {
-      display: flex;
-      gap: 32px;
-      overflow-x: auto;
-      /* No `scroll-behavior: smooth` here on purpose. Combined with mandatory
-         snapping it fought the programmatic scroll and snapped straight back to
-         0, so the arrows appeared dead. The JS passes behavior:'smooth' per
-         call, which snapping cooperates with. Proximity rather than mandatory
-         for the same reason — it tidies the resting position without
-         overriding where the scroll was asked to go. */
-      scroll-snap-type: x proximity;
-      /* Room for the cards' own drop shadows, which clip otherwise. */
-      padding: 12px 4px 24px;
-      scrollbar-width: none;
-    }
-    .homepage-services .cards-track::-webkit-scrollbar { display: none; }
-
-    .homepage-services .cards-track > .service-card {
-      flex: 0 0 auto;
-      scroll-snap-align: start;
-    }
-
-    /* The arrows sit outside the scrolling track so they stay put. */
-    .homepage-services .cards-container > .arrow {
-      z-index: 2;
-    }
-    .homepage-services .cards-container > .arrow[hidden] {
-      visibility: hidden;
-    }
+    
+    
 
     /* ── Portfolio row ───────────────────────────────────────────────────
        The cards are squares sized by a fixed `height: 424px` with
@@ -580,31 +552,58 @@ const strategyCards = [
   // Services carousel. The theme shipped these arrows as decoration — they had
   // no behaviour at all, so the cards that spilled past the container were
   // simply unreachable.
-  const track = document.querySelector<HTMLElement>('[data-services-track]');
+  const sectionServices = document.querySelector<HTMLElement>('.homepage-services');
   const prev = document.querySelector<HTMLButtonElement>('[data-services-prev]');
   const next = document.querySelector<HTMLButtonElement>('[data-services-next]');
 
-  if (track && prev && next) {
-    const step = () => {
-      const card = track.querySelector<HTMLElement>('.service-card');
-      if (!card) return track.clientWidth;
-      const gap = parseFloat(getComputedStyle(track).gap) || 0;
-      return card.getBoundingClientRect().width + gap;
+  if (sectionServices && prev && next) {
+    const cards = Array.from(sectionServices.querySelectorAll<HTMLElement>('.service-card'));
+    const totalCards = cards.length;
+    let currentIndex = 0;
+
+    const getCardsToShow = () => {
+      if (window.matchMedia('(max-width: 900px)').matches) return 1;
+      if (window.matchMedia('(max-width: 1280px)').matches) return 2;
+      return 3;
     };
 
-    const sync = () => {
-      // 2px tolerance: fractional scroll offsets never land exactly on the end.
-      const atStart = track.scrollLeft <= 2;
-      const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
-      prev.toggleAttribute('hidden', atStart);
-      next.toggleAttribute('hidden', atEnd);
+    const updateSlider = () => {
+      const cardsToShow = Math.min(getCardsToShow(), totalCards);
+
+      cards.forEach((card) => {
+        card.style.display = 'none';
+        card.style.order = '0';
+      });
+
+      for (let i = 0; i < cardsToShow; i += 1) {
+        const targetIndex = (currentIndex + i) % totalCards;
+        const card = cards[targetIndex];
+        card.style.display = 'flex';
+        card.style.order = String(i);
+      }
     };
 
-    prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
-    next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
-    track.addEventListener('scroll', sync, { passive: true });
-    window.addEventListener('resize', sync);
-    sync();
+    prev.addEventListener('click', (e) => {
+      e.preventDefault();
+      const cardsToShow = Math.min(getCardsToShow(), totalCards);
+      currentIndex = (currentIndex - cardsToShow + totalCards) % totalCards;
+      updateSlider();
+    });
+
+    next.addEventListener('click', (e) => {
+      e.preventDefault();
+      const cardsToShow = Math.min(getCardsToShow(), totalCards);
+      currentIndex = (currentIndex + cardsToShow) % totalCards;
+      updateSlider();
+    });
+
+    let resizeTimer: number | undefined;
+    window.addEventListener('resize', () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(updateSlider, 150);
+    });
+
+    updateSlider();
   }
 
   // FAQ accordion.

@@ -68,6 +68,12 @@
   }
 }
 
+@media (max-width: 550px) {
+    .pricing .pricing-text ul {
+        margin-left: 0;
+    }
+}
+
 /* ── Blog single-post: aside card 105px lower than the author card ───────
  * The compiled theme CSS defines `.single-post .single-post-container
  * .aside-right { top: 0px }` and then, later in the same file, the identical
@@ -181,7 +187,7 @@ body {
   max-height: 48px;
 }
 
-.img-fluid {
+.client-logo .img-fluid {
   width:100%;
   max-width: 256px;
   height: auto;
