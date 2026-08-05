@@ -1,38 +1,20 @@
 ---
 import Base from '../layouts/Base.astro';
-import { SERVICE_ORDER, serviceFor, placeFor, type Service } from '../lib/locations';
+import { SERVICE_ORDER, CURATED_LOCATIONS, type Service } from '../lib/locations';
 
 // Ported from alpha-efficiency-2024 template-locations.blade.php ->
 // partials.locations.{hero,third-section,fourth-section,fifth-section}.
 //
-// Server-rendered because the list of locations comes from D1 rather than being
-// hardcoded — see src/lib/locations.ts for why the original custom fields could
-// not be carried across.
-export const prerender = false;
-
+// Prerendered — the list is a fixed, hand-curated set (see src/lib/locations.ts),
+// not a live D1 query, so there's nothing here that needs to be server-rendered.
 const IMG = '/assets/images';
 
-const db = Astro.locals.runtime?.env?.DB;
-let rows: { path: string; title: string }[] = [];
-if (db) {
-  const { results } = await db
-    .prepare(
-      `SELECT path, title FROM pages
-        WHERE status = 'published' AND track = 'location'
-        ORDER BY path`
-    )
-    .all<{ path: string; title: string }>();
-  rows = results ?? [];
-}
-
 const grouped = new Map<Service, { path: string; place: string }[]>();
-for (const r of rows) {
-  const svc = serviceFor(r.path);
-  const list = grouped.get(svc) ?? [];
-  list.push({ path: r.path, place: placeFor(r.path) });
-  grouped.set(svc, list);
+for (const loc of CURATED_LOCATIONS) {
+  const list = grouped.get(loc.service) ?? [];
+  list.push({ path: loc.path, place: loc.place });
+  grouped.set(loc.service, list);
 }
-for (const list of grouped.values()) list.sort((a, b) => a.place.localeCompare(b.place));
 
 const clientLogos = [
   'aeriform.svg', 'ignite.svg', 'jpar.svg', 'tangram.svg', 'joorney.svg', 'smith.svg',
@@ -127,7 +109,7 @@ const clientLogos = [
       border-bottom: 1px solid #e2e2e2;
     }
     .template-locations .location-list {
-      list-style: none; padding: 0; margin: 0;
+      padding: 0; margin: 0;
       display: grid; gap: .35rem 1.5rem;
       grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
     }

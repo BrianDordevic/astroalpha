@@ -84,6 +84,22 @@
 
 }
 
+.fourth-section .location-group {
+      background: #fafafa;
+    border-radius: 20px;
+    padding-left: 65px;
+    padding-right: 65px;
+    padding-bottom: 40px;
+    padding-top: 27px;
+}
+.fourth-section .location-group li::marker{
+    color: #c4c4c4;
+}
+.fourth-section .location-group li a{
+    color: #323232;
+    text-decoration: none;
+}
+
 
 /* ── Blog single-post: aside card 105px lower than the author card ───────
  * The compiled theme CSS defines `.single-post .single-post-container
