@@ -72,6 +72,10 @@
     .pricing .pricing-text ul {
         margin-left: 0;
     }
+    .single-post .single-post-container {
+    grid-template-columns: none!important;
+    gap: 50px;
+}
 }
 
 /* ── Blog single-post: aside card 105px lower than the author card ───────
