@@ -132,6 +132,14 @@ const IS_PROD = SITE === 'https://alphaefficiency.com';
           formId: '9b4a5cb0-05d9-48c2-8239-571793e052fc',
           cssRequired: false,
           target: '#hubspotForm',
+          // The theme's compiled CSS styles the form under ".hbspt-form" —
+          // the wrapper class the old embed script used to add automatically.
+          // The current embed script no longer adds it, so it's added by hand
+          // once the form is in the DOM, to keep reusing that existing CSS
+          // instead of duplicating ~25 !important rules for a new selector.
+          onFormReady: function () {
+            document.getElementById('hubspotForm')?.classList.add('hbspt-form');
+          },
         });
       </script>
     </Fragment>
