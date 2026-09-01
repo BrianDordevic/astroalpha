@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "astro-dev",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["--prefix", "site", "run", "dev"],
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-lc", "source ~/.nvm/nvm.sh && nvm use v26.8.1 && npm --prefix site run dev"],
       "port": 4321
     }
   ]

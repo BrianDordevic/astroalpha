@@ -1,4 +1,4 @@
-name = "alpha-efficiency-astro"
+name = "alpha-efficiency"
 compatibility_date = "2026-07-25"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "dist"
@@ -12,6 +12,6 @@ pages_build_output_dir = "dist"
 #   production: SITE_URL=https://alphaefficiency.com      npm run build
 [[d1_databases]]
 binding = "DB"
-database_name = "ae-content"
-database_id = "51558479-ed49-4cc9-84e4-31490cafe226"
+database_name = "alphaefficiency"
+database_id = "7f873c47-63a8-43b8-af88-349d77844319"
 migrations_dir = "../db/migrations"
