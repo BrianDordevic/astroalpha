@@ -74,6 +74,36 @@ export interface PostPage {
 }
 
 /**
+ * A small category-filtered result set for related-post cards.
+ *
+ * Unlike listPostsPaged(), this deliberately does not run COUNT(*): callers
+ * only need the first few matching posts. This avoids the COUNT(*) query that
+ * previously scanned every published post before rendering each article.
+ */
+export async function listRelatedPosts(
+  locals: App.Locals,
+  categoryId: number,
+  limit = 4
+): Promise<Page[]> {
+  const { results } = await db(locals)
+    .prepare(
+      `SELECT p.id, p.path, p.slug, p.title, p.excerpt, p.hero_image, p.published_at, p.categories
+         FROM pages p
+        WHERE p.status = 'published'
+          AND p.track = 'blog'
+          AND p.type = 'post'
+          AND EXISTS (
+            SELECT 1 FROM json_each(p.categories) WHERE json_each.value = ?
+          )
+        ORDER BY p.published_at DESC
+        LIMIT ?`
+    )
+    .bind(categoryId, limit)
+    .all<Page>();
+  return results ?? [];
+}
+
+/**
  * Paginated blog listing with optional search and category filter.
  *
  * Categories live in D1 as a JSON array of WordPress term ids, so filtering

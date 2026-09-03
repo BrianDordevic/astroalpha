@@ -10,7 +10,21 @@ import { defineMiddleware } from 'astro:middleware';
 const SITE = import.meta.env.SITE ?? 'https://alphaefficiency.com';
 const IS_PROD = SITE === 'https://alphaefficiency.com';
 
-export const onRequest = defineMiddleware(async (_context, next) => {
+export const onRequest = defineMiddleware(async (context, next) => {
+  const shouldCache = !IS_PROD && context.request.method === 'GET'
+    && !context.request.headers.has('Authorization')
+    && !context.request.headers.has('Cookie');
+  const edgeCache = shouldCache && typeof caches !== 'undefined' ? caches.default : null;
+
+  if (edgeCache) {
+    const cached = await edgeCache.match(context.request).catch(() => undefined);
+    if (cached) {
+      const response = new Response(cached.body, cached);
+      response.headers.set('X-AE-Edge-Cache', 'HIT');
+      return response;
+    }
+  }
+
   const response = await next();
 
   response.headers.set('X-Content-Type-Options', 'nosniff');
@@ -19,12 +33,20 @@ export const onRequest = defineMiddleware(async (_context, next) => {
   if (!IS_PROD) {
     response.headers.set('X-Robots-Tag', 'noindex, nofollow');
 
-    // Staging must always show the newest deploy on the one stable URL.
-    // Without this Cloudflare edge-caches the HTML and the project URL keeps
-    // serving an older build, which forces everyone onto per-deployment hash
-    // URLs to see their own changes. Assets stay cached — this only covers
-    // documents, which is what goes stale visibly.
-    response.headers.set('Cache-Control', 'no-store, must-revalidate');
+    // Keep the stable staging URL fresh without sending every repeat request
+    // back through Astro and D1. A one-minute shared cache bounds deployment
+    // staleness while stale-while-revalidate prevents crawler bursts from
+    // stampeding the database.
+    response.headers.set(
+      'Cache-Control',
+      'public, max-age=0, s-maxage=60, stale-while-revalidate=300'
+    );
+
+    if (edgeCache && response.status === 200 && !response.headers.has('Set-Cookie')) {
+      response.headers.set('X-AE-Edge-Cache', 'MISS');
+      // Cache failure must never turn a successful page response into an error.
+      await edgeCache.put(context.request, response.clone()).catch(() => {});
+    }
   }
 
   return response;

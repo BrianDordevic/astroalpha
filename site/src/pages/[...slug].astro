@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { getPage, getRedirect, listPosts, listPostsPaged } from '../lib/db';
+import { getPage, getRedirect, listPosts, listRelatedPosts } from '../lib/db';
 import { bodyClassFor } from '../lib/body-class';
 import LocationSingle from '../components/LocationSingle.astro';
 import NotFound from '../components/NotFound.astro';
@@ -66,7 +66,7 @@ const isPost = page?.type === 'post';
 let relatedPosts: Awaited<ReturnType<typeof listPosts>> = [];
 if (isPost) {
   const categoryId = JSON.parse((page as any).categories ?? '[]')[0];
-  const { posts } = await listPostsPaged(Astro.locals, { categoryId, perPage: 4 });
+  const posts = categoryId ? await listRelatedPosts(Astro.locals, categoryId, 4) : [];
   relatedPosts = posts.filter((p) => p.path !== page!.path).slice(0, 3);
 }
 ---
